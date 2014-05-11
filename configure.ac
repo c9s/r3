@@ -1,0 +1,5 @@
+AC_INIT([r2],[1.4],[yoanlin93@gmail.com],[r2],[http://github.com/c9s/r2])
+# AC_CONFIG_AUX_DIR(config)
+# AC_CONFIG_SRCDIR(Front/mona.cpp)
+# AM_INIT_AUTOMAKE()
+AC_CONFIG_HEADERS([config.h])
