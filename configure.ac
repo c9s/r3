@@ -1,24 +1,20 @@
-AC_INIT([r2],[1.4],[yoanlin93@gmail.com],[r2],[http://github.com/c9s/r2])
-# AC_CONFIG_AUX_DIR(config)
-# AC_CONFIG_SRCDIR(Front/mona.cpp)
-# AM_INIT_AUTOMAKE()
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.69])
+AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 
-CFLAGS=$CXXFLAGS
-AC_SUBST(CFLAGS)
+# Checks for programs.
+AC_PROG_CC
 
-AC_HEADER_STDC
+# Checks for libraries.
 
-AC_CHECK_HEADERS(stdlib.h string.h sys/time.h unistd.h
-                 ,,AC_MSG_ERROR(required header file not found))
+# Checks for header files.
 
-dnl ========== checks for typedefs, structures, and compiler characteristics ==========
+# Checks for typedefs, structures, and compiler characteristics.
 
-AC_C_CONST
-AC_C_INLINE
-AC_TYPE_SIZE_T
+# Checks for library functions.
 
-AC_FUNC_MALLOC
-AC_FUNC_MEMCMP
-AC_FUNC_MMAP
 AC_OUTPUT

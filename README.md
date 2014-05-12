@@ -6,6 +6,13 @@ table, and you may dispatch the URL based on the transition table in C.
 
 
 
+Pattern Syntax
+-----------------------
+
+    /blog/post/{id}      use [^/]+ regular expression by default.
+
+    /blog/post/{id:\d+}  use `\d+` regular expression instead of default.
+
 
 
 Use case in PHP
@@ -14,7 +21,7 @@ Use case in PHP
 ```php
 // Here is the paths data structure
 $paths = [
-    '/blog/post/:id' => [ 'controller' => 'PostController', 'action' => 'item', 'method' => 'GET' ],
+    '/blog/post/{id}' => [ 'controller' => 'PostController', 'action' => 'item', 'method' => 'GET' ],
     '/blog/post' => [ 'controller' => 'PostController', 'action' => 'list', 'method' => 'GET' ],
     '/blog/post' => [ 'controller' => 'PostController', 'action' => 'create', 'method' => 'POST' ],
     '/blog' => [ 'controller' => 'BlogController', 'action' => 'list', 'method' => 'GET' ],
