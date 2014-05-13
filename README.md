@@ -1,9 +1,9 @@
 R2
 ================
 
-libr2 is a DFA URI router library. It compiles your route paths into DFA state
-table, and you may dispatch the URL based on the transition table in C.
-
+libr2 is an URI router library. It compiles your route paths into a radix tree.
+By using the constructed radix tree in the start-up time, you may dispatch your
+routes efficiently.
 
 
 Pattern Syntax
@@ -21,13 +21,13 @@ Use case in PHP
 ```php
 // Here is the paths data structure
 $paths = [
-    '/blog/post/{id}' => [ 'controller' => 'PostController', 'action' => 'item', 'method' => 'GET' ],
-    '/blog/post' => [ 'controller' => 'PostController', 'action' => 'list', 'method' => 'GET' ],
-    '/blog/post' => [ 'controller' => 'PostController', 'action' => 'create', 'method' => 'POST' ],
-    '/blog' => [ 'controller' => 'BlogController', 'action' => 'list', 'method' => 'GET' ],
+    '/blog/post/{id}' => [ 'controller' => 'PostController' , 'action' => 'item'   , 'method'   => 'GET' ] , 
+    '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'list'   , 'method'   => 'GET' ] , 
+    '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'create' , 'method' => 'POST' ]  , 
+    '/blog'           => [ 'controller' => 'BlogController' , 'action' => 'list'   , 'method'   => 'GET' ] , 
 ];
-$rs = r2_compile($paths, 'persisten-table-id');
-$ret = r2_dispatch($rs, '/blog/post/3' );
+$rs = r2_compile_radix($paths, 'persisten-table-id');
+$ret = r2_dispatch_radix($rs, '/blog/post/3' );
 list($complete, $route, $variables) = $ret;
 
 list($error, $message) = r2_validate($route); // validate route conditions
