@@ -15,7 +15,7 @@ SET(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     )
 
-include_directories(. ${INCLUDE_DIRECTORIES} /opt/local/include)
+include_directories(. "${PROJECT_SOURCE_DIR}/include" ${INCLUDE_DIRECTORIES} /opt/local/include)
 link_directories(${LINK_DIRECTORIES} /opt/local/lib)
 
 
@@ -45,13 +45,12 @@ set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} r3)
 enable_testing()
 # set (CMAKE_CXX_FLAGS "-std=c++0x -arch x86_64 -stdlib=libc++ -g3 -Wall -O0")
 
-# add_subdirectory(src)
+add_subdirectory(src)
 add_subdirectory(tests)
 
 add_test(test_tree ${CMAKE_CURRENT_BINARY_DIR}/test_tree)
-add_library(r3 main.c)
 
-# add_executable(alphablue-gui main.cc cv.cc)
+add_executable(demo demo.c)
 # target_link_libraries(alphablue-gui ${OpenCV_LIBS} ${GFlags_LIBS} ${GLog_LIBS} ${Boost_LIBS})
 # install(TARGETS alphablue-gui DESTINATION bin)
 
