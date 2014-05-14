@@ -1,5 +1,7 @@
 CMakeCache.txt
 CMakeFiles
 Makefile
+CTestTestfile.cmake
 cmake_install.cmake
 install_manifest.txt
+*.a

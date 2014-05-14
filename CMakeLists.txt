@@ -8,7 +8,7 @@
 
 
 cmake_minimum_required(VERSION 2.8)
-project(libr3)
+project(r3)
 
 SET(CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake_modules
@@ -34,7 +34,7 @@ link_directories(${LINK_DIRECTORIES} /opt/local/lib)
 find_package(PCRE REQUIRED)
 find_package(Judy REQUIRED)
 
-set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} libr3)
+set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} r3)
 
 # find_package(opencv)
 
@@ -49,7 +49,7 @@ enable_testing()
 add_subdirectory(tests)
 
 add_test(test_tree ${CMAKE_CURRENT_BINARY_DIR}/test_tree)
-add_library(libr3 main.c)
+add_library(r3 main.c)
 
 # add_executable(alphablue-gui main.cc cv.cc)
 # target_link_libraries(alphablue-gui ${OpenCV_LIBS} ${GFlags_LIBS} ${GLog_LIBS} ${Boost_LIBS})
