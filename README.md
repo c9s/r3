@@ -1,10 +1,9 @@
-R2
+R3
 ================
 
-libr2 is an URI router library. It compiles your route paths into a radix tree.
+R3 is an URI router library. It compiles your route paths into a radix tree.
 By using the constructed radix tree in the start-up time, you may dispatch your
 routes efficiently.
-
 
 Pattern Syntax
 -----------------------
