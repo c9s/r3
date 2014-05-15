@@ -21,6 +21,7 @@
  * Split "/blog/{id}" into [ "/blog" , "/{id}" ]
  * Split "/blog" into [ "/blog" ]
  * Split "/b" into [ "/b" ]
+ * Split "/{id}" into [ "/{id}" ]
  *
  * @param char* pattern
  * @param int   pattern_len
@@ -28,24 +29,43 @@
  * @return char**
  */
 char** split_route_pattern(char *pattern, int pattern_len) {
+    char *s1, *p = pattern;
 
-    char *p = pattern;
+    char ** list;
+    unsigned int list_idx = 0;
+    unsigned int list_size = 20;
 
-    while (*p) {
+    list = malloc( sizeof(char**) * list_size ); // default token list size
+
+    s1 = p;
+    while (*p && (p - pattern) < pattern_len ) {
+
         // a slug
         if ( *p == '{' ) {
-            char *s1 = p;
-            char *s2;
             while (*(p++) != '}') {
                 if ( p - pattern > pattern_len ) {
                     // XXX: unexpected error (unclosed slug)
                 }
             }
-            s2 = p;
+            list[list_idx] = strndup(s1, p-s1);
+            printf("%d -> %s\n", list_idx, list[list_idx]);
+            list_idx++;
+
+            s1 = p;
         }
+        else if ( *p == '/' ) {
+            char *s2;
+            while (*(++p) != '/');
+            // printf("-> %s\n", strndup(s1, p-s1) );
+
+            list[list_idx] = strndup(s1, p-s1);
+            printf("%d -> %s\n", list_idx, list[list_idx]);
+            list_idx++;
+
+            s1 = p;
+        }
+        p++;
     }
-
-
     return NULL;
 }
 
