@@ -43,6 +43,8 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len);
 
 void rnode_dump(rnode * n, int level);
 
+void rnode_combine_patterns(rnode * n);
+
 rnode * rnode_lookup(rnode * tree, char * path, int path_len);
 
 redge * redge_create(char * pattern, int pattern_len, rnode * child);

@@ -40,6 +40,28 @@ START_TEST (test_rnode_find_edge)
 END_TEST
 
 
+START_TEST (test_combine_patterns)
+{
+    token_array *t;
+    rnode * n;
+    n = rnode_create(10);
+
+
+    t = split_route_pattern("/foo", strlen("/foo") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    t = split_route_pattern("/bar", strlen("/bar") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    t = split_route_pattern("/zoo", strlen("/zoo") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    rnode_combine_patterns(n);
+
+    // printf("%s\n", n->combined_pattern);
+}
+END_TEST
+
 START_TEST (test_slug_to_pcre)
 {
     char * pattern;
@@ -50,6 +72,17 @@ START_TEST (test_slug_to_pcre)
     pattern = slug_to_pcre("{id:[a-z]+}", '/');
     fail_if( strcmp(pattern, "[a-z]+") != 0 , "as [a-z]+" );
     free(pattern);
+
+
+
+
+    /*
+    char * p = malloc(sizeof(char) * 10);
+    strncat(p, "foo", 3);
+    free(p);
+    */
+
+
 
 
 
@@ -170,6 +203,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_rnode_find_edge);
         tcase_add_test(tcase, test_rnode_insert_tokens);
         tcase_add_test(tcase, test_slug_to_pcre);
+        tcase_add_test(tcase, test_combine_patterns);
 
         suite_add_tcase(suite, tcase);
 

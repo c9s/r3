@@ -22,14 +22,16 @@ struct _rnode {
     int      children_cap;
 
     /* the combined regexp pattern string from pattern_tokens */
-    char* combined_pattern;
+    char * combined_pattern;
+    int    combined_pattern_len;
 
-    int      endpoint;
+    int endpoint;
 };
 
 struct _redge {
     char * pattern;
     int    pattern_len;
+    bool   is_slug;
     rnode * child;
 };
 
@@ -41,12 +43,13 @@ struct _redge {
  * Create a rnode object
  */
 rnode * rnode_create(int cap) {
-    rnode * n = (rnode*) calloc( sizeof(rnode) , 1);
+    rnode * n = (rnode*) malloc( sizeof(rnode) );
 
     n->children = (redge**) malloc( sizeof(redge*) * 10 );
     n->children_len = 0;
     n->children_cap = 10;
     n->endpoint = 0;
+    n->combined_pattern = NULL;
     // n->edge_patterns = token_array_create(10);
     return n;
 }
@@ -103,11 +106,38 @@ redge * rnode_find_edge(rnode * n, char * pat) {
     return NULL;
 }
 
+
+
+/**
+ * This function combines ['/foo', '/bar', '/{slug}'] into (/foo)|(/bar)|/([^/]+)}
+ *
+ */
 void rnode_combine_patterns(rnode * n) {
+    char * cpat;
+    char * p;
+
+    cpat = malloc(128);
+    if (cpat==NULL)
+        return;
+
+    p = cpat;
+
     redge *e = NULL;
     for ( int i = 0 ; i < n->children_len ; i++ ) {
         e = n->children[i];
+        strncat(p++,"(", 1);
+        strncat(p, e->pattern, e->pattern_len);
+
+        p += e->pattern_len;
+
+        strncat(p++,")", 1);
+
+        if ( i + 1 < n->children_len ) {
+            strncat(p++,"|",1);
+        }
     }
+    n->combined_pattern = cpat;
+    n->combined_pattern_len = p - cpat;
 }
 
 
@@ -179,6 +209,7 @@ redge * redge_create(char * pattern, int pattern_len, rnode * child) {
     edge->pattern = pattern;
     edge->pattern_len = pattern_len;
     edge->child = child;
+    edge->is_slug = 0;
     return edge;
 }
 
