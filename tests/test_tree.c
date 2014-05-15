@@ -17,8 +17,8 @@ START_TEST (test_rnode_construct_uniq)
 
     rnode * child = rnode_create(3);
 
-    fail_if( rnode_add_edge(n, strdup("/add") , child) == FALSE );
-    fail_if( rnode_add_edge(n, strdup("/add") , child) != FALSE );
+    fail_if( rnode_add_child(n, strdup("/add") , child) == FALSE );
+    fail_if( rnode_add_child(n, strdup("/add") , child) != FALSE );
 
     rnode_free(n);
 }
@@ -30,7 +30,7 @@ START_TEST (test_rnode_find_edge)
 
     rnode * child = rnode_create(3);
 
-    fail_if( rnode_add_edge(n, strdup("/add") , child) == FALSE );
+    fail_if( rnode_add_child(n, strdup("/add") , child) == FALSE );
 
     fail_if( rnode_find_edge(n, "/add") == NULL );
     fail_if( rnode_find_edge(n, "/bar") != NULL );
@@ -38,6 +38,42 @@ START_TEST (test_rnode_find_edge)
     rnode_free(n);
 }
 END_TEST
+
+
+START_TEST (test_rnode_insert_tokens)
+{
+    token_array *t;
+
+    rnode * n = rnode_create(10);
+
+    fail_if(n == NULL, "rnode tree");
+
+    t = split_route_pattern("/foo/bar", strlen("/foo/bar") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    t = split_route_pattern("/foo/zoo", strlen("/foo/zoo") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    t = split_route_pattern("/a/bb", strlen("/a/bb") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    t = split_route_pattern("/a/bb/cc", strlen("/a/bb/cc") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    t = split_route_pattern("/a/jj/kk", strlen("/a/jj/kk") );
+    fail_if( rnode_insert_tokens(n , t) == NULL );
+
+    rnode_dump(n, 0);
+
+
+    // fail_if( rnode_find_edge(n, "/add") == NULL );
+    // fail_if( rnode_find_edge(n, "/bar") != NULL );
+
+    rnode_free(n);
+}
+END_TEST
+
+
 
 
 START_TEST (test_route_split)
@@ -108,6 +144,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_rnode_construct_uniq);
         tcase_add_test(tcase, test_rnode_find_edge);
+        tcase_add_test(tcase, test_rnode_insert_tokens);
 
         suite_add_tcase(suite, tcase);
 

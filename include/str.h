@@ -11,4 +11,9 @@ char * ltrim_slash(char* str);
 
 char** str_split(char* a_str, const char a_delim);
 
+void str_repeat(char *s, char *c, int len);
+
+void print_indent(int level);
+
 #endif /* !STR_H */
+

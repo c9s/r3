@@ -67,3 +67,16 @@ char** str_split(char* a_str, const char a_delim)
 
     return result;
 }
+
+void str_repeat(char *s, char *c, int len) {
+    while(len--) {
+        s[len - 1] = *c;
+    }
+}
+
+void print_indent(int level) {
+    int len = level * 2;
+    while(len--) {
+        printf(" ");
+    }
+}

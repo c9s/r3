@@ -15,33 +15,32 @@
 
 #include "token.h"
 
+struct _redge;
+struct _rnode;
+typedef struct _redge redge;
 typedef struct _rnode rnode;
 
-struct _rnode {
-    rnode ** children;
-    int      children_len;
-    int      children_cap;
 
-    /* the combined regexp pattern string from pattern_tokens */
-    char* combined_pattern;
 
-    token_array * edge_patterns;
-};
 
 rnode * rnode_create(int cap);
 
 void rnode_free(rnode * tree);
 
-bool rnode_add_edge(rnode * n, char * pat , rnode *child);
+void redge_free(redge * edge);
 
-rnode * rnode_find_edge(rnode * n, char * pat);
+bool rnode_add_child(rnode * n, char * pat , rnode *child);
 
-void rnode_append_child(rnode *n, rnode *child);
+redge * rnode_find_edge(rnode * n, char * pat);
 
+void rnode_append_edge(rnode *n, redge *child);
 
+rnode * rnode_insert_tokens(rnode * tree, token_array * tokens);
 
+void rnode_dump(rnode * n, int level);
 
-void rnode_append_route(rnode * tree, token_array * token);
+redge * redge_create(char * pattern, int pattern_len, rnode * child);
 
+void redge_free(redge * edge);
 
 #endif /* !NODE_H */
