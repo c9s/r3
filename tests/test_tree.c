@@ -66,6 +66,13 @@ START_TEST (test_rnode_insert_tokens)
     rnode_dump(n, 0);
 
 
+    fail_if( rnode_lookup(n, "/a/jj/kk", strlen("/a/jj/kk") ) == NULL );
+    fail_if( rnode_lookup(n, "/a/jj", strlen("/a/jj") ) != NULL );
+    fail_if( rnode_lookup(n, "/a/jj/kk/ll", strlen("/a/jj/kk/ll") ) != NULL );
+
+    fail_if( rnode_lookup(n, "/xxxx", strlen("xxxx") ) != NULL );
+
+
     // fail_if( rnode_find_edge(n, "/add") == NULL );
     // fail_if( rnode_find_edge(n, "/bar") != NULL );
 

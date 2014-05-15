@@ -12,6 +12,7 @@
 // Judy array
 #include <Judy.h>
 
+#include "str.h"
 #include "node.h"
 #include "token.h"
 
@@ -22,6 +23,8 @@ struct _rnode {
 
     /* the combined regexp pattern string from pattern_tokens */
     char* combined_pattern;
+
+    int      endpoint;
 };
 
 struct _redge {
@@ -32,12 +35,18 @@ struct _redge {
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
 
+
+
+/**
+ * Create a rnode object
+ */
 rnode * rnode_create(int cap) {
     rnode * n = (rnode*) calloc( sizeof(rnode) , 1);
 
     n->children = (redge**) malloc( sizeof(redge*) * 10 );
     n->children_len = 0;
     n->children_cap = 10;
+    n->endpoint = 0;
     // n->edge_patterns = token_array_create(10);
     return n;
 }
@@ -94,6 +103,28 @@ redge * rnode_find_edge(rnode * n, char * pat) {
     return NULL;
 }
 
+
+rnode * rnode_lookup(rnode * tree, char * path, int path_len) {
+    token_array * tokens = split_route_pattern(path, path_len);
+
+    rnode * n = tree;
+    redge * e = NULL;
+    for ( int i = 0 ; i < tokens->len ; i++ ) {
+        e = rnode_find_edge(n, token_array_fetch(tokens, i) );
+        if (!e) {
+            return NULL;
+        }
+        n = e->child;
+    }
+    if (n->endpoint) {
+        return n;
+    }
+    return NULL;
+}
+
+
+
+
 rnode * rnode_insert_tokens(rnode * tree, token_array * tokens) {
     rnode * n = tree;
     redge * e = NULL;
@@ -105,10 +136,22 @@ rnode * rnode_insert_tokens(rnode * tree, token_array * tokens) {
         }
         // insert node
         rnode * child = rnode_create(3);
-        rnode_add_child(n, token_array_fetch(tokens,i) , child);
+        rnode_add_child(n, strdup(token_array_fetch(tokens,i)) , child);
         n = child;
     }
+    n->endpoint++;
     return n;
+}
+
+rnode * rnode_insert_route(rnode *tree, char *route)
+{
+    return rnode_insert_routel(tree, route, strlen(route) );
+}
+
+rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
+{
+    token_array * t = split_route_pattern(route, strlen(route));
+    return rnode_insert_tokens(tree, t);
 }
 
 void rnode_dump(rnode * n, int level) {

@@ -37,6 +37,10 @@ void rnode_append_edge(rnode *n, redge *child);
 
 rnode * rnode_insert_tokens(rnode * tree, token_array * tokens);
 
+rnode * rnode_insert_route(rnode *tree, char *route);
+
+rnode * rnode_insert_routel(rnode *tree, char *route, int route_len);
+
 void rnode_dump(rnode * n, int level);
 
 redge * redge_create(char * pattern, int pattern_len, rnode * child);
