@@ -29,7 +29,7 @@ void rnode_free(rnode * tree);
 
 void redge_free(redge * edge);
 
-bool rnode_add_child(rnode * n, char * pat , rnode *child);
+redge * rnode_add_child(rnode * n, char * pat , rnode *child);
 
 redge * rnode_find_edge(rnode * n, char * pat);
 

@@ -7,6 +7,11 @@
 #ifndef STR_H
 #define STR_H
 
+
+int strndiff(char * d1, char * d2, unsigned int n);
+
+int strdiff(char * d1, char * d2);
+
 char * slug_to_pcre(char * slug, char sep);
 
 char * ltrim_slash(char* str);
