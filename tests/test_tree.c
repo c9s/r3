@@ -13,17 +13,17 @@ START_TEST (test_route)
 }
 END_TEST
 
-START_TEST (test_token_list)
+START_TEST (test_token_array)
 {
-    token_list * l = token_list_create(10);
+    token_array * l = token_array_create(10);
     fail_if( l == NULL );
-    fail_if( FALSE == token_list_resize(l, l->cap * 2) );
+    fail_if( FALSE == token_array_resize(l, l->cap * 2) );
 
-    fail_if( FALSE == token_list_append(l, strdup("abc") ) );
-    fail_if( FALSE == token_list_append(l, strdup("foo") ) );
-    fail_if( FALSE == token_list_append(l, strdup("bar") ) );
+    fail_if( FALSE == token_array_append(l, strdup("abc") ) );
+    fail_if( FALSE == token_array_append(l, strdup("foo") ) );
+    fail_if( FALSE == token_array_append(l, strdup("bar") ) );
 
-    token_list_free(l);
+    token_array_free(l);
 }
 END_TEST
 
@@ -32,7 +32,7 @@ Suite* r3_suite (void) {
 
         TCase *tcase = tcase_create("testcase");
         tcase_add_test(tcase, test_route);
-        tcase_add_test(tcase, test_token_list);
+        tcase_add_test(tcase, test_token_array);
 
         suite_add_tcase(suite, tcase);
 

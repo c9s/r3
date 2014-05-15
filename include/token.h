@@ -12,21 +12,21 @@ typedef unsigned char bool;
 #define FALSE 0
 #define TRUE 1
 
-typedef struct _token_list {
+typedef struct _token_array {
   char **tokens;
   int    len;
   int    cap;
-} token_list;
+} token_array;
 
-token_list * token_list_create(int cap);
+token_array * token_array_create(int cap);
 
 
-bool token_list_is_full(token_list * l);
+bool token_array_is_full(token_array * l);
 
-bool token_list_resize(token_list *l, int new_cap);
+bool token_array_resize(token_array *l, int new_cap);
 
-bool token_list_append(token_list * list, char * token);
+bool token_array_append(token_array * list, char * token);
 
-void token_list_free(token_list *l);
+void token_array_free(token_array *l);
 
 #endif /* !TOKEN_H */

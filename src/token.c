@@ -8,27 +8,27 @@
 #include "token.h"
 
 
-token_list * token_list_create(int cap) {
-    token_list * list = (token_list*) malloc( sizeof(token_list) );
+token_array * token_array_create(int cap) {
+    token_array * list = (token_array*) malloc( sizeof(token_array) );
     list->len = 0;
     list->cap = cap;
     list->tokens = (char**) malloc( sizeof(char*) * cap);
     return list;
 }
 
-bool token_list_is_full(token_list * l) {
+bool token_array_is_full(token_array * l) {
     return l->len >= l->cap;
 }
 
-bool token_list_resize(token_list *l, int new_cap) {
+bool token_array_resize(token_array *l, int new_cap) {
     l->tokens = realloc(l->tokens, sizeof(char**) * new_cap);
     l->cap = new_cap;
     return l->tokens != NULL;
 }
 
-bool token_list_append(token_list * l, char * token) {
-    if ( token_list_is_full(l) ) {
-        bool ret = token_list_resize(l, l->cap + 20);
+bool token_array_append(token_array * l, char * token) {
+    if ( token_array_is_full(l) ) {
+        bool ret = token_array_resize(l, l->cap + 20);
         if (ret == FALSE ) {
             return FALSE;
         }
@@ -37,13 +37,12 @@ bool token_list_append(token_list * l, char * token) {
     return TRUE;
 }
 
-void token_list_free(token_list *l) {
+void token_array_free(token_array *l) {
     for ( int i = 0; i < l->len ; i++ ) {
         char * t = l->tokens[ i ];
         free(t);
     }
     free(l);
 }
-
 
 
