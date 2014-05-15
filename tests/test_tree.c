@@ -4,6 +4,14 @@
 #include "node.h"
 #include "token.h"
 
+START_TEST (test_ltrim_slash)
+{
+    fail_if( strcmp( ltrim_slash("/blog") , "blog" ) != 0 );
+    fail_if( strcmp( ltrim_slash("blog") , "blog" ) != 0 );
+}
+END_TEST
+
+
 START_TEST (test_route)
 {
     token_array *t;
@@ -42,13 +50,22 @@ END_TEST
 
 START_TEST (test_token_array)
 {
-    token_array * l = token_array_create(10);
+    token_array * l = token_array_create(3);
     fail_if( l == NULL );
-    fail_if( FALSE == token_array_resize(l, l->cap * 2) );
 
     fail_if( FALSE == token_array_append(l, strdup("abc") ) );
+    fail_if( l->len != 1 );
+
     fail_if( FALSE == token_array_append(l, strdup("foo") ) );
+    fail_if( l->len != 2 );
+
     fail_if( FALSE == token_array_append(l, strdup("bar") ) );
+    fail_if( l->len != 3 );
+
+    fail_if( FALSE == token_array_append(l, strdup("zoo") ) );
+    fail_if( l->len != 4 );
+
+    fail_if( FALSE == token_array_resize(l, l->cap * 2) );
 
     token_array_free(l);
 }
@@ -60,6 +77,7 @@ Suite* r3_suite (void) {
         TCase *tcase = tcase_create("testcase");
         tcase_add_test(tcase, test_route);
         tcase_add_test(tcase, test_token_array);
+        tcase_add_test(tcase, test_ltrim_slash);
 
         suite_add_tcase(suite, tcase);
 

@@ -7,5 +7,8 @@
 #ifndef STR_H
 #define STR_H
 
+char * ltrim_slash(char* str);
+
+char** str_split(char* a_str, const char a_delim);
 
 #endif /* !STR_H */
