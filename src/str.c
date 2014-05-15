@@ -11,6 +11,30 @@
 #include "str.h"
 #include "token.h"
 
+/**
+ * @param char * sep separator
+ */
+char * slug_to_pcre(char * slug, char sep)
+{
+    char * p = NULL;
+    char * pat = NULL;
+    char * end = NULL;
+
+    if ( NULL != (p = strchr(slug, ':')) ) {
+        // this slug contains a pattern
+        end = strchr(p, '}');
+
+        // start after ':'
+        return strndup( (p + 1) , (end - p - 1) );
+    } else {
+        if ((pat = malloc(128)) == NULL) {
+            return (NULL);
+        }
+        // should return a '[^/]+' pattern
+        snprintf(pat, 128, "[^%c]+", sep);
+    }
+    return pat;
+}
 
 
 char * ltrim_slash(char* str)

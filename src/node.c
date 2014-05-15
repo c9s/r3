@@ -103,6 +103,13 @@ redge * rnode_find_edge(rnode * n, char * pat) {
     return NULL;
 }
 
+void rnode_combine_patterns(rnode * n) {
+    redge *e = NULL;
+    for ( int i = 0 ; i < n->children_len ; i++ ) {
+        e = n->children[i];
+    }
+}
+
 
 rnode * rnode_lookup(rnode * tree, char * path, int path_len) {
     token_array * tokens = split_route_pattern(path, path_len);
