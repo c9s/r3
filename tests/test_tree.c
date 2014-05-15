@@ -11,8 +11,36 @@ START_TEST (test_ltrim_slash)
 }
 END_TEST
 
+START_TEST (test_rnode_construct_uniq)
+{
+    rnode * n = rnode_create(10);
 
-START_TEST (test_route)
+    rnode * child = rnode_create(3);
+
+    fail_if( rnode_add_edge(n, strdup("/add") , child) == FALSE );
+    fail_if( rnode_add_edge(n, strdup("/add") , child) != FALSE );
+
+    rnode_free(n);
+}
+END_TEST
+
+START_TEST (test_rnode_find_edge)
+{
+    rnode * n = rnode_create(10);
+
+    rnode * child = rnode_create(3);
+
+    fail_if( rnode_add_edge(n, strdup("/add") , child) == FALSE );
+
+    fail_if( rnode_find_edge(n, "/add") == NULL );
+    fail_if( rnode_find_edge(n, "/bar") != NULL );
+
+    rnode_free(n);
+}
+END_TEST
+
+
+START_TEST (test_route_split)
 {
     token_array *t;
 
@@ -75,9 +103,11 @@ Suite* r3_suite (void) {
         Suite *suite = suite_create("blah");
 
         TCase *tcase = tcase_create("testcase");
-        tcase_add_test(tcase, test_route);
+        tcase_add_test(tcase, test_route_split);
         tcase_add_test(tcase, test_token_array);
         tcase_add_test(tcase, test_ltrim_slash);
+        tcase_add_test(tcase, test_rnode_construct_uniq);
+        tcase_add_test(tcase, test_rnode_find_edge);
 
         suite_add_tcase(suite, tcase);
 

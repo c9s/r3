@@ -33,4 +33,8 @@ void token_array_dump(token_array *l);
 
 token_array * split_route_pattern(char *pattern, int pattern_len);
 
+#define token_array_fetch(t,i)  t->tokens[i]
+#define token_array_len(t)  t->len
+#define token_array_cap(t)  t->cap
+
 #endif /* !TOKEN_H */

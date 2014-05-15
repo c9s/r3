@@ -19,6 +19,14 @@ token_array * token_array_create(int cap) {
     return list;
 }
 
+void token_array_free(token_array *l) {
+    for ( int i = 0; i < l->len ; i++ ) {
+        char * t = l->tokens[ i ];
+        free(t);
+    }
+    free(l);
+}
+
 bool token_array_is_full(token_array * l) {
     return l->len >= l->cap;
 }
@@ -51,13 +59,6 @@ void token_array_dump(token_array *l) {
     printf("]\n");
 }
 
-void token_array_free(token_array *l) {
-    for ( int i = 0; i < l->len ; i++ ) {
-        char * t = l->tokens[ i ];
-        free(t);
-    }
-    free(l);
-}
 
 
 
