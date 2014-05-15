@@ -217,6 +217,7 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         n = child;
         return n;
     } else if ( dl == e->pattern_len ) {    // fully-equal to the pattern of the edge
+
         char * subroute = route + dl;
         int    subroute_len = route_len - dl;
 
@@ -230,7 +231,18 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         }
 
     } else if ( dl < e->pattern_len ) {
-        printf("branch the edge dl: %d\n", dl);
+        // printf("branch the edge dl: %d\n", dl);
+
+        // branch the edge at correct position (avoid broken slugs)
+        char *slug_s = strchr(route, '{');
+        char *slug_e = strchr(route, '}');
+        if ( dl > (slug_s - route) && dl < (slug_e - route) ) {
+            // break before '{'
+            dl = slug_s - route;
+        }
+
+
+
         /* it's partically matched with the pattern,
          * we should split the end point and make a branch here...
          */
