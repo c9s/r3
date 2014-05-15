@@ -131,6 +131,10 @@ START_TEST (test_rnode_insert_routel)
     rnode_insert_routel(n, "/post/{handle}", strlen("/post/{handle}") );
     rnode_dump(n, 0);
 
+    printf("Inserting /post/{handle}-{id}\n");
+    rnode_insert_routel(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}") );
+    rnode_dump(n, 0);
+
     /*
     fail_if(n == NULL, "rnode tree");
 

@@ -207,6 +207,15 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         }
     }
 
+    // branch the edge at correct position (avoid broken slugs)
+    char *slug_s = strchr(route, '{');
+    char *slug_e = strchr(route, '}');
+    if ( slug_s && slug_e ) {
+        if ( dl > (slug_s - route) && dl < (slug_e - route) ) {
+            // break before '{'
+            dl = slug_s - route;
+        }
+    }
 
     if ( dl == 0 ) {
         // not found, we should just insert a whole new edge
@@ -233,24 +242,14 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
     } else if ( dl < e->pattern_len ) {
         // printf("branch the edge dl: %d\n", dl);
 
-        // branch the edge at correct position (avoid broken slugs)
-        char *slug_s = strchr(route, '{');
-        char *slug_e = strchr(route, '}');
-        if ( slug_s && slug_e ) {
-            if ( dl > (slug_s - route) && dl < (slug_e - route) ) {
-                // break before '{'
-                dl = slug_s - route;
-            }
-        }
 
         /* it's partically matched with the pattern,
          * we should split the end point and make a branch here...
          */
-        rnode *c1, *c2; // child 1, child 2
-        redge *e1, *e2; // edge 1, edge 2
-        char * s1 = e->pattern + dl;
+        rnode *c2; // child 1, child 2
+        redge *e2; // edge 1, edge 2
         char * s2 = route + dl;
-        int s1_len = 0, s2_len = 0;
+        int s2_len = 0;
 
         redge_branch(e, dl);
 
@@ -265,7 +264,6 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         free(e->pattern);
         e->pattern = strndup(e->pattern, dl);
         e->pattern_len = dl;
-
 
         // move n->edges to c1
         c2->endpoint++;
@@ -311,11 +309,11 @@ void redge_branch(redge *e, int dl) {
 void rnode_dump(rnode * n, int level) {
     if ( n->edge_len ) {
         print_indent(level);
-        printf("*\n");
+        printf("+--\n");
         for ( int i = 0 ; i < n->edge_len ; i++ ) {
             redge * e = n->edges[i];
             print_indent(level + 1);
-            printf("+ \"%s\"\n", e->pattern);
+            printf("|-\"%s\"\n", e->pattern);
             rnode_dump( e->child, level + 1);
         }
     }

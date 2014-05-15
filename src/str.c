@@ -31,6 +31,18 @@ int strdiff(char * d1, char * d2) {
 }
 
 
+/**
+ * provide a quick way to count slugs, simply search for '{'
+ */
+int count_slug(char * p, int len) {
+    int s = 0;
+    while( len-- ) {
+        if ( *p == '{' )
+            s++;
+        p++;
+    }
+    return s;
+}
 
 char * contains_slug(char * str) {
     return strchr(str, '}');
