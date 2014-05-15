@@ -29,4 +29,8 @@ bool token_array_append(token_array * list, char * token);
 
 void token_array_free(token_array *l);
 
+void token_array_dump(token_array *l);
+
+token_array * split_route_pattern(char *pattern, int pattern_len);
+
 #endif /* !TOKEN_H */

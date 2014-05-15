@@ -7,6 +7,5 @@
 #ifndef STR_H
 #define STR_H
 
-char** split_route_pattern(char *pattern, int pattern_len);
 
 #endif /* !STR_H */

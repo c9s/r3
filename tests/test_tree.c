@@ -6,9 +6,36 @@
 
 START_TEST (test_route)
 {
-    split_route_pattern("/blog", strlen("/blog") );
-    split_route_pattern("/foo/{id}", strlen("/foo/{id}") );
-    split_route_pattern("/{title}", strlen("/{title}") );
+    token_array *t;
+
+    t = split_route_pattern("/blog", strlen("/blog") );
+    fail_if( t == NULL );
+    token_array_dump(t);
+    token_array_free(t);
+
+    t = split_route_pattern("/foo/{id}", strlen("/foo/{id}") );
+    fail_if( t == NULL );
+    token_array_dump(t);
+    fail_if( t->len != 2 );
+    token_array_free(t);
+
+    t = split_route_pattern("/foo/bar/{id}", strlen("/foo/bar/{id}") );
+    fail_if( t == NULL );
+    token_array_dump(t);
+    fail_if( t->len != 3 );
+    token_array_free(t);
+
+    t = split_route_pattern("/{title}", strlen("/{title}") );
+    fail_if( t == NULL );
+    token_array_dump(t);
+    fail_if( t->len != 1 );
+    token_array_free(t);
+
+    t = split_route_pattern("/", strlen("/") );
+    fail_if( t == NULL );
+    token_array_dump(t);
+    fail_if( t->len != 1 );
+    token_array_free(t);
 
 }
 END_TEST

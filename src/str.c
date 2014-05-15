@@ -9,65 +9,8 @@
 #include <string.h>
 #include <assert.h>
 #include "str.h"
+#include "token.h"
 
-
-/**
- * This function is used to split route path into a string array, not for performance.
- * hence this function should be safe.
- *
- * Split "/path/foo/{id}" into [ "/path" , "/foo" , "/{id}" ]
- * Split "/path/bar/{id}" into [ "/path" , "/foo" , "/{id}" ]
- * Split "/blog/post/{id}" into [ "/blog" , "/post" , "/{id}" ]
- * Split "/blog/{id}" into [ "/blog" , "/{id}" ]
- * Split "/blog" into [ "/blog" ]
- * Split "/b" into [ "/b" ]
- * Split "/{id}" into [ "/{id}" ]
- *
- * @param char* pattern
- * @param int   pattern_len
- *
- * @return char**
- */
-char** split_route_pattern(char *pattern, int pattern_len) {
-    char *s1, *p = pattern;
-
-    char ** list;
-    unsigned int list_idx = 0;
-    unsigned int list_size = 20;
-
-    list = malloc( sizeof(char**) * list_size ); // default token list size
-
-    s1 = p;
-    while (*p && (p - pattern) < pattern_len ) {
-
-        // a slug
-        if ( *p == '{' ) {
-            while (*(p++) != '}') {
-                if ( p - pattern > pattern_len ) {
-                    // XXX: unexpected error (unclosed slug)
-                }
-            }
-            list[list_idx] = strndup(s1, p-s1);
-            printf("%d -> %s\n", list_idx, list[list_idx]);
-            list_idx++;
-
-            s1 = p;
-        }
-        else if ( *p == '/' ) {
-            char *s2;
-            while (*(++p) != '/');
-            // printf("-> %s\n", strndup(s1, p-s1) );
-
-            list[list_idx] = strndup(s1, p-s1);
-            printf("%d -> %s\n", list_idx, list[list_idx]);
-            list_idx++;
-
-            s1 = p;
-        }
-        p++;
-    }
-    return NULL;
-}
 
 
 char** str_split(char* a_str, const char a_delim)
