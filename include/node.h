@@ -49,6 +49,8 @@ rnode * rnode_lookup(rnode * tree, char * path, int path_len);
 
 redge * redge_create(char * pattern, int pattern_len, rnode * child);
 
+void redge_branch(redge *e, int dl);
+
 void redge_free(redge * edge);
 
 #endif /* !NODE_H */

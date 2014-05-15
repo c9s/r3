@@ -62,19 +62,36 @@ START_TEST (test_combine_patterns)
 }
 END_TEST
 
-START_TEST (test_slug_to_pcre)
+START_TEST (test_compile_slug)
 {
+    /*
     char * pattern;
-    pattern = slug_to_pcre("{id}", '/');
-    fail_if( strcmp(pattern, "[^/]+") != 0 , "as [^/]+" );
+    pattern = compile_slug("{id}", strlen("{id}"));
+    ck_assert_str_eq( pattern, "([^/]+)" );
     free(pattern);
 
-    pattern = slug_to_pcre("{id:[a-z]+}", '/');
-    fail_if( strcmp(pattern, "[a-z]+") != 0 , "as [a-z]+" );
+    pattern = compile_slug("/{id}", strlen("/{id}"));
+    ck_assert_str_eq( pattern, "/([^/]+)" );
+    free(pattern);
+
+    pattern = compile_slug("-{id}", strlen("-{id}"));
+    ck_assert_str_eq( pattern, "-([^-]+)" );
+    free(pattern);
+
+    pattern = compile_slug("{id}-{title}", strlen("{id}-{title}"));
+    ck_assert_str_eq( pattern, "([^/]+)-([^-]+)" );
     free(pattern);
 
 
+    pattern = compile_slug("{id:[a-z]+}", strlen("{id:[a-z]+}") );
+    ck_assert_str_eq( pattern, "([a-z]+)" );
+    free(pattern);
 
+
+    pattern = compile_slug("/path/{id:[a-z]+}", strlen("/path/{id:[a-z]+}") );
+    ck_assert_str_eq( pattern, "/path/([a-z]+)" );
+    free(pattern);
+    */
 
     /*
     char * p = malloc(sizeof(char) * 10);
@@ -221,7 +238,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_rnode_construct_uniq);
         tcase_add_test(tcase, test_rnode_find_edge);
         tcase_add_test(tcase, test_rnode_insert_routel);
-        tcase_add_test(tcase, test_slug_to_pcre);
+        tcase_add_test(tcase, test_compile_slug);
         tcase_add_test(tcase, test_combine_patterns);
 
         suite_add_tcase(suite, tcase);

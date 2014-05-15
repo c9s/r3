@@ -236,12 +236,12 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         // branch the edge at correct position (avoid broken slugs)
         char *slug_s = strchr(route, '{');
         char *slug_e = strchr(route, '}');
-        if ( dl > (slug_s - route) && dl < (slug_e - route) ) {
-            // break before '{'
-            dl = slug_s - route;
+        if ( slug_s && slug_e ) {
+            if ( dl > (slug_s - route) && dl < (slug_e - route) ) {
+                // break before '{'
+                dl = slug_s - route;
+            }
         }
-
-
 
         /* it's partically matched with the pattern,
          * we should split the end point and make a branch here...
@@ -252,26 +252,7 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         char * s2 = route + dl;
         int s1_len = 0, s2_len = 0;
 
-        redge **tmp_edges = e->child->edges;
-        int   **tmp_edge_len = e->child->edge_len;
-
-        // the suffix edge of the leaf
-        c1 = rnode_create(3);
-        s1_len = e->pattern_len - dl;
-        e1 = redge_create(strndup(s1, s1_len), s1_len, c1);
-        // printf("edge left: %s\n", e1->pattern);
-
-        // Migrate the child edges to the new edge we just created.
-        for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
-            rnode_append_edge(c1, tmp_edges[i]);
-            e->child->edges[i] = NULL;
-        }
-        e->child->edge_len = 0;
-
-        rnode_append_edge(e->child, e1);
-
-
-
+        redge_branch(e, dl);
 
         // here is the new edge from.
         c2 = rnode_create(3);
@@ -286,15 +267,7 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         e->pattern_len = dl;
 
 
-
-        // Move the child edges to the new suffix edge child 
-        /*
-        e->child->edge_len = 0;
-        */
-
-
         // move n->edges to c1
-        c1->endpoint++;
         c2->endpoint++;
         return c2;
     } else if ( dl > 0 ) {
@@ -307,6 +280,32 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
     // return rnode_insert_tokens(tree, t);
     // n->endpoint++;
     return n;
+}
+
+void redge_branch(redge *e, int dl) {
+    rnode *c1; // child 1, child 2
+    redge *e1; // edge 1, edge 2
+    char * s1 = e->pattern + dl;
+    int s1_len = 0;
+
+    redge **tmp_edges = e->child->edges;
+    int   tmp_edge_len = e->child->edge_len;
+
+    // the suffix edge of the leaf
+    c1 = rnode_create(3);
+    s1_len = e->pattern_len - dl;
+    e1 = redge_create(strndup(s1, s1_len), s1_len, c1);
+    // printf("edge left: %s\n", e1->pattern);
+
+    // Migrate the child edges to the new edge we just created.
+    for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
+        rnode_append_edge(c1, tmp_edges[i]);
+        e->child->edges[i] = NULL;
+    }
+    e->child->edge_len = 0;
+
+    rnode_append_edge(e->child, e1);
+    c1->endpoint++;
 }
 
 void rnode_dump(rnode * n, int level) {

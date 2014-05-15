@@ -32,29 +32,71 @@ int strdiff(char * d1, char * d2) {
 
 
 
+char * contains_slug(char * str) {
+    return strchr(str, '}');
+}
+
 /**
  * @param char * sep separator
  */
-char * slug_to_pcre(char * slug, char sep)
+char * compile_slug(char * str, int len)
 {
-    char * p = NULL;
-    char * pat = NULL;
-    char * end = NULL;
+    char *s1 = NULL, *s2 = NULL, *i = NULL, *o = NULL;
+    char *pat = NULL;
+    char sep = '/';
 
-    if ( NULL != (p = strchr(slug, ':')) ) {
-        // this slug contains a pattern
-        end = strchr(p, '}');
+    // find '{'
+    s1 = strchr(str, '{');
 
-        // start after ':'
-        return strndup( (p + 1) , (end - p - 1) );
-    } else {
-        if ((pat = malloc(128)) == NULL) {
-            return (NULL);
-        }
-        // should return a '[^/]+' pattern
-        snprintf(pat, 128, "[^%c]+", sep);
+    if ( s1 == NULL ) {
+        return strdup(str);
     }
-    return pat;
+
+    if ( (s1 - str) > 0 ) {
+        sep = *(s1-1);
+    }
+
+    char * out = NULL;
+    if ((out = calloc(sizeof(char),128)) == NULL) {
+        return (NULL);
+    }
+
+    // append prefix
+    o = out;
+    strncat(o, str, s1 - str);
+    o += (s1 - str);
+
+    // start after ':'
+    if ( NULL != (pat = strchr(s1, ':')) ) {
+        pat++;
+
+        // this slug contains a pattern
+        s2 = strchr(pat, '}');
+
+        *o = '(';
+        o++;
+
+        strncat(o, pat, (s2 - pat) );
+        o += (s2 - pat);
+
+        *o = ')';
+        o++;
+
+    } else {
+        // should return a '[^/]+' pattern
+        // strncat(c, "([^%c]+)", strlen("([^%c]+)") );
+        // snprintf(pat, 128, "([^%c]+)", sep);
+        sprintf(o, "([^%c]+)", sep);
+        o+= sizeof("([^%c]+)");
+    }
+
+    s2++;
+    while( (s2 - str) > len ) {
+        *o = *s2;
+        s2++;
+        o++;
+    }
+    return out;
 }
 
 
