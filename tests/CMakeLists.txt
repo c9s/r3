@@ -11,13 +11,13 @@ else (NOT CHECK_FOUND)
 
     include_directories(${CHECK_INCLUDE_DIRS})
     # include_directories("${PROJECT_SOURCE_DIR}/include/r2")
-    add_executable(test_tree test_tree.c)
-    target_link_libraries(test_tree ${TEST_LIBS})
+    add_executable(test_r3 test_tree.c)
+    target_link_libraries(test_r3 ${TEST_LIBS})
 
     add_custom_command(
-        TARGET test_tree POST_BUILD
+        TARGET test_r3 POST_BUILD
         COMMENT "Running unit tests"
-        COMMAND test_tree
+        COMMAND test_r3
     )
 endif (NOT CHECK_FOUND)
 
