@@ -11,6 +11,18 @@ AM_PATH_CHECK(,[have_check="yes"],
   [have_check="no"])
 AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
 
+AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_HEADER_STDBOOL
+AC_C_INLINE
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
+
 PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES(DEPS, [libpcre check])
 AC_SUBST(DEPS_CFLAGS)
