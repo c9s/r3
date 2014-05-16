@@ -13,16 +13,15 @@ tags
 
 # autotools
 *.a
-*.am
 *.lo
 *.la
 *.dylib
 *.o
-/aclocal.m4
-/autom4te.cache
-/compile
-/configure
-/depcomp
-/install-sh
-/missing
-/stamp-h1
+# /aclocal.m4
+# /autom4te.cache
+# /compile
+# /configure
+# /depcomp
+# /install-sh
+# /missing
+# /stamp-h1
