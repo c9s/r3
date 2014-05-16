@@ -612,16 +612,7 @@ START_TEST(benchmark_str)
 
     printf("Benchmarking...\n");
     BENCHMARK(string_dispatch)
-    /*
-    double s = microtime();
-    long N = 5000000;
-    for (int i = 0; i < 5000000 ; i++ ) {
-    */
-        r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
-    /*
-    }
-    double e = microtime();
-    */
+    r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
     END_BENCHMARK()
 
     bench_print_summary(&B);
