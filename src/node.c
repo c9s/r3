@@ -274,7 +274,7 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
 
                 if (entry && e->has_slug) {
                     // append captured token to entry
-                    str_array_append(entry->vars , strndup(substring_start, substring_length));
+                    str_array_append(entry->vars , my_strndup(substring_start, substring_length));
                 }
                 if (restlen == 0) {
                     return e->child;
@@ -378,7 +378,7 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
     if ( dl == 0 ) {
         // not found, we should just insert a whole new edge
         node * child = r3_tree_create(3);
-        r3_tree_add_child(n, strndup(route, route_len) , child);
+        r3_tree_add_child(n, my_strndup(route, route_len) , child);
         info("edge not found, insert one: %s\n", route);
         child->route_ptr = route_ptr;
         child->endpoint++;
@@ -415,13 +415,13 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
         // here is the new edge from.
         c2 = r3_tree_create(3);
         s2_len = route_len - dl;
-        e2 = r3_edge_create(strndup(s2, s2_len), s2_len, c2);
+        e2 = r3_edge_create(my_strndup(s2, s2_len), s2_len, c2);
         // printf("edge right: %s\n", e2->pattern);
         r3_tree_append_edge(e->child, e2);
 
         // truncate the original edge pattern 
         free(e->pattern);
-        e->pattern = strndup(e->pattern, dl);
+        e->pattern = my_strndup(e->pattern, dl);
         e->pattern_len = dl;
 
         // move n->edges to c1
