@@ -41,7 +41,7 @@ void r3_edge_branch(edge *e, int dl) {
     // the suffix edge of the leaf
     c1 = r3_tree_create(3);
     s1_len = e->pattern_len - dl;
-    e1 = r3_edge_create(strndup(s1, s1_len), s1_len, c1);
+    e1 = r3_edge_create(my_strndup(s1, s1_len), s1_len, c1);
     // printf("edge left: %s\n", e1->pattern);
 
     // Migrate the child edges to the new edge we just created.

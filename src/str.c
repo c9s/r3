@@ -62,7 +62,7 @@ char * compile_slug(char * str, int len)
     s1 = strchr(str, '{');
 
     if ( s1 == NULL ) {
-        return strdup(str);
+        return my_strdup(str);
     }
 
     if ( (s1 - str) > 0 ) {
@@ -117,7 +117,7 @@ char * ltrim_slash(char* str)
 {
     char * p = str;
     while (*p == '/') p++;
-    return strdup(p);
+    return my_strdup(p);
 }
 
 char** str_split(char* a_str, const char a_delim)
@@ -158,7 +158,7 @@ char** str_split(char* a_str, const char a_delim)
         while (token)
         {
             assert(idx < count);
-            *(result + idx++) = strdup(token);
+            *(result + idx++) = my_strdup(token);
             token = strtok(0, delim);
         }
         assert(idx == count - 1);
@@ -179,4 +179,30 @@ void print_indent(int level) {
     while(len--) {
         printf(" ");
     }
+}
+
+char *my_strdup(const char *s) {
+    char *out;
+    size_t count = 0;
+    while( s[count] )
+        ++count;
+    ++count;
+    out = malloc(sizeof(char*) * count);
+    out[--count] = 0;
+    while( --count >= 0 )
+        out[count] = s[count];
+    return out;
+}
+
+char *my_strndup(const char *s, size_t n) {
+    char *out;
+    size_t count = 0;
+    while( count < n && s[count] )
+        ++count;
+    ++count;
+    out = malloc(sizeof(char*) * count);
+    out[--count] = 0;
+    while( --count >= 0 )
+        out[count] = s[count];
+    return out;
 }

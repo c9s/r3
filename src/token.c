@@ -96,21 +96,21 @@ str_array * split_route_pattern(char *pattern, int pattern_len) {
                 assert(p - pattern < pattern_len ); // throw exception
             }
             p++; // contains the '}'
-            // printf("==> %s\n", strndup(s1, p-s1) );
-            str_array_append(str_array, strndup(s1, p-s1) );
+            // printf("==> %s\n", my_strndup(s1, p-s1) );
+            str_array_append(str_array, my_strndup(s1, p-s1) );
             s1 = p;
             continue;
         }
         else if ( *p == '/' ) {
-            // printf("==> %s\n", strndup(s1, p-s1) );
-            str_array_append(str_array, strndup(s1, p-s1) );
+            // printf("==> %s\n", my_strndup(s1, p-s1) );
+            str_array_append(str_array, my_strndup(s1, p-s1) );
             s1 = p;
         }
         p++;
     }
 
     if ( p-s1 > 0 ) {
-        str_array_append(str_array, strndup(s1, p-s1) );
+        str_array_append(str_array, my_strndup(s1, p-s1) );
     }
     return str_array;
 }
