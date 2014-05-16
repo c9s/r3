@@ -17,6 +17,7 @@
 
 // Judy array
 // #include <Judy.h>
+#include <config.h>
 
 #include "r3_define.h"
 #include "r3_str.h"
