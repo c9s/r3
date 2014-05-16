@@ -18,25 +18,25 @@ C API
 
 ```c
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
-n = rtree_create(10);
+n = r3_tree_create(10);
 
 int route_data = 3;
 
 // insert the route path into the router tree
-rtree_insert_pathn(n , "/zoo"       , strlen("/zoo")       , &route_data );
-rtree_insert_pathn(n , "/foo/bar"   , strlen("/foo/bar")   , &route_data );
-rtree_insert_pathn(n , "/bar"       , strlen("/bar")       , &route_data );
-rtree_insert_pathn(n , "/post/{id}" , strlen("/post/{id}") , &route_data );
+r3_tree_insert_pathn(n , "/zoo"       , strlen("/zoo")       , &route_data );
+r3_tree_insert_pathn(n , "/foo/bar"   , strlen("/foo/bar")   , &route_data );
+r3_tree_insert_pathn(n , "/bar"       , strlen("/bar")       , &route_data );
+r3_tree_insert_pathn(n , "/post/{id}" , strlen("/post/{id}") , &route_data );
 
 // let's compile the tree!
-rtree_compile(n);
+r3_tree_compile(n);
 
 
 // dump the compiled tree
-rtree_dump(n, 0);
+r3_tree_dump(n, 0);
 
 // match a route
-node *matched_node = rtree_match(n, "/foo/bar", strlen("/foo/bar") );
+node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar") );
 matched_node->endpoint; // make sure there is a route end at here.
 int ret = *( (*int) matched_node->route_ptr );
 ```

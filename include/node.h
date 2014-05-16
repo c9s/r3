@@ -23,8 +23,8 @@ typedef struct _node node;
 
 struct _node {
     edge ** edges;
-    int      edge_len;
-    int      edge_cap;
+    int      r3_edge_len;
+    int      r3_edge_cap;
 
     /* the combined regexp pattern string from pattern_tokens */
     char * combined_pattern;
@@ -55,44 +55,44 @@ typedef struct {
 } match_entry;
 
 
-node * rtree_create(int cap);
+node * r3_tree_create(int cap);
 
-node * node_create();
+node * r3_node_create();
 
-void rtree_free(node * tree);
+void r3_tree_free(node * tree);
 
-void edge_free(edge * edge);
+void r3_edge_free(edge * edge);
 
-edge * rtree_add_child(node * n, char * pat , node *child);
+edge * r3_tree_add_child(node * n, char * pat , node *child);
 
-edge * node_find_edge(node * n, char * pat);
+edge * r3_node_find_edge(node * n, char * pat);
 
-void rtree_append_edge(node *n, edge *child);
+void r3_tree_append_edge(node *n, edge *child);
 
-node * rtree_insert_path(node *tree, char *route, void * route_ptr);
+node * r3_tree_insert_path(node *tree, char *route, void * route_ptr);
 
-node * rtree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr);
+node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr);
 
-void rtree_dump(node * n, int level);
+void r3_tree_dump(node * n, int level);
 
-edge * node_find_edge_str(node * n, char * str, int str_len);
+edge * r3_node_find_edge_str(node * n, char * str, int str_len);
 
 
-void rtree_compile(node *n);
+void r3_tree_compile(node *n);
 
-void rtree_compile_patterns(node * n);
+void r3_tree_compile_patterns(node * n);
 
-node * rtree_match(node * n, char * path, int path_len, match_entry * entry);
+node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry);
 
-bool node_has_slug_edges(node *n);
+bool r3_node_has_slug_edges(node *n);
 
-node * rtree_lookup(node * tree, char * path, int path_len);
+node * r3_tree_lookup(node * tree, char * path, int path_len);
 
-edge * edge_create(char * pattern, int pattern_len, node * child);
+edge * r3_edge_create(char * pattern, int pattern_len, node * child);
 
-void edge_branch(edge *e, int dl);
+void r3_edge_branch(edge *e, int dl);
 
-void edge_free(edge * edge);
+void r3_edge_free(edge * edge);
 
 
 
