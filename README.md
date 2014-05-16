@@ -1,9 +1,20 @@
 R3
 ================
 
-R3 is an URI router library. It compiles your route paths into a prefix trie.
-By using the constructed prefix trie in the start-up time, so you can dispatch 
+R3 is an URI router library with high performance, thus, it's implemented in C.
+It compiles your route paths into a prefix trie.
+
+By using the constructed prefix trie in the start-up time, you can dispatch
 routes with efficiency.
+
+
+Requirement
+-----------------------
+
+* cmake
+* check
+* pcre
+* jemalloc
 
 Pattern Syntax
 -----------------------
@@ -95,4 +106,11 @@ if ( $error ) {
     echo $message; // "Method not allowed", "...";
 }
 ```
+
+Hacking
+----------------------
+
+    cmake CMakeLists.txt
+    make
+
 
