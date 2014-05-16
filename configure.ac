@@ -1,0 +1,8 @@
+AC_INIT([r3], 1.0)
+AM_INIT_AUTOMAKE
+LT_INIT
+AC_PROG_CC
+PKG_PROG_PKG_CONFIG
+PKG_CHECK_MODULES(DEPS, [libpcre check])
+AC_CONFIG_FILES(Makefile src/Makefile tests/Makefile)
+AC_OUTPUT
