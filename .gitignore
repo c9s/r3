@@ -12,9 +12,6 @@ install_manifest.txt
 tags
 
 # autotools
-
-Makefile
-# Makefile.in
 *.a
 *.am
 *.lo
