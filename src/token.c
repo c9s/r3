@@ -9,6 +9,7 @@
 #include <string.h>
 #include <assert.h>
 #include "str_array.h"
+#include "r3_str.h"
 
 
 str_array * str_array_create(int cap) {
