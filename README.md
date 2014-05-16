@@ -1,15 +1,14 @@
 R3
 ================
 
-R3 is an URI router library. It compiles your route paths into a radix tree.
-By using the constructed radix tree in the start-up time, you may dispatch your
-routes efficiently.
+R3 is an URI router library. It compiles your route paths into a prefix trie.
+By using the constructed prefix trie in the start-up time, so you can dispatch 
+routes with efficiency.
 
 Pattern Syntax
 -----------------------
 
     /blog/post/{id}      use [^/]+ regular expression by default.
-
     /blog/post/{id:\d+}  use `\d+` regular expression instead of default.
 
 
@@ -41,6 +40,24 @@ matched_node->endpoint; // make sure there is a route end at here.
 int ret = *( (*int) matched_node->route_ptr );
 ```
 
+
+
+Benchmark
+-----------------------
+The routing benchmark from stevegraham/rails' PR <https://github.com/stevegraham/rails/pull/1>:
+
+                 omg    10462.0 (±6.7%) i/s -      52417 in   5.030416s
+
+And here is the result of the router journey:
+
+                 omg     9932.9 (±4.8%) i/s -      49873 in   5.033452s
+
+r3 uses the same route path data for benchmarking, and here is the benchmark:
+
+                5000000 iterations finished in 0.905591 seconds
+                5521256.22 i/sec
+
+The matching speed of r3 is 527+ times faster than rails' trie router.
 
 
 Use case in PHP
