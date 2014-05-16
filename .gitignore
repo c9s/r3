@@ -14,7 +14,7 @@ tags
 # autotools
 
 Makefile
-Makefile.in
+# Makefile.in
 *.a
 *.am
 *.lo
@@ -29,4 +29,3 @@ Makefile.in
 /install-sh
 /missing
 /stamp-h1
-
