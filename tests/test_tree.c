@@ -87,6 +87,9 @@ START_TEST (test_compile)
 
     m = rnode_match( n , "/foo/xxx", strlen("/foo/xxx") );
     fail_if( NULL == m );
+
+    m = rnode_match( n , "/not_found", strlen("/not_found") );
+    fail_if( NULL == m ); // should be the node of "/"
 }
 END_TEST
 
