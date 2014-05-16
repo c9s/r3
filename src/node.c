@@ -12,14 +12,13 @@
 // Judy array
 #include <Judy.h>
 
+#include "define.h"
 #include "str.h"
 #include "node.h"
 #include "token.h"
 
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
-
-
 
 /**
  * Create a rnode object
@@ -165,7 +164,7 @@ void rnode_compile_patterns(rnode * n) {
 
 rnode * rnode_match(rnode * n, char * path, int path_len) {
     if (n->combined_pattern && n->pcre_pattern) {
-        // printf("pcre matching /%s/ on %s\n", n->combined_pattern, path);
+        info("pcre matching %s on %s\n", n->combined_pattern, path);
         // int ovector_count = (n->edge_len + 1) * 2;
         int ovector_count = 30;
         int ovector[ovector_count];
@@ -180,7 +179,7 @@ rnode * rnode_match(rnode * n, char * path, int path_len) {
                 ovector,           /* output vector for substring information */
                 ovector_count);      /* number of elements in the output vector */
 
-        printf("rc: %d\n", rc );
+        info("rc: %d\n", rc );
         if (rc < 0) {
             switch(rc)
             {
@@ -199,12 +198,12 @@ rnode * rnode_match(rnode * n, char * path, int path_len) {
         {
             char *substring_start = path + ovector[2*i];
             int   substring_length = ovector[2*i+1] - ovector[2*i];
-            printf("%2d: %.*s\n", i, substring_length, substring_start);
+            info("%2d: %.*s\n", i, substring_length, substring_start);
             if ( substring_length > 0) {
-                int len = path_len - substring_length; // fully match to the end
-                // printf("len:%d edges:%d i:%d\n", len, n->edge_len, i);
-                if (len) {
-                    return rnode_match( n->edges[i - 1]->child, substring_start, len);
+                int restlen = path_len - ovector[2*i+1]; // fully match to the end
+                info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
+                if (restlen) {
+                    return rnode_match( n->edges[i - 1]->child, substring_start + substring_length, restlen);
                 }
                 return n->edges[i - 1]->child;
             }

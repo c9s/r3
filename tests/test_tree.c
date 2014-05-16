@@ -55,6 +55,7 @@ START_TEST (test_compile)
     fail_if( n->combined_pattern );
     fail_if( NULL == rnode_find_edge_str(n, "/", strlen("/") ) );
 
+    rnode_insert_routel(n, "/foo/{id}", strlen("/foo/{id}") );
     rnode_insert_routel(n, "/{id}", strlen("/{id}") );
     rnode_compile(n);
     rnode_dump(n, 0);
@@ -81,7 +82,10 @@ START_TEST (test_compile)
     m = rnode_match( n , "/bar", strlen("/bar") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/zzz", strlen("/zzz") );
+    m = rnode_match( n , "/xxx", strlen("/xxx") );
+    fail_if( NULL == m );
+
+    m = rnode_match( n , "/foo/xxx", strlen("/foo/xxx") );
     fail_if( NULL == m );
 }
 END_TEST
