@@ -10,6 +10,16 @@
 #define MICRO_IN_SEC 1000000.00
 #define SEC_IN_MIN 60
 #define NUL  '\0'
+
+long unixtime() {
+    struct timeval tp;
+    long sec = 0L;
+    if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
+        return tp.tv_sec;
+    }
+    return 0;
+}
+
 double microtime() {
     struct timeval tp;
     long sec = 0L;
@@ -218,30 +228,30 @@ START_TEST (test_route_split)
 
     t = split_route_pattern("/blog", strlen("/blog") );
     fail_if( t == NULL );
-    str_array_dump(t);
+    // str_array_dump(t);
     str_array_free(t);
 
     t = split_route_pattern("/foo/{id}", strlen("/foo/{id}") );
     fail_if( t == NULL );
-    str_array_dump(t);
+    // str_array_dump(t);
     fail_if( t->len != 2 );
     str_array_free(t);
 
     t = split_route_pattern("/foo/bar/{id}", strlen("/foo/bar/{id}") );
     fail_if( t == NULL );
-    str_array_dump(t);
+    // str_array_dump(t);
     fail_if( t->len != 3 );
     str_array_free(t);
 
     t = split_route_pattern("/{title}", strlen("/{title}") );
     fail_if( t == NULL );
-    str_array_dump(t);
+    // str_array_dump(t);
     fail_if( t->len != 1 );
     str_array_free(t);
 
     t = split_route_pattern("/", strlen("/") );
     fail_if( t == NULL );
-    str_array_dump(t);
+    // str_array_dump(t);
     fail_if( t->len != 1 );
     str_array_free(t);
 
@@ -632,11 +642,11 @@ START_TEST(benchmark_str)
     }
     double e = microtime();
 
-    printf("%.2f i/sec\n", e - s / N );
+    printf("%.2f i/sec\n", N / (e - s) );
     printf("%lf seconds\n", e - s );
 
     FILE *fp = fopen("bench_str.csv", "a+");
-    fprintf(fp, "%.2f,\"%s\"\n", e - s / N, "using strcmp" );
+    fprintf(fp, "%ld,%.2f\n", unixtime(), N / (e - s));
     fclose(fp);
 
 }
