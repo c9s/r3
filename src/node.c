@@ -16,24 +16,6 @@
 #include "node.h"
 #include "token.h"
 
-struct _rnode {
-    redge ** edges;
-    int      edge_len;
-    int      edge_cap;
-
-    /* the combined regexp pattern string from pattern_tokens */
-    char * combined_pattern;
-    int    combined_pattern_len;
-
-    int endpoint;
-};
-
-struct _redge {
-    char * pattern;
-    int    pattern_len;
-    bool   has_slug;
-    rnode * child;
-};
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
 
@@ -110,12 +92,16 @@ redge * rnode_find_edge(rnode * n, char * pat) {
 
 void rnode_compile(rnode *n)
 {
-    bool has_slug_edges = rnode_has_slug_edges(n);
-    if ( has_slug_edges ) {
-        rnode_combine_patterns(n);
+    bool use_slug = rnode_has_slug_edges(n);
+    if ( use_slug ) {
+        rnode_compile_patterns(n);
     } else {
         // use normal text matching...
         n->combined_pattern = NULL;
+    }
+
+    for (int i = 0 ; i < n->edge_len ; i++ ) {
+        rnode_compile(n->edges[i]->child);
     }
 }
 
@@ -124,7 +110,7 @@ void rnode_compile(rnode *n)
  * This function combines ['/foo', '/bar', '/{slug}'] into (/foo)|(/bar)|/([^/]+)}
  *
  */
-void rnode_combine_patterns(rnode * n) {
+void rnode_compile_patterns(rnode * n) {
     char * cpat;
     char * p;
 
@@ -155,6 +141,88 @@ void rnode_combine_patterns(rnode * n) {
     }
     n->combined_pattern = cpat;
     n->combined_pattern_len = p - cpat;
+
+
+    const char *error;
+    int erroffset;
+
+    // n->pcre_pattern;
+    n->pcre_pattern = pcre_compile(
+            n->combined_pattern,              /* the pattern */
+            0,                                /* default options */
+            &error,               /* for error message */
+            &erroffset,           /* for error offset */
+            NULL);                /* use default character tables */
+    if (n->pcre_pattern == NULL)
+    {
+        printf("PCRE compilation failed at offset %d: %s\n", erroffset, error);
+        return;
+    }
+}
+
+
+rnode * rnode_match(rnode * n, char * path, int path_len) {
+    int ovector_count = (n->edge_len + 1) * 2;
+    int ovector[ovector_count];
+
+    if (n->combined_pattern && n->pcre_pattern) {
+        printf("pcre matching /%s/ on %s\n", n->combined_pattern, path);
+        // use PCRE for now
+        int rc;
+        rc = pcre_exec(
+                n->pcre_pattern,   /* the compiled pattern */
+                NULL,              /* no extra data - we didn't study the pattern */
+                path,              /* the subject string */
+                path_len,          /* the length of the subject */
+                0,                 /* start at offset 0 in the subject */
+                0,                 /* default options */
+                ovector,           /* output vector for substring information */
+                ovector_count);      /* number of elements in the output vector */
+
+        printf("rc: %d\n", rc );
+        if (rc < 0) {
+            switch(rc)
+            {
+                case PCRE_ERROR_NOMATCH: printf("No match\n"); break;
+                /*
+                Handle other special cases if you like
+                */
+                default: printf("Matching error %d\n", rc); break;
+            }
+            // does not match all edges, return NULL;
+            return NULL;
+        }
+
+        int i;
+        for (i = 1; i < rc; i++)
+        {
+            char *substring_start = path + ovector[2*i];
+            int substring_length = ovector[2*i+1] - ovector[2*i];
+            printf("%2d: %.*s\n", i, substring_length, substring_start);
+            if ( substring_length > 0) {
+                return n->edges[i]->child;
+            }
+        }
+
+    } else {
+
+    }
+    return NULL;
+}
+
+redge * rnode_find_edge_str(rnode * n, char * str, int str_len) {
+    redge *e;
+    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+        e = n->edges[i];
+        char *p = e->pattern;
+        while ( *p == *str ) {
+            p++;
+        }
+        if ( p - e->pattern == e->pattern_len ) {
+            return e;
+        }
+    }
+    return NULL;
 }
 
 
@@ -236,7 +304,7 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         // not found, we should just insert a whole new edge
         rnode * child = rnode_create(3);
         rnode_add_child(n, strndup(route, route_len) , child);
-        printf("edge not found, insert one: %s\n", route);
+        // printf("edge not found, insert one: %s\n", route);
 
         n = child;
         return n;
@@ -352,18 +420,28 @@ void redge_free(redge * e) {
 }
 
 
+
+
 void rnode_dump(rnode * n, int level) {
     if ( n->edge_len ) {
-        printf(" => \n");
+        if ( n->combined_pattern ) {
+            printf(" regexp: %s", n->combined_pattern);
+        }
+        printf("\n");
         for ( int i = 0 ; i < n->edge_len ; i++ ) {
             redge * e = n->edges[i];
             print_indent(level);
             printf("  |-\"%s\"", e->pattern);
-            if ( e->child ) {
-                rnode_dump( e->child, level + 1);
-                printf("\n");
-            } else {
+
+            if (e->has_slug) {
+                printf(" slug:");
+                printf("%s", compile_slug(e->pattern, e->pattern_len) );
             }
+
+            if ( e->child && e->child->edges ) {
+                rnode_dump( e->child, level + 1);
+            }
+            printf("\n");
         }
     }
 }

@@ -40,25 +40,37 @@ START_TEST (test_rnode_find_edge)
 END_TEST
 
 
-START_TEST (test_combine_patterns)
+START_TEST (test_compile)
 {
     token_array *t;
     rnode * n;
     n = rnode_create(10);
 
 
-    t = split_route_pattern("/foo", strlen("/foo") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
 
-    t = split_route_pattern("/bar", strlen("/bar") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
+    rnode_insert_routel(n, "/zoo", strlen("/zoo") );
+    rnode_insert_routel(n, "/foo", strlen("/foo") );
+    rnode_insert_routel(n, "/bar", strlen("/bar") );
+    rnode_compile(n);
+    fail_if( n->combined_pattern );
+    fail_if( NULL == rnode_find_edge_str(n, "/", strlen("/") ) );
 
-    t = split_route_pattern("/zoo", strlen("/zoo") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
+    rnode_insert_routel(n, "/{id}", strlen("/{id}") );
+    rnode_compile(n);
+    rnode_dump(n, 0);
+    fail_if(n->edges[0]->child->combined_pattern == NULL);
 
-    rnode_combine_patterns(n);
+    redge *e = rnode_find_edge_str(n, "/", strlen("/") );
+    fail_if( NULL == e );
 
-    // printf("%s\n", n->combined_pattern);
+    /*
+    printf( "%s\n", e->pattern );
+    printf( "%s\n", e->child->combined_pattern );
+    printf( "%s\n", n->edges[0]->child->combined_pattern);
+    printf( "%s\n", n->combined_pattern );
+    */
+    rnode *m = rnode_match( e->child , "foo", strlen("foo") );
+    fail_if( NULL == m );
 }
 END_TEST
 
@@ -111,51 +123,31 @@ START_TEST (test_rnode_insert_routel)
 {
     rnode * n = rnode_create(10);
 
-    printf("Inserting /foo/bar\n");
+    // printf("Inserting /foo/bar\n");
     rnode_insert_routel(n, "/foo/bar", strlen("/foo/bar") );
-    rnode_dump(n, 0);
+    // rnode_dump(n, 0);
 
-    printf("Inserting /foo/zoo\n");
+    // printf("Inserting /foo/zoo\n");
     rnode_insert_routel(n, "/foo/zoo", strlen("/foo/zoo") );
-    rnode_dump(n, 0);
+    // rnode_dump(n, 0);
 
-    printf("Inserting /f/id\n");
+    // printf("Inserting /f/id\n");
     rnode_insert_routel(n, "/f/id", strlen("/f/id") );
-    rnode_dump(n, 0);
+    // rnode_dump(n, 0);
 
-    printf("Inserting /post/{id}\n");
+    // printf("Inserting /post/{id}\n");
     rnode_insert_routel(n, "/post/{id}", strlen("/post/{id}") );
-    rnode_dump(n, 0);
+    // rnode_dump(n, 0);
 
-    printf("Inserting /post/{handle}\n");
+    // printf("Inserting /post/{handle}\n");
     rnode_insert_routel(n, "/post/{handle}", strlen("/post/{handle}") );
-    rnode_dump(n, 0);
+    // rnode_dump(n, 0);
 
-    printf("Inserting /post/{handle}-{id}\n");
+    // printf("Inserting /post/{handle}-{id}\n");
     rnode_insert_routel(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}") );
-    rnode_combine_patterns(n);
-    rnode_dump(n, 0);
+    rnode_compile(n);
+    // rnode_dump(n, 0);
 
-
-
-    /*
-    fail_if(n == NULL, "rnode tree");
-
-    t = split_route_pattern("/foo/bar", strlen("/foo/bar") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
-
-    t = split_route_pattern("/foo/zoo", strlen("/foo/zoo") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
-
-    t = split_route_pattern("/a/bb", strlen("/a/bb") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
-
-    t = split_route_pattern("/a/bb/cc", strlen("/a/bb/cc") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
-
-    t = split_route_pattern("/a/jj/kk", strlen("/a/jj/kk") );
-    fail_if( rnode_insert_tokens(n , t) == NULL );
-    */
 
 
     /*
@@ -246,7 +238,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_rnode_find_edge);
         tcase_add_test(tcase, test_rnode_insert_routel);
         tcase_add_test(tcase, test_compile_slug);
-        tcase_add_test(tcase, test_combine_patterns);
+        tcase_add_test(tcase, test_compile);
 
         suite_add_tcase(suite, tcase);
 

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <pcre.h>
 
 #include "token.h"
 
@@ -20,6 +21,27 @@ struct _rnode;
 typedef struct _redge redge;
 typedef struct _rnode rnode;
 
+
+struct _rnode {
+    redge ** edges;
+    int      edge_len;
+    int      edge_cap;
+
+    /* the combined regexp pattern string from pattern_tokens */
+    char * combined_pattern;
+    int    combined_pattern_len;
+    pcre * pcre_pattern;
+
+
+    int endpoint;
+};
+
+struct _redge {
+    char * pattern;
+    int    pattern_len;
+    bool   has_slug;
+    rnode * child;
+};
 
 
 
@@ -43,7 +65,14 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len);
 
 void rnode_dump(rnode * n, int level);
 
-void rnode_combine_patterns(rnode * n);
+redge * rnode_find_edge_str(rnode * n, char * str, int str_len);
+
+
+void rnode_compile(rnode *n);
+
+void rnode_compile_patterns(rnode * n);
+
+rnode * rnode_match(rnode * n, char * path, int path_len);
 
 bool rnode_has_slug_edges(rnode *n);
 
