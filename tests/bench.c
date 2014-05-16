@@ -48,7 +48,7 @@ double bench_iteration_speed(bench *b) {
     return b->N / (b->end - b->start);
 }
 
-void bench_summary(bench *b) {
+void bench_print_summary(bench *b) {
     printf("%ld runs, ", b->R);
     printf("%ld iterations, ", b->N);
     printf("finished in %lf seconds\n", b->end - b->start );

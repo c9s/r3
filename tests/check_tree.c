@@ -624,7 +624,7 @@ START_TEST(benchmark_str)
     */
     END_BENCHMARK()
 
-    bench_summary(&B);
+    bench_print_summary(&B);
 
     FILE *fp = fopen("bench_str.csv", "a+");
     fprintf(fp, "%ld,%.2f\n", unixtime(), B.N / (B.end - B.start));

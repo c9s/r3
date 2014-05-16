@@ -46,6 +46,6 @@ void bench_stop(bench *b);
 
 double bench_iteration_speed(bench *b);
 
-void bench_summary(bench *b);
+void bench_print_summary(bench *b);
 
 #endif /* !BENCH_H */
