@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/Users/c9s/tmp/r3'
+ac_pwd='/Users/c9s/tmp/r3-2'
 srcdir='.'
 INSTALL='/opt/local/bin/ginstall -c'
 MKDIR_P='/opt/local/bin/gmkdir -p'
@@ -882,12 +882,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/opt/local/bin/gmkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /Users/c9s/tmp/r3/install-sh"
-S["MAKEINFO"]="${SHELL} /Users/c9s/tmp/r3/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /Users/c9s/tmp/r3/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /Users/c9s/tmp/r3/missing automake-1.14"
-S["AUTOCONF"]="${SHELL} /Users/c9s/tmp/r3/missing autoconf"
-S["ACLOCAL"]="${SHELL} /Users/c9s/tmp/r3/missing aclocal-1.14"
+S["install_sh"]="${SHELL} /Users/c9s/tmp/r3-2/install-sh"
+S["MAKEINFO"]="${SHELL} /Users/c9s/tmp/r3-2/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /Users/c9s/tmp/r3-2/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /Users/c9s/tmp/r3-2/missing automake-1.14"
+S["AUTOCONF"]="${SHELL} /Users/c9s/tmp/r3-2/missing autoconf"
+S["ACLOCAL"]="${SHELL} /Users/c9s/tmp/r3-2/missing aclocal-1.14"
 S["VERSION"]="1.0"
 S["PACKAGE"]="r3"
 S["CYGPATH_W"]="echo"

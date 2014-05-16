@@ -29,7 +29,8 @@ set -ex
 $libtoolize -c -f
 autoconf -f -W all,no-obsolete
 autoheader -f -W all
-automake -a -c -f -W all
+# automake -a -c -f -W all
+automake --add-missing --foreign -c -W all
 
 rm -rf autom4te.cache
 exit 0
