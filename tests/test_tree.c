@@ -11,31 +11,31 @@ START_TEST (test_ltrim_slash)
 }
 END_TEST
 
-START_TEST (test_rnode_construct_uniq)
+START_TEST (test_node_construct_uniq)
 {
-    rnode * n = rnode_create(10);
+    node * n = rtree_create(10);
 
-    rnode * child = rnode_create(3);
+    node * child = rtree_create(3);
 
-    // fail_if( rnode_add_child(n, strdup("/add") , child) != NULL );
-    // fail_if( rnode_add_child(n, strdup("/add") , child) != NULL );
+    // fail_if( rtree_add_child(n, strdup("/add") , child) != NULL );
+    // fail_if( rtree_add_child(n, strdup("/add") , child) != NULL );
 
-    rnode_free(n);
+    rtree_free(n);
 }
 END_TEST
 
-START_TEST (test_rnode_find_edge)
+START_TEST (test_node_find_edge)
 {
-    rnode * n = rnode_create(10);
+    node * n = rtree_create(10);
 
-    rnode * child = rnode_create(3);
+    node * child = rtree_create(3);
 
-    fail_if( rnode_add_child(n, strdup("/add") , child) == FALSE );
+    fail_if( rtree_add_child(n, strdup("/add") , child) == FALSE );
 
-    fail_if( rnode_find_edge(n, "/add") == NULL );
-    fail_if( rnode_find_edge(n, "/bar") != NULL );
+    fail_if( node_find_edge(n, "/add") == NULL );
+    fail_if( node_find_edge(n, "/bar") != NULL );
 
-    rnode_free(n);
+    rtree_free(n);
 }
 END_TEST
 
@@ -43,25 +43,25 @@ END_TEST
 START_TEST (test_compile)
 {
     token_array *t;
-    rnode * n;
-    n = rnode_create(10);
+    node * n;
+    n = rtree_create(10);
 
 
 
-    rnode_insert_routel(n, "/zoo", strlen("/zoo") );
-    rnode_insert_routel(n, "/foo", strlen("/foo") );
-    rnode_insert_routel(n, "/bar", strlen("/bar") );
-    rnode_compile(n);
+    rtree_insert_pathn(n, "/zoo", strlen("/zoo"), NULL);
+    rtree_insert_pathn(n, "/foo", strlen("/foo"), NULL);
+    rtree_insert_pathn(n, "/bar", strlen("/bar"), NULL);
+    rtree_compile(n);
     fail_if( n->combined_pattern );
-    fail_if( NULL == rnode_find_edge_str(n, "/", strlen("/") ) );
+    fail_if( NULL == node_find_edge_str(n, "/", strlen("/") ) );
 
-    rnode_insert_routel(n, "/foo/{id}", strlen("/foo/{id}") );
-    rnode_insert_routel(n, "/{id}", strlen("/{id}") );
-    rnode_compile(n);
-    rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/foo/{id}", strlen("/foo/{id}"), NULL);
+    rtree_insert_pathn(n, "/{id}", strlen("/{id}"), NULL);
+    rtree_compile(n);
+    rtree_dump(n, 0);
     fail_if(n->edges[0]->child->combined_pattern == NULL);
 
-    redge *e = rnode_find_edge_str(n, "/", strlen("/") );
+    edge *e = node_find_edge_str(n, "/", strlen("/") );
     fail_if( NULL == e );
 
     /*
@@ -70,26 +70,28 @@ START_TEST (test_compile)
     printf( "%s\n", n->edges[0]->child->combined_pattern);
     printf( "%s\n", n->combined_pattern );
     */
-    rnode *m = rnode_match( e->child , "foo", strlen("foo") );
+    node *m = rtree_match( e->child , "foo", strlen("foo") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/foo", strlen("/foo") );
+    m = rtree_match( n , "/foo", strlen("/foo") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/zoo", strlen("/zoo") );
+    m = rtree_match( n , "/zoo", strlen("/zoo") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/bar", strlen("/bar") );
+    m = rtree_match( n , "/bar", strlen("/bar") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/xxx", strlen("/xxx") );
+    m = rtree_match( n , "/xxx", strlen("/xxx") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/foo/xxx", strlen("/foo/xxx") );
+    m = rtree_match( n , "/foo/xxx", strlen("/foo/xxx") );
     fail_if( NULL == m );
 
-    m = rnode_match( n , "/not_found", strlen("/not_found") );
+    m = rtree_match( n , "/not_found", strlen("/not_found") );
     fail_if( NULL == m ); // should be the node of "/"
+    ck_assert_int_eq( m->endpoint , 0 ); // should not be an endpoint
+
 }
 END_TEST
 
@@ -138,49 +140,49 @@ START_TEST (test_compile_slug)
 END_TEST
 
 
-START_TEST (test_rnode_insert_routel)
+START_TEST (test_rtree_insert_pathn)
 {
-    rnode * n = rnode_create(10);
+    node * n = rtree_create(10);
 
     // printf("Inserting /foo/bar\n");
-    rnode_insert_routel(n, "/foo/bar", strlen("/foo/bar") );
-    // rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/foo/bar", strlen("/foo/bar"), NULL);
+    // rtree_dump(n, 0);
 
     // printf("Inserting /foo/zoo\n");
-    rnode_insert_routel(n, "/foo/zoo", strlen("/foo/zoo") );
-    // rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/foo/zoo", strlen("/foo/zoo"), NULL);
+    // rtree_dump(n, 0);
 
     // printf("Inserting /f/id\n");
-    rnode_insert_routel(n, "/f/id", strlen("/f/id") );
-    // rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/f/id", strlen("/f/id") , NULL);
+    // rtree_dump(n, 0);
 
     // printf("Inserting /post/{id}\n");
-    rnode_insert_routel(n, "/post/{id}", strlen("/post/{id}") );
-    // rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/post/{id}", strlen("/post/{id}"), NULL);
+    // rtree_dump(n, 0);
 
     // printf("Inserting /post/{handle}\n");
-    rnode_insert_routel(n, "/post/{handle}", strlen("/post/{handle}") );
-    // rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/post/{handle}", strlen("/post/{handle}"), NULL);
+    // rtree_dump(n, 0);
 
     // printf("Inserting /post/{handle}-{id}\n");
-    rnode_insert_routel(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}") );
-    rnode_compile(n);
-    // rnode_dump(n, 0);
+    rtree_insert_pathn(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}"), NULL);
+    rtree_compile(n);
+    // rtree_dump(n, 0);
 
 
 
     /*
-    fail_if( rnode_lookup(n , "/a/jj/kk"    , strlen("/a/jj/kk") ) == NULL );
-    fail_if( rnode_lookup(n , "/a/jj"       , strlen("/a/jj") ) != NULL );
-    fail_if( rnode_lookup(n , "/a/jj/kk/ll" , strlen("/a/jj/kk/ll") ) != NULL );
-    fail_if( rnode_lookup(n, "/xxxx", strlen("xxxx") ) != NULL );
+    fail_if( rtree_lookup(n , "/a/jj/kk"    , strlen("/a/jj/kk") ) == NULL );
+    fail_if( rtree_lookup(n , "/a/jj"       , strlen("/a/jj") ) != NULL );
+    fail_if( rtree_lookup(n , "/a/jj/kk/ll" , strlen("/a/jj/kk/ll") ) != NULL );
+    fail_if( rtree_lookup(n, "/xxxx", strlen("xxxx") ) != NULL );
     */
 
 
-    // fail_if( rnode_find_edge(n, "/add") == NULL );
-    // fail_if( rnode_find_edge(n, "/bar") != NULL );
+    // fail_if( node_find_edge(n, "/add") == NULL );
+    // fail_if( node_find_edge(n, "/bar") != NULL );
 
-    rnode_free(n);
+    rtree_free(n);
 }
 END_TEST
 
@@ -253,9 +255,9 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_route_split);
         tcase_add_test(tcase, test_token_array);
         tcase_add_test(tcase, test_ltrim_slash);
-        tcase_add_test(tcase, test_rnode_construct_uniq);
-        tcase_add_test(tcase, test_rnode_find_edge);
-        tcase_add_test(tcase, test_rnode_insert_routel);
+        tcase_add_test(tcase, test_node_construct_uniq);
+        tcase_add_test(tcase, test_node_find_edge);
+        tcase_add_test(tcase, test_rtree_insert_pathn);
         tcase_add_test(tcase, test_compile_slug);
         tcase_add_test(tcase, test_compile);
 

@@ -21,26 +21,29 @@
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
 
 /**
- * Create a rnode object
+ * Create a node object
  */
-rnode * rnode_create(int cap) {
-    rnode * n = (rnode*) malloc( sizeof(rnode) );
+node * rtree_create(int cap) {
+    node * n = (node*) malloc( sizeof(node) );
 
-    n->edges = (redge**) malloc( sizeof(redge*) * 10 );
+    n->edges = (edge**) malloc( sizeof(edge*) * 10 );
     n->edge_len = 0;
     n->edge_cap = 10;
     n->endpoint = 0;
     n->combined_pattern = NULL;
-    // n->edge_patterns = token_array_create(10);
     return n;
 }
 
-void rnode_free(rnode * tree) {
+void rtree_free(node * tree) {
     for (int i = 0 ; i < tree->edge_len ; i++ ) {
         if (tree->edges[i]) {
-            redge_free(tree->edges[ i ]);
+            edge_free(tree->edges[ i ]);
         }
     }
+
+    if (tree->combined_pattern)
+        free(tree->combined_pattern);
+
     free(tree->edges);
     // token_array_free(tree->edge_patterns);
     free(tree);
@@ -50,18 +53,18 @@ void rnode_free(rnode * tree) {
 
 
 /* parent node, edge pattern, child */
-redge * rnode_add_child(rnode * n, char * pat , rnode *child) {
+edge * rtree_add_child(node * n, char * pat , node *child) {
     // find the same sub-pattern, if it does not exist, create one
 
-    redge * e;
+    edge * e;
 
-    e = rnode_find_edge(n, pat);
+    e = node_find_edge(n, pat);
     if (e) {
         return e;
     }
 
-    e = redge_create( pat, strlen(pat), child);
-    rnode_append_edge(n, e);
+    e = edge_create( pat, strlen(pat), child);
+    rtree_append_edge(n, e);
     // token_array_append(n->edge_patterns, pat);
     // assert( token_array_len(n->edge_patterns) == n->edge_len );
     return e;
@@ -69,17 +72,22 @@ redge * rnode_add_child(rnode * n, char * pat , rnode *child) {
 
 
 
-void rnode_append_edge(rnode *n, redge *e) {
+void rtree_append_edge(node *n, edge *e) {
+
+    if (!n->edges) {
+        n->edge_cap = 3;
+        n->edges = malloc(sizeof(edge) * n->edge_cap);
+    }
     if (n->edge_len >= n->edge_cap) {
         n->edge_cap *= 2;
-        n->edges = realloc(n->edges, sizeof(redge) * n->edge_cap);
+        n->edges = realloc(n->edges, sizeof(edge) * n->edge_cap);
     }
     n->edges[ n->edge_len++ ] = e;
 }
 
 
-redge * rnode_find_edge(rnode * n, char * pat) {
-    redge * e;
+edge * node_find_edge(node * n, char * pat) {
+    edge * e;
     for (int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         if ( strcmp(e->pattern, pat) == 0 ) {
@@ -89,18 +97,18 @@ redge * rnode_find_edge(rnode * n, char * pat) {
     return NULL;
 }
 
-void rnode_compile(rnode *n)
+void rtree_compile(node *n)
 {
-    bool use_slug = rnode_has_slug_edges(n);
+    bool use_slug = node_has_slug_edges(n);
     if ( use_slug ) {
-        rnode_compile_patterns(n);
+        rtree_compile_patterns(n);
     } else {
         // use normal text matching...
         n->combined_pattern = NULL;
     }
 
     for (int i = 0 ; i < n->edge_len ; i++ ) {
-        rnode_compile(n->edges[i]->child);
+        rtree_compile(n->edges[i]->child);
     }
 }
 
@@ -109,7 +117,7 @@ void rnode_compile(rnode *n)
  * This function combines ['/foo', '/bar', '/{slug}'] into (/foo)|(/bar)|/([^/]+)}
  *
  */
-void rnode_compile_patterns(rnode * n) {
+void rtree_compile_patterns(node * n) {
     char * cpat;
     char * p;
 
@@ -119,7 +127,7 @@ void rnode_compile_patterns(rnode * n) {
 
     p = cpat;
 
-    redge *e = NULL;
+    edge *e = NULL;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         if ( e->has_slug ) {
@@ -152,9 +160,13 @@ void rnode_compile_patterns(rnode * n) {
             &error,               /* for error message */
             &erroffset,           /* for error offset */
             NULL);                /* use default character tables */
-    if (n->pcre_pattern == NULL)
-    {
+    if (n->pcre_pattern == NULL) {
         printf("PCRE compilation failed at offset %d: %s\n", erroffset, error);
+        return;
+    }
+    n->pcre_extra = pcre_study(n->pcre_pattern, 0, &error);
+    if (n->pcre_extra == NULL) {
+        printf("PCRE study failed at offset %s\n", error);
         return;
     }
 }
@@ -162,7 +174,7 @@ void rnode_compile_patterns(rnode * n) {
 
 
 
-rnode * rnode_match(rnode * n, char * path, int path_len) {
+node * rtree_match(node * n, char * path, int path_len) {
     if (n->combined_pattern && n->pcre_pattern) {
         info("pcre matching %s on %s\n", n->combined_pattern, path);
         // int ovector_count = (n->edge_len + 1) * 2;
@@ -203,7 +215,7 @@ rnode * rnode_match(rnode * n, char * path, int path_len) {
                 int restlen = path_len - ovector[2*i+1]; // fully match to the end
                 info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
                 if (restlen) {
-                    return rnode_match( n->edges[i - 1]->child, substring_start + substring_length, restlen);
+                    return rtree_match( n->edges[i - 1]->child, substring_start + substring_length, restlen);
                 }
                 return n->edges[i - 1]->child;
             }
@@ -212,20 +224,20 @@ rnode * rnode_match(rnode * n, char * path, int path_len) {
         return NULL;
     }
 
-    redge *e = rnode_find_edge_str(n, path, path_len);
+    edge *e = node_find_edge_str(n, path, path_len);
     if (e) {
         int len = path_len - e->pattern_len;
         if(len == 0) {
             return e->child;
         } else {
-            return rnode_match(e->child, path + e->pattern_len, len);
+            return rtree_match(e->child, path + e->pattern_len, len);
         }
     }
     return NULL;
 }
 
-redge * rnode_find_edge_str(rnode * n, char * str, int str_len) {
-    redge *e;
+edge * node_find_edge_str(node * n, char * str, int str_len) {
+    edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         char *p = e->pattern;
@@ -240,13 +252,13 @@ redge * rnode_find_edge_str(rnode * n, char * str, int str_len) {
 }
 
 
-rnode * rnode_lookup(rnode * tree, char * path, int path_len) {
+node * rtree_lookup(node * tree, char * path, int path_len) {
     token_array * tokens = split_route_pattern(path, path_len);
 
-    rnode * n = tree;
-    redge * e = NULL;
+    node * n = tree;
+    edge * e = NULL;
     for ( int i = 0 ; i < tokens->len ; i++ ) {
-        e = rnode_find_edge(n, token_array_fetch(tokens, i) );
+        e = node_find_edge(n, token_array_fetch(tokens, i) );
         if (!e) {
             return NULL;
         }
@@ -258,35 +270,46 @@ rnode * rnode_lookup(rnode * tree, char * path, int path_len) {
     return NULL;
 }
 
+node * node_create() {
+    node * n = (node*) malloc( sizeof(node) );
+    n->edges = NULL;
+    n->edge_len = 0;
+    n->edge_cap = 0;
+    n->endpoint = 0;
+    n->combined_pattern = NULL;
+    n->pcre_pattern = NULL;
+    return n;
+}
 
 
-rnode * rnode_insert_tokens(rnode * tree, token_array * tokens) {
-    rnode * n = tree;
-    redge * e = NULL;
+
+node * rtree_insert_tokens(node * tree, token_array * tokens) {
+    node * n = tree;
+    edge * e = NULL;
     for ( int i = 0 ; i < tokens->len ; i++ ) {
-        e = rnode_find_edge(n, token_array_fetch(tokens, i) );
+        e = node_find_edge(n, token_array_fetch(tokens, i) );
         if (e) {
             n = e->child;
             continue;
         }
         // insert node
-        rnode * child = rnode_create(3);
-        rnode_add_child(n, strdup(token_array_fetch(tokens,i)) , child);
+        node * child = node_create();
+        rtree_add_child(n, strdup(token_array_fetch(tokens,i)) , child);
         n = child;
     }
     n->endpoint++;
     return n;
 }
 
-rnode * rnode_insert_route(rnode *tree, char *route)
+node * rtree_insert_path(node *tree, char *route, void * route_ptr)
 {
-    return rnode_insert_routel(tree, route, strlen(route) );
+    return rtree_insert_pathn(tree, route, strlen(route) , route_ptr);
 }
 
-rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
+node * rtree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr)
 {
-    rnode * n = tree;
-    redge * e = NULL;
+    node * n = tree;
+    edge * e = NULL;
 
     char * p = route;
 
@@ -316,12 +339,11 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
 
     if ( dl == 0 ) {
         // not found, we should just insert a whole new edge
-        rnode * child = rnode_create(3);
-        rnode_add_child(n, strndup(route, route_len) , child);
-        // printf("edge not found, insert one: %s\n", route);
-
-        n = child;
-        return n;
+        node * child = rtree_create(3);
+        rtree_add_child(n, strndup(route, route_len) , child);
+        info("edge not found, insert one: %s\n", route);
+        child->route_ptr = route_ptr;
+        return child;
     } else if ( dl == e->pattern_len ) {    // fully-equal to the pattern of the edge
 
         char * subroute = route + dl;
@@ -329,10 +351,11 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
 
         // there are something more we can insert
         if ( subroute_len > 0 ) {
-            return rnode_insert_routel(e->child, subroute, subroute_len);
+            return rtree_insert_pathn(e->child, subroute, subroute_len, route_ptr);
         } else {
             // no more,
             e->child->endpoint++; // make it as an endpoint, TODO: put the route value
+            e->child->route_ptr = route_ptr;
             return e->child;
         }
 
@@ -343,19 +366,19 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         /* it's partically matched with the pattern,
          * we should split the end point and make a branch here...
          */
-        rnode *c2; // child 1, child 2
-        redge *e2; // edge 1, edge 2
+        node *c2; // child 1, child 2
+        edge *e2; // edge 1, edge 2
         char * s2 = route + dl;
         int s2_len = 0;
 
-        redge_branch(e, dl);
+        edge_branch(e, dl);
 
         // here is the new edge from.
-        c2 = rnode_create(3);
+        c2 = rtree_create(3);
         s2_len = route_len - dl;
-        e2 = redge_create(strndup(s2, s2_len), s2_len, c2);
+        e2 = edge_create(strndup(s2, s2_len), s2_len, c2);
         // printf("edge right: %s\n", e2->pattern);
-        rnode_append_edge(e->child, e2);
+        rtree_append_edge(e->child, e2);
 
         // truncate the original edge pattern 
         free(e->pattern);
@@ -364,6 +387,7 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
 
         // move n->edges to c1
         c2->endpoint++;
+        c2->route_ptr = route_ptr;
         return c2;
     } else if ( dl > 0 ) {
 
@@ -372,14 +396,14 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
         return NULL;
     }
     // token_array * t = split_route_pattern(route, strlen(route));
-    // return rnode_insert_tokens(tree, t);
+    // return rtree_insert_tokens(tree, t);
     // n->endpoint++;
     return n;
 }
 
-bool rnode_has_slug_edges(rnode *n) {
+bool node_has_slug_edges(node *n) {
     bool found = FALSE;
-    redge *e;
+    edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         e->has_slug = contains_slug(e->pattern);
@@ -389,61 +413,69 @@ bool rnode_has_slug_edges(rnode *n) {
     return found;
 }
 
-void redge_branch(redge *e, int dl) {
-    rnode *c1; // child 1, child 2
-    redge *e1; // edge 1, edge 2
+
+/**
+ * branch the edge pattern at "dl" offset
+ *
+ */
+void edge_branch(edge *e, int dl) {
+    node *c1; // child 1, child 2
+    edge *e1; // edge 1, edge 2
     char * s1 = e->pattern + dl;
     int s1_len = 0;
 
-    redge **tmp_edges = e->child->edges;
+    edge **tmp_edges = e->child->edges;
     int   tmp_edge_len = e->child->edge_len;
 
     // the suffix edge of the leaf
-    c1 = rnode_create(3);
+    c1 = rtree_create(3);
     s1_len = e->pattern_len - dl;
-    e1 = redge_create(strndup(s1, s1_len), s1_len, c1);
+    e1 = edge_create(strndup(s1, s1_len), s1_len, c1);
     // printf("edge left: %s\n", e1->pattern);
 
     // Migrate the child edges to the new edge we just created.
     for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
-        rnode_append_edge(c1, tmp_edges[i]);
+        rtree_append_edge(c1, tmp_edges[i]);
         e->child->edges[i] = NULL;
     }
     e->child->edge_len = 0;
+    e->child->endpoint--;
 
-    rnode_append_edge(e->child, e1);
+    info("branched pattern: %s", e1->pattern);
+
+    rtree_append_edge(e->child, e1);
     c1->endpoint++;
 }
 
 
-redge * redge_create(char * pattern, int pattern_len, rnode * child) {
-    redge * edge = (redge*) malloc( sizeof(redge) );
-    edge->pattern = pattern;
-    edge->pattern_len = pattern_len;
-    edge->child = child;
-    return edge;
+edge * edge_create(char * pattern, int pattern_len, node * child) {
+    edge * e = (edge*) malloc( sizeof(edge) );
+    e->pattern = pattern;
+    e->pattern_len = pattern_len;
+    e->child = child;
+    return e;
 }
 
-void redge_free(redge * e) {
+void edge_free(edge * e) {
     if (e->pattern) {
         free(e->pattern);
     }
     if ( e->child ) {
-        rnode_free(e->child);
+        rtree_free(e->child);
     }
 }
 
 
 
 
-void rnode_dump(rnode * n, int level) {
+void rtree_dump(node * n, int level) {
     if ( n->edge_len ) {
         if ( n->combined_pattern ) {
             printf(" regexp: %s", n->combined_pattern);
         }
         printf("\n");
         for ( int i = 0 ; i < n->edge_len ; i++ ) {
-            redge * e = n->edges[i];
+            edge * e = n->edges[i];
             print_indent(level);
             printf("  |-\"%s\"", e->pattern);
 
@@ -453,7 +485,7 @@ void rnode_dump(rnode * n, int level) {
             }
 
             if ( e->child && e->child->edges ) {
-                rnode_dump( e->child, level + 1);
+                rtree_dump( e->child, level + 1);
             }
             printf("\n");
         }

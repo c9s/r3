@@ -16,14 +16,14 @@
 
 #include "token.h"
 
-struct _redge;
-struct _rnode;
-typedef struct _redge redge;
-typedef struct _rnode rnode;
+struct _edge;
+struct _node;
+typedef struct _edge edge;
+typedef struct _node node;
 
 
-struct _rnode {
-    redge ** edges;
+struct _node {
+    edge ** edges;
     int      edge_len;
     int      edge_cap;
 
@@ -31,57 +31,65 @@ struct _rnode {
     char * combined_pattern;
     int    combined_pattern_len;
     pcre * pcre_pattern;
+    pcre_extra * pcre_extra;
 
+
+    /**
+     * the pointer of route structure
+     */
+    void * route_ptr;
 
     int endpoint;
 };
 
-struct _redge {
+struct _edge {
     char * pattern;
     int    pattern_len;
     bool   has_slug;
-    rnode * child;
+    node * child;
 };
 
 
 
-rnode * rnode_create(int cap);
+node * rtree_create(int cap);
 
-void rnode_free(rnode * tree);
+node * node_create();
 
-void redge_free(redge * edge);
+void rtree_free(node * tree);
 
-redge * rnode_add_child(rnode * n, char * pat , rnode *child);
+void edge_free(edge * edge);
 
-redge * rnode_find_edge(rnode * n, char * pat);
+edge * rtree_add_child(node * n, char * pat , node *child);
 
-void rnode_append_edge(rnode *n, redge *child);
+edge * node_find_edge(node * n, char * pat);
 
-rnode * rnode_insert_tokens(rnode * tree, token_array * tokens);
+void rtree_append_edge(node *n, edge *child);
 
-rnode * rnode_insert_route(rnode *tree, char *route);
+node * rtree_insert_tokens(node * tree, token_array * tokens);
 
-rnode * rnode_insert_routel(rnode *tree, char *route, int route_len);
+node * rtree_insert_path(node *tree, char *route, void * route_ptr);
 
-void rnode_dump(rnode * n, int level);
+node * rtree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr);
 
-redge * rnode_find_edge_str(rnode * n, char * str, int str_len);
+void rtree_dump(node * n, int level);
+
+edge * node_find_edge_str(node * n, char * str, int str_len);
 
 
-void rnode_compile(rnode *n);
+void rtree_compile(node *n);
 
-void rnode_compile_patterns(rnode * n);
+void rtree_compile_patterns(node * n);
 
-rnode * rnode_match(rnode * n, char * path, int path_len);
+node * rtree_match(node * n, char * path, int path_len);
 
-bool rnode_has_slug_edges(rnode *n);
+bool node_has_slug_edges(node *n);
 
-rnode * rnode_lookup(rnode * tree, char * path, int path_len);
+node * rtree_lookup(node * tree, char * path, int path_len);
 
-redge * redge_create(char * pattern, int pattern_len, rnode * child);
+edge * edge_create(char * pattern, int pattern_len, node * child);
 
-void redge_branch(redge *e, int dl);
+void edge_branch(edge *e, int dl);
 
-void redge_free(redge * edge);
+void edge_free(edge * edge);
 
 #endif /* !NODE_H */
