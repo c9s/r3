@@ -315,7 +315,8 @@ node * r3_tree_lookup(node * tree, char * path, int path_len) {
 
     node * n = tree;
     edge * e = NULL;
-    for ( int i = 0 ; i < tokens->len ; i++ ) {
+    int i = 0;
+    for (; i < tokens->len ; i++ ) {
         e = r3_node_find_edge(n, str_array_fetch(tokens, i) );
         if (!e) {
             return NULL;
