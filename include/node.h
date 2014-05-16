@@ -16,6 +16,10 @@
 
 #include "token.h"
 
+#define node_edge_pattern(node,i) node->edges[i]->pattern
+#define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
+
+
 struct _edge;
 struct _node;
 typedef struct _edge edge;
@@ -48,9 +52,9 @@ struct _edge {
 };
 
 typedef struct {
-    char ** vars;
-    int     vars_len;
+    str_array * vars;
     char * path; // dispatched path
+    int    path_len;
     void * route_ptr; // route ptr
 } match_entry;
 
@@ -96,5 +100,8 @@ void r3_edge_free(edge * edge);
 
 
 
+match_entry * match_entry_create(char * path, int path_len);
+
+void match_entry_free(match_entry * entry);
 
 #endif /* !NODE_H */

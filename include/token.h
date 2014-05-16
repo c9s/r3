@@ -18,7 +18,6 @@ typedef struct _str_array {
 
 str_array * str_array_create(int cap);
 
-
 bool str_array_is_full(str_array * l);
 
 bool str_array_resize(str_array *l, int new_cap);

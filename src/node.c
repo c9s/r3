@@ -85,7 +85,6 @@ void r3_tree_append_edge(node *n, edge *e) {
     n->edges[ n->r3_edge_len++ ] = e;
 }
 
-
 edge * r3_node_find_edge(node * n, char * pat) {
     edge * e;
     for (int i = 0 ; i < n->r3_edge_len ; i++ ) {
@@ -181,6 +180,21 @@ void r3_tree_compile_patterns(node * n) {
 }
 
 
+match_entry * match_entry_create(char * path, int path_len) {
+    match_entry * entry = malloc(sizeof(match_entry));
+    if(!entry)
+        return NULL;
+    entry->vars = str_array_create(3);
+    entry->path = path;
+    entry->path_len = path_len;
+    entry->route_ptr = NULL;
+    return entry;
+}
+
+void match_entry_free(match_entry * entry) {
+    str_array_free(entry->vars);
+    free(entry);
+}
 
 
 node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
@@ -234,7 +248,8 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
                 e = n->edges[i - 1];
 
                 if (entry && e->has_slug) {
-                    // entry->
+                    // append captured token to entry
+                    str_array_append(entry->vars , strndup(substring_start, substring_length));
                 }
                 if (restlen == 0) {
                     return e->child;
@@ -258,8 +273,6 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
     return NULL;
 }
 
-#define node_edge_pattern(node,i) node->edges[i]->pattern
-#define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
 
 inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
     int i = 0;

@@ -80,7 +80,6 @@ START_TEST (test_compile)
     n = r3_tree_create(10);
 
 
-    match_entry * entry;
     node *m;
     edge *e ;
 
@@ -115,24 +114,29 @@ START_TEST (test_compile)
     printf( "%s\n", n->combined_pattern );
     */
 
-    entry = calloc( sizeof(entry) , 1 );
+    match_entry * entry;
 
-
+    entry = match_entry_create( "foo" , strlen("/foo") );
     m = r3_tree_match( n , "/foo", strlen("/foo"), entry);
     fail_if( NULL == m );
 
+    entry = match_entry_create( "/zoo" , strlen("/zoo") );
     m = r3_tree_match( n , "/zoo", strlen("/zoo"), entry);
     fail_if( NULL == m );
 
+    entry = match_entry_create( "/bar" , strlen("/bar") );
     m = r3_tree_match( n , "/bar", strlen("/bar"), entry);
     fail_if( NULL == m );
 
+    entry = match_entry_create( "/xxx" , strlen("/xxx") );
     m = r3_tree_match( n , "/xxx", strlen("/xxx"), entry);
     fail_if( NULL == m );
 
+    entry = match_entry_create( "/foo/xxx" , strlen("/foo/xxx") );
     m = r3_tree_match( n , "/foo/xxx", strlen("/foo/xxx"), entry);
     fail_if( NULL == m );
 
+    entry = match_entry_create( "/some_id" , strlen("/some_id") );
     m = r3_tree_match( n , "/some_id", strlen("/some_id"), entry);
     fail_if( NULL == m );
     ck_assert_int_gt( m->endpoint , 0 ); // should not be an endpoint
