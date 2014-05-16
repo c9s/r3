@@ -12,10 +12,10 @@
 // Judy array
 #include <Judy.h>
 
-#include "define.h"
-#include "str.h"
-#include "node.h"
-#include "token.h"
+#include "r3_define.h"
+#include "r3_str.h"
+#include "r3.h"
+#include "str_array.h"
 
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
@@ -28,7 +28,7 @@ node * r3_tree_create(int cap) {
 
     n->edges = (edge**) malloc( sizeof(edge*) * 10 );
     n->r3_edge_len = 0;
-    n->r3_edge_cap = 10;
+    n->r3_edge_cap = cap;
     n->endpoint = 0;
     n->combined_pattern = NULL;
     return n;
@@ -475,8 +475,6 @@ void r3_edge_free(edge * e) {
         r3_tree_free(e->child);
     }
 }
-
-
 
 
 void r3_tree_dump(node * n, int level) {

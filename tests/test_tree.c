@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <check.h>
 #include <stdlib.h>
-#include "str.h"
-#include "node.h"
-#include "token.h"
+#include "r3_str.h"
+#include "r3.h"
+#include "str_array.h"
 
 #include <sys/time.h>
 

@@ -1,5 +1,5 @@
 /*
- * node.h
+ * r3.h
  * Copyright (C) 2014 c9s <c9s@c9smba.local>
  *
  * Distributed under terms of the MIT license.
@@ -14,7 +14,7 @@
 #include <assert.h>
 #include <pcre.h>
 
-#include "token.h"
+#include "str_array.h"
 
 #define node_edge_pattern(node,i) node->edges[i]->pattern
 #define node_edge_pattern_len(node,i) node->edges[i]->pattern_len

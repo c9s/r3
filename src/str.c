@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "str.h"
-#include "token.h"
-#include "define.h"
+#include "r3_str.h"
+#include "str_array.h"
+#include "r3_define.h"
 
 int strndiff(char * d1, char * d2, unsigned int n) {
     char * o = d1;

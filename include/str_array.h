@@ -1,5 +1,5 @@
 /*
- * token.h
+ * str_array.h
  * Copyright (C) 2014 c9s <c9s@c9smba.local>
  *
  * Distributed under terms of the MIT license.
@@ -8,7 +8,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "define.h"
+#include "r3_define.h"
 
 typedef struct _str_array {
   char **tokens;

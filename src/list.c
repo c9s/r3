@@ -5,7 +5,7 @@
  * Distributed under terms of the MIT license.
  */
 #include <stdlib.h>
-#include "list.h"
+#include "r3_list.h"
  
 /* Naive linked list implementation */
  
