@@ -5,7 +5,8 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 set(R3_SRCS node.c str.c list.c token.c edge.c)
 set(CMAKE_CFLAGS "-Wall -pipe -g3 -funroll-loops")
-set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} ${Jemalloc_LIBRARIES} r3)
+# set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} ${Jemalloc_LIBRARIES} r3)
+set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Jemalloc_LIBRARIES} r3)
 
 # add_library(r3 SHARED ${R3_SRCS})
 add_library(r3 STATIC ${R3_SRCS})

@@ -10,7 +10,7 @@
 #include <pcre.h>
 
 // Judy array
-#include <Judy.h>
+// #include <Judy.h>
 
 #include "r3_define.h"
 #include "r3_str.h"
