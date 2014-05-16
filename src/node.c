@@ -45,7 +45,7 @@ void rtree_free(node * tree) {
         free(tree->combined_pattern);
 
     free(tree->edges);
-    // token_array_free(tree->edge_patterns);
+    // str_array_free(tree->edge_patterns);
     free(tree);
     tree = NULL;
 }
@@ -65,8 +65,8 @@ edge * rtree_add_child(node * n, char * pat , node *child) {
 
     e = edge_create( pat, strlen(pat), child);
     rtree_append_edge(n, e);
-    // token_array_append(n->edge_patterns, pat);
-    // assert( token_array_len(n->edge_patterns) == n->edge_len );
+    // str_array_append(n->edge_patterns, pat);
+    // assert( str_array_len(n->edge_patterns) == n->edge_len );
     return e;
 }
 
@@ -127,6 +127,7 @@ void rtree_compile_patterns(node * n) {
 
     p = cpat;
 
+
     edge *e = NULL;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
@@ -152,6 +153,12 @@ void rtree_compile_patterns(node * n) {
 
     const char *error;
     int erroffset;
+    unsigned int option_bits;
+
+    if (n->pcre_pattern)
+        free(n->pcre_pattern);
+    if (n->pcre_extra)
+        free(n->pcre_extra);
 
     // n->pcre_pattern;
     n->pcre_pattern = pcre_compile(
@@ -174,7 +181,9 @@ void rtree_compile_patterns(node * n) {
 
 
 
-node * rtree_match(node * n, char * path, int path_len) {
+node * rtree_match(node * n, char * path, int path_len, match_entry * entry) {
+    // info("try matching: %s\n", path);
+
     if (n->combined_pattern && n->pcre_pattern) {
         info("pcre matching %s on %s\n", n->combined_pattern, path);
         // int ovector_count = (n->edge_len + 1) * 2;
@@ -206,18 +215,27 @@ node * rtree_match(node * n, char * path, int path_len) {
         }
 
         int i;
+        edge *e;
         for (i = 1; i < rc; i++)
         {
             char *substring_start = path + ovector[2*i];
             int   substring_length = ovector[2*i+1] - ovector[2*i];
             info("%2d: %.*s\n", i, substring_length, substring_start);
+
             if ( substring_length > 0) {
                 int restlen = path_len - ovector[2*i+1]; // fully match to the end
                 info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
-                if (restlen) {
-                    return rtree_match( n->edges[i - 1]->child, substring_start + substring_length, restlen);
+
+                e = n->edges[i - 1];
+
+                if (entry && e->has_slug) {
+                    // entry->
                 }
-                return n->edges[i - 1]->child;
+
+                if (restlen == 0) {
+                    return e->child;
+                }
+                return rtree_match( e->child, substring_start + substring_length, restlen, entry);
             }
         }
         // does not match
@@ -230,7 +248,7 @@ node * rtree_match(node * n, char * path, int path_len) {
         if(len == 0) {
             return e->child;
         } else {
-            return rtree_match(e->child, path + e->pattern_len, len);
+            return rtree_match(e->child, path + e->pattern_len, len, entry);
         }
     }
     return NULL;
@@ -238,27 +256,43 @@ node * rtree_match(node * n, char * path, int path_len) {
 
 edge * node_find_edge_str(node * n, char * str, int str_len) {
     edge *e;
+    char *p;
+    char *s;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
-        char *p = e->pattern;
-        while ( *p == *str ) {
-            p++;
+        p = e->pattern;
+        s = str;
+
+        info("matching '%s' with '%s'\n", str, e->pattern);
+        if ( str_len < e->pattern_len ) {
+            continue;
         }
+        if ( strncmp(e->pattern, str, e->pattern_len) == 0 ) {
+            return e;
+        }
+        /*
+        while ( *p == *s ) {
+            p++;
+            s++;
+        }
+
+        info("matched len: %d == pattern len %d\n", (int)(p - e->pattern) , e->pattern_len);
         if ( p - e->pattern == e->pattern_len ) {
             return e;
         }
+        */
     }
     return NULL;
 }
 
 
 node * rtree_lookup(node * tree, char * path, int path_len) {
-    token_array * tokens = split_route_pattern(path, path_len);
+    str_array * tokens = split_route_pattern(path, path_len);
 
     node * n = tree;
     edge * e = NULL;
     for ( int i = 0 ; i < tokens->len ; i++ ) {
-        e = node_find_edge(n, token_array_fetch(tokens, i) );
+        e = node_find_edge(n, str_array_fetch(tokens, i) );
         if (!e) {
             return NULL;
         }
@@ -281,25 +315,6 @@ node * node_create() {
     return n;
 }
 
-
-
-node * rtree_insert_tokens(node * tree, token_array * tokens) {
-    node * n = tree;
-    edge * e = NULL;
-    for ( int i = 0 ; i < tokens->len ; i++ ) {
-        e = node_find_edge(n, token_array_fetch(tokens, i) );
-        if (e) {
-            n = e->child;
-            continue;
-        }
-        // insert node
-        node * child = node_create();
-        rtree_add_child(n, strdup(token_array_fetch(tokens,i)) , child);
-        n = child;
-    }
-    n->endpoint++;
-    return n;
-}
 
 node * rtree_insert_path(node *tree, char *route, void * route_ptr)
 {
@@ -343,6 +358,7 @@ node * rtree_insert_pathn(node *tree, char *route, int route_len, void * route_p
         rtree_add_child(n, strndup(route, route_len) , child);
         info("edge not found, insert one: %s\n", route);
         child->route_ptr = route_ptr;
+        child->endpoint++;
         return child;
     } else if ( dl == e->pattern_len ) {    // fully-equal to the pattern of the edge
 
@@ -389,15 +405,10 @@ node * rtree_insert_pathn(node *tree, char *route, int route_len, void * route_p
         c2->endpoint++;
         c2->route_ptr = route_ptr;
         return c2;
-    } else if ( dl > 0 ) {
-
     } else {
         printf("unexpected condition.");
         return NULL;
     }
-    // token_array * t = split_route_pattern(route, strlen(route));
-    // return rtree_insert_tokens(tree, t);
-    // n->endpoint++;
     return n;
 }
 
@@ -441,7 +452,7 @@ void edge_branch(edge *e, int dl) {
     e->child->edge_len = 0;
     e->child->endpoint--;
 
-    info("branched pattern: %s", e1->pattern);
+    info("branched pattern: %s\n", e1->pattern);
 
     rtree_append_edge(e->child, e1);
     c1->endpoint++;
@@ -471,9 +482,11 @@ void edge_free(edge * e) {
 void rtree_dump(node * n, int level) {
     if ( n->edge_len ) {
         if ( n->combined_pattern ) {
-            printf(" regexp: %s", n->combined_pattern);
+            printf(" regexp:%s", n->combined_pattern);
         }
-        printf("\n");
+
+        printf(" endpoint:%d\n", n->endpoint);
+
         for ( int i = 0 ; i < n->edge_len ; i++ ) {
             edge * e = n->edges[i];
             print_indent(level);
@@ -491,3 +504,9 @@ void rtree_dump(node * n, int level) {
         }
     }
 }
+
+/*
+char * node_trace(node * n) {
+
+}
+*/

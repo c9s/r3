@@ -21,7 +21,6 @@ struct _node;
 typedef struct _edge edge;
 typedef struct _node node;
 
-
 struct _node {
     edge ** edges;
     int      edge_len;
@@ -32,7 +31,6 @@ struct _node {
     int    combined_pattern_len;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
-
 
     /**
      * the pointer of route structure
@@ -49,6 +47,12 @@ struct _edge {
     node * child;
 };
 
+typedef struct {
+    char ** vars;
+    int     vars_len;
+    char * path; // dispatched path
+    void * route_ptr; // route ptr
+} match_entry;
 
 
 node * rtree_create(int cap);
@@ -65,8 +69,6 @@ edge * node_find_edge(node * n, char * pat);
 
 void rtree_append_edge(node *n, edge *child);
 
-node * rtree_insert_tokens(node * tree, token_array * tokens);
-
 node * rtree_insert_path(node *tree, char *route, void * route_ptr);
 
 node * rtree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr);
@@ -80,7 +82,7 @@ void rtree_compile(node *n);
 
 void rtree_compile_patterns(node * n);
 
-node * rtree_match(node * n, char * path, int path_len);
+node * rtree_match(node * n, char * path, int path_len, match_entry * entry);
 
 bool node_has_slug_edges(node *n);
 
@@ -91,5 +93,8 @@ edge * edge_create(char * pattern, int pattern_len, node * child);
 void edge_branch(edge *e, int dl);
 
 void edge_free(edge * edge);
+
+
+
 
 #endif /* !NODE_H */

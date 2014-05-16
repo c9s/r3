@@ -11,15 +11,15 @@
 #include "token.h"
 
 
-token_array * token_array_create(int cap) {
-    token_array * list = (token_array*) malloc( sizeof(token_array) );
+str_array * str_array_create(int cap) {
+    str_array * list = (str_array*) malloc( sizeof(str_array) );
     list->len = 0;
     list->cap = cap;
     list->tokens = (char**) malloc( sizeof(char*) * cap);
     return list;
 }
 
-void token_array_free(token_array *l) {
+void str_array_free(str_array *l) {
     for ( int i = 0; i < l->len ; i++ ) {
         char * t = l->tokens[ i ];
         free(t);
@@ -27,19 +27,19 @@ void token_array_free(token_array *l) {
     free(l);
 }
 
-bool token_array_is_full(token_array * l) {
+bool str_array_is_full(str_array * l) {
     return l->len >= l->cap;
 }
 
-bool token_array_resize(token_array *l, int new_cap) {
+bool str_array_resize(str_array *l, int new_cap) {
     l->tokens = realloc(l->tokens, sizeof(char**) * new_cap);
     l->cap = new_cap;
     return l->tokens != NULL;
 }
 
-bool token_array_append(token_array * l, char * token) {
-    if ( token_array_is_full(l) ) {
-        bool ret = token_array_resize(l, l->cap + 20);
+bool str_array_append(str_array * l, char * token) {
+    if ( str_array_is_full(l) ) {
+        bool ret = str_array_resize(l, l->cap + 20);
         if (ret == FALSE ) {
             return FALSE;
         }
@@ -48,7 +48,7 @@ bool token_array_append(token_array * l, char * token) {
     return TRUE;
 }
 
-void token_array_dump(token_array *l) {
+void str_array_dump(str_array *l) {
     printf("[");
     for ( int i = 0; i < l->len ; i++ ) {
         printf("\"%s\"", l->tokens[i] );
@@ -79,10 +79,10 @@ void token_array_dump(token_array *l) {
  *
  * @return char**
  */
-token_array * split_route_pattern(char *pattern, int pattern_len) {
+str_array * split_route_pattern(char *pattern, int pattern_len) {
     char *s1, *p = pattern;
 
-    token_array * token_array = token_array_create( 20 );
+    str_array * str_array = str_array_create( 20 );
 
     s1 = p;
     p++;
@@ -97,20 +97,20 @@ token_array * split_route_pattern(char *pattern, int pattern_len) {
             }
             p++; // contains the '}'
             // printf("==> %s\n", strndup(s1, p-s1) );
-            token_array_append(token_array, strndup(s1, p-s1) );
+            str_array_append(str_array, strndup(s1, p-s1) );
             s1 = p;
             continue;
         }
         else if ( *p == '/' ) {
             // printf("==> %s\n", strndup(s1, p-s1) );
-            token_array_append(token_array, strndup(s1, p-s1) );
+            str_array_append(str_array, strndup(s1, p-s1) );
             s1 = p;
         }
         p++;
     }
 
     if ( p-s1 > 0 ) {
-        token_array_append(token_array, strndup(s1, p-s1) );
+        str_array_append(str_array, strndup(s1, p-s1) );
     }
-    return token_array;
+    return str_array;
 }

@@ -12,8 +12,7 @@ typedef unsigned char bool;
 #define FALSE 0
 #define TRUE 1
 
-
-#define DEBUG 1
+// #define DEBUG 1
 #ifdef DEBUG
 
 #define info(fmt, ...) \
