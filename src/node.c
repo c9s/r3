@@ -31,6 +31,9 @@ node * r3_tree_create(int cap) {
     n->r3_edge_cap = cap;
     n->endpoint = 0;
     n->combined_pattern = NULL;
+    n->pcre_pattern = NULL;
+    n->pcre_extra = NULL;
+    n->ov_cnt = 0;
     return n;
 }
 
@@ -148,6 +151,9 @@ void r3_tree_compile_patterns(node * n) {
             strncat(p++,"|",1);
         }
     }
+
+
+    n->ov_cnt = (1 + n->r3_edge_len) * 3;
     n->combined_pattern = cpat;
     n->combined_pattern_len = p - cpat;
 
@@ -197,15 +203,26 @@ void match_entry_free(match_entry * entry) {
 }
 
 
+/**
+ * This function matches the URL path and return the left node
+ *
+ * r3_tree_match returns NULL when the path does not match. returns *node when the path matches.
+ *
+ * @param node         n        the root of the tree
+ * @param char*        path     the URL path to dispatch
+ * @param int          path_len the length of the URL path.
+ * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
+ */
 node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
     // info("try matching: %s\n", path);
 
     edge *e;
-    if (n->combined_pattern && n->pcre_pattern) {
+
+    // if the pcre_pattern is found, and the pointer is not NULL, then it's
+    // pcre pattern node, we use pcre_exec to match the nodes
+    if (n->pcre_pattern) {
         info("pcre matching %s on %s\n", n->combined_pattern, path);
-        // int ovector_count = (n->r3_edge_len + 1) * 2;
-        int ovector_count = 30;
-        int ovector[ovector_count];
+        int ovector[n->ov_cnt];
         int rc;
         int i;
 
@@ -219,7 +236,7 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
                 0,                 /* start at offset 0 in the subject */
                 0,                 /* default options */
                 ovector,           /* output vector for substring information */
-                ovector_count);      /* number of elements in the output vector */
+                n->ov_cnt);      /* number of elements in the output vector */
 
         info("rc: %d\n", rc );
         if (rc < 0) {
@@ -424,57 +441,6 @@ bool r3_node_has_slug_edges(node *n) {
     return found;
 }
 
-
-/**
- * branch the edge pattern at "dl" offset
- *
- */
-void r3_edge_branch(edge *e, int dl) {
-    node *c1; // child 1, child 2
-    edge *e1; // edge 1, edge 2
-    char * s1 = e->pattern + dl;
-    int s1_len = 0;
-
-    edge **tmp_edges = e->child->edges;
-    int   tmp_r3_edge_len = e->child->r3_edge_len;
-
-    // the suffix edge of the leaf
-    c1 = r3_tree_create(3);
-    s1_len = e->pattern_len - dl;
-    e1 = r3_edge_create(strndup(s1, s1_len), s1_len, c1);
-    // printf("edge left: %s\n", e1->pattern);
-
-    // Migrate the child edges to the new edge we just created.
-    for ( int i = 0 ; i < tmp_r3_edge_len ; i++ ) {
-        r3_tree_append_edge(c1, tmp_edges[i]);
-        e->child->edges[i] = NULL;
-    }
-    e->child->r3_edge_len = 0;
-    e->child->endpoint--;
-
-    info("branched pattern: %s\n", e1->pattern);
-
-    r3_tree_append_edge(e->child, e1);
-    c1->endpoint++;
-}
-
-
-edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
-    edge * e = (edge*) malloc( sizeof(edge) );
-    e->pattern = pattern;
-    e->pattern_len = pattern_len;
-    e->child = child;
-    return e;
-}
-
-void r3_edge_free(edge * e) {
-    if (e->pattern) {
-        free(e->pattern);
-    }
-    if ( e->child ) {
-        r3_tree_free(e->child);
-    }
-}
 
 
 void r3_tree_dump(node * n, int level) {

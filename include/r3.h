@@ -30,11 +30,16 @@ struct _node {
     int      r3_edge_len;
     int      r3_edge_cap;
 
+
+    /** compile-time variables here.... **/
+
     /* the combined regexp pattern string from pattern_tokens */
     char * combined_pattern;
     int    combined_pattern_len;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
+    int    ov_cnt;
+
 
     /**
      * the pointer of route structure
