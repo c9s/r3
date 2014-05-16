@@ -30,6 +30,10 @@ enable_testing()
 add_subdirectory(src)
 add_subdirectory(tests)
 
+install (FILES include/r3.h DESTINATION include)
+install (FILES include/r3_define.h DESTINATION include)
+install (FILES include/r3_str.h DESTINATION include)
+
 add_test(test_r3 ${CMAKE_CURRENT_BINARY_DIR}/tests/test_r3)
 
 add_executable(demo demo.c)
