@@ -226,13 +226,13 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
     // info("try matching: %s\n", path);
 
     edge *e;
+    int rc;
+    int i;
 
     // if the pcre_pattern is found, and the pointer is not NULL, then it's
     // pcre pattern node, we use pcre_exec to match the nodes
     if (n->pcre_pattern) {
         info("pcre matching %s on %s\n", n->combined_pattern, path);
-        int rc;
-        int i;
 
         rc = pcre_exec(
                 n->pcre_pattern,   /* the compiled pattern */
@@ -286,14 +286,12 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
         return NULL;
     }
 
-    e = r3_node_find_edge_str(n, path, path_len);
-    if (e) {
+    if ( (e = r3_node_find_edge_str(n, path, path_len)) != NULL ) {
         int restlen = path_len - e->pattern_len;
-        if(restlen) {
+        if(restlen > 0) {
             return r3_tree_match(e->child, path + e->pattern_len, restlen, entry);
-        } else {
-            return e->child;
         }
+        return e->child;
     }
     return NULL;
 }
