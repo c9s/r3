@@ -183,7 +183,7 @@ void print_indent(int level) {
 
 char *my_strdup(const char *s) {
     char *out;
-    size_t count = 0;
+    int count = 0;
     while( s[count] )
         ++count;
     ++count;
@@ -194,9 +194,9 @@ char *my_strdup(const char *s) {
     return out;
 }
 
-char *my_strndup(const char *s, size_t n) {
+char *my_strndup(const char *s, int n) {
     char *out;
-    size_t count = 0;
+    int count = 0;
     while( count < n && s[count] )
         ++count;
     ++count;

@@ -30,7 +30,7 @@ void print_indent(int level);
 
 char *my_strdup(const char *s);
 
-char *my_strndup(const char *s, size_t n);
+char *my_strndup(const char *s, int n);
 
 
 #endif /* !STR_H */
