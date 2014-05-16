@@ -11,7 +11,12 @@
         <script>
         $.get('tests/bench_str.csv', function(data) {
 
-        $('#chart').highcharts({
+        var options = {
+            chart: {
+                zoomType: 'x',
+            },
+
+            /*
             data: {
                 csv: data,
                 parseDate: function (s) {
@@ -21,6 +26,7 @@
                     }
                 }
             },
+            */
 
             title: {
                 text: 'Matching Speed'
@@ -33,8 +39,6 @@
             xAxis: {
                 type: 'datetime',
                 // tickInterval: 7 * 24 * 3600 * 1000, // one week
-                tickWidth: 0,
-                gridLineWidth: 1,
                 labels: {
                     align: 'left',
                     x: 3,
@@ -49,20 +53,6 @@
                 labels: {
                     align: 'left',
                     x: 3,
-                    y: 16,
-                    format: '{value:.,0f}'
-                },
-                showFirstLabel: false
-            }, { // right y axis
-                linkedTo: 0,
-                gridLineWidth: 0,
-                opposite: true,
-                title: {
-                    text: null
-                },
-                labels: {
-                    align: 'right',
-                    x: -3,
                     y: 16,
                     format: '{value:.,0f}'
                 },
@@ -83,38 +73,50 @@
             },
 
             plotOptions: {
-                series: {
-                    cursor: 'pointer',
-                    point: {
-                        events: {
-                            click: function (e) {
-                                hs.htmlExpand(null, {
-                                    pageOrigin: {
-                                        x: e.pageX,
-                                        y: e.pageY
-                                    },
-                                    headingText: this.series.name,
-                                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) +':<br/> '+
-                                        this.y +' visits',
-                                    width: 200
-                                });
-                            }
-                        }
+                area: {
+                    fillColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
                     },
                     marker: {
-                        lineWidth: 1
-                    }
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
                 }
             },
 
             series: [{
+                type: 'area',
                 name: 'Speed',
-                lineWidth: 4,
+                pointInterval: 1000,
+                lineWidth: 2,
                 marker: {
-                    radius: 4
-                }
+                    radius: 3
+                },
+                pointStart: Date.UTC(2014, 5, 16),
+                data: []
             }]
+        };
+
+        var lines = data.split(/\n/);
+        $(lines).each(function(i,line) {
+            var columns = line.split(/,/);
+            var i = parseInt(columns[1]);
+            if(i) {
+                options.series[0].data.push(i);
+            }
         });
+
+        $('#chart').highcharts(options);
 });
         </script>
 	</head>
