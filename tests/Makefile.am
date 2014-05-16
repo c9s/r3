@@ -1,5 +1,14 @@
-bin_PROGRAMS=test_tree
-test_tree_SOURCES=test_tree.c
-test_tree_LDADD=$(DEPS_LIBS) -L$(top_builddir)/src -lcheck -lr3
+# INCLUDES                    = @CHECK_CFLAGS@
+if HAVE_CHECK
+TESTS                       = check_tree
+else
+TESTS                       =
+endif
+# noinst_PROGRAMS             = $(TESTS)
+check_PROGRAMS = $(TESTS)
+check_tree_SOURCES = check_tree.c
+check_tree_LDADD=$(DEPS_LIBS) -L$(top_builddir)/src -lcheck -lr3
+check_tree_CFLAGS=$(DEPS_CFLAGS) @CHECK_CFLAGS@
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir)/include
 AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
+CLEANFILES                  = check_tree.log
