@@ -62,7 +62,7 @@ char * compile_slug(char * str, int len)
     s1 = strchr(str, '{');
 
     if ( s1 == NULL ) {
-        return my_strdup(str);
+        return strdup(str);
     }
 
     if ( (s1 - str) > 0 ) {
@@ -117,7 +117,7 @@ char * ltrim_slash(char* str)
 {
     char * p = str;
     while (*p == '/') p++;
-    return my_strdup(p);
+    return strdup(p);
 }
 
 char** str_split(char* a_str, const char a_delim)
@@ -158,7 +158,7 @@ char** str_split(char* a_str, const char a_delim)
         while (token)
         {
             assert(idx < count);
-            *(result + idx++) = my_strdup(token);
+            *(result + idx++) = strdup(token);
             token = strtok(0, delim);
         }
         assert(idx == count - 1);
@@ -181,7 +181,8 @@ void print_indent(int level) {
     }
 }
 
-char *my_strdup(const char *s) {
+#ifndef HAVE_STRDUP
+char *strdup(const char *s) {
     char *out;
     int count = 0;
     while( s[count] )
@@ -193,8 +194,10 @@ char *my_strdup(const char *s) {
         out[count] = s[count];
     return out;
 }
+#endif
 
-char *my_strndup(const char *s, int n) {
+#ifndef HAVE_STRNDUP
+char *strndup(const char *s, int n) {
     char *out;
     int count = 0;
     while( count < n && s[count] )
@@ -206,3 +209,4 @@ char *my_strndup(const char *s, int n) {
         out[count] = s[count];
     return out;
 }
+#endif

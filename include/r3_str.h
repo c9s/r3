@@ -8,6 +8,7 @@
 #define STR_H
 
 #include "r3_define.h"
+#include "config.h"
 
 int strndiff(char * d1, char * d2, unsigned int n);
 
@@ -28,9 +29,13 @@ void str_repeat(char *s, char *c, int len);
 
 void print_indent(int level);
 
-char *my_strdup(const char *s);
+#ifndef HAVE_STRDUP
+char *strdup(const char *s);
+#endif
 
-char *my_strndup(const char *s, int n);
+#ifndef HAVE_STRNDUP
+char *strndup(const char *s, int n);
+#endif
 
 
 #endif /* !STR_H */
