@@ -28,6 +28,10 @@ void str_repeat(char *s, char *c, int len);
 
 void print_indent(int level);
 
+char *my_strdup(const char *s);
+
+char *my_strndup(const char *s, size_t n);
+
 
 #endif /* !STR_H */
 
