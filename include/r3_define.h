@@ -8,9 +8,15 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
+#ifndef bool
 typedef unsigned char bool;
-#define FALSE 0
-#define TRUE 1
+#endif
+#ifndef FALSE
+#    define FALSE 0
+#endif
+#ifndef TRUE
+#    define TRUE 1
+#endif
 
 // #define DEBUG 1
 #ifdef DEBUG
