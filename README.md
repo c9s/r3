@@ -60,7 +60,7 @@ r3 uses the same route path data for benchmarking, and here is the benchmark:
 The matching speed of r3 is 527+ times faster than rails' trie router.
 
 
-### Route Paths
+### The benchmarking route paths 
 
 The route path generator is from <https://github.com/stevegraham/rails/pull/1>:
 
