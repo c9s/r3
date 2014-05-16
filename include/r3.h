@@ -27,8 +27,8 @@ typedef struct _node node;
 
 struct _node {
     edge ** edges;
-    int      r3_edge_len;
-    int      r3_edge_cap;
+    int      edge_len;
+    int      edge_cap;
 
 
     /** compile-time variables here.... **/
@@ -39,7 +39,7 @@ struct _node {
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
     int    ov_cnt;
-
+    int *  ov;
 
     /**
      * the pointer of route structure

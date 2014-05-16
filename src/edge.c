@@ -36,7 +36,7 @@ void r3_edge_branch(edge *e, int dl) {
     int s1_len = 0;
 
     edge **tmp_edges = e->child->edges;
-    int   tmp_r3_edge_len = e->child->r3_edge_len;
+    int   tmp_r3_edge_len = e->child->edge_len;
 
     // the suffix edge of the leaf
     c1 = r3_tree_create(3);
@@ -49,7 +49,7 @@ void r3_edge_branch(edge *e, int dl) {
         r3_tree_append_edge(c1, tmp_edges[i]);
         e->child->edges[i] = NULL;
     }
-    e->child->r3_edge_len = 0;
+    e->child->edge_len = 0;
     e->child->endpoint--;
 
     info("branched pattern: %s\n", e1->pattern);
