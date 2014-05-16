@@ -107,10 +107,10 @@ if ( $error ) {
 }
 ```
 
-Hacking
+Install
 ----------------------
 
-    cmake CMakeLists.txt
+    cmake CMakeLists.txt -Wno-dev
     make
-
+    sudo make install
 
