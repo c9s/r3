@@ -636,14 +636,15 @@ START_TEST(benchmark_str)
 
     printf("Benchmarking...\n");
     double s = microtime();
-    unsigned int N = 5000000;
+    long N = 5000000;
     for (int i = 0; i < 5000000 ; i++ ) {
         rtree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
     }
     double e = microtime();
 
+    printf("%ld iterations ", N);
+    printf("finished in %lf seconds\n", e - s );
     printf("%.2f i/sec\n", N / (e - s) );
-    printf("%lf seconds\n", e - s );
 
     FILE *fp = fopen("bench_str.csv", "a+");
     fprintf(fp, "%ld,%.2f\n", unixtime(), N / (e - s));
