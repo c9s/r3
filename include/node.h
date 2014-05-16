@@ -45,6 +45,8 @@ void rnode_dump(rnode * n, int level);
 
 void rnode_combine_patterns(rnode * n);
 
+bool rnode_has_slug_edges(rnode *n);
+
 rnode * rnode_lookup(rnode * tree, char * path, int path_len);
 
 redge * redge_create(char * pattern, int pattern_len, rnode * child);

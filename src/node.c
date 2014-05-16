@@ -31,7 +31,7 @@ struct _rnode {
 struct _redge {
     char * pattern;
     int    pattern_len;
-    bool   is_slug;
+    bool   has_slug;
     rnode * child;
 };
 
@@ -108,6 +108,16 @@ redge * rnode_find_edge(rnode * n, char * pat) {
     return NULL;
 }
 
+void rnode_compile(rnode *n)
+{
+    bool has_slug_edges = rnode_has_slug_edges(n);
+    if ( has_slug_edges ) {
+        rnode_combine_patterns(n);
+    } else {
+        // use normal text matching...
+        n->combined_pattern = NULL;
+    }
+}
 
 
 /**
@@ -118,7 +128,7 @@ void rnode_combine_patterns(rnode * n) {
     char * cpat;
     char * p;
 
-    cpat = malloc(128);
+    cpat = calloc(sizeof(char),128);
     if (cpat==NULL)
         return;
 
@@ -127,12 +137,17 @@ void rnode_combine_patterns(rnode * n) {
     redge *e = NULL;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
-        strncat(p++,"(", 1);
-        strncat(p, e->pattern, e->pattern_len);
+        if ( e->has_slug ) {
+            char * slug_pat = compile_slug(e->pattern, e->pattern_len);
+            strcat(p, slug_pat);
+        } else {
+            strncat(p++,"(", 1);
 
-        p += e->pattern_len;
+            strncat(p, e->pattern, e->pattern_len);
+            p += e->pattern_len;
 
-        strncat(p++,")", 1);
+            strncat(p++,")", 1);
+        }
 
         if ( i + 1 < n->edge_len ) {
             strncat(p++,"|",1);
@@ -280,6 +295,18 @@ rnode * rnode_insert_routel(rnode *tree, char *route, int route_len)
     return n;
 }
 
+bool rnode_has_slug_edges(rnode *n) {
+    bool found = FALSE;
+    redge *e;
+    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+        e = n->edges[i];
+        e->has_slug = contains_slug(e->pattern);
+        if (e->has_slug) 
+            found = TRUE;
+    }
+    return found;
+}
+
 void redge_branch(redge *e, int dl) {
     rnode *c1; // child 1, child 2
     redge *e1; // edge 1, edge 2
@@ -306,25 +333,12 @@ void redge_branch(redge *e, int dl) {
     c1->endpoint++;
 }
 
-void rnode_dump(rnode * n, int level) {
-    if ( n->edge_len ) {
-        print_indent(level);
-        printf("+--\n");
-        for ( int i = 0 ; i < n->edge_len ; i++ ) {
-            redge * e = n->edges[i];
-            print_indent(level + 1);
-            printf("|-\"%s\"\n", e->pattern);
-            rnode_dump( e->child, level + 1);
-        }
-    }
-}
 
 redge * redge_create(char * pattern, int pattern_len, rnode * child) {
     redge * edge = (redge*) malloc( sizeof(redge) );
     edge->pattern = pattern;
     edge->pattern_len = pattern_len;
     edge->child = child;
-    edge->is_slug = 0;
     return edge;
 }
 
@@ -338,4 +352,18 @@ void redge_free(redge * e) {
 }
 
 
-
+void rnode_dump(rnode * n, int level) {
+    if ( n->edge_len ) {
+        printf(" => \n");
+        for ( int i = 0 ; i < n->edge_len ; i++ ) {
+            redge * e = n->edges[i];
+            print_indent(level);
+            printf("  |-\"%s\"", e->pattern);
+            if ( e->child ) {
+                rnode_dump( e->child, level + 1);
+                printf("\n");
+            } else {
+            }
+        }
+    }
+}

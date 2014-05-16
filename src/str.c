@@ -10,6 +10,7 @@
 #include <assert.h>
 #include "str.h"
 #include "token.h"
+#include "define.h"
 
 int strndiff(char * d1, char * d2, unsigned int n) {
     char * o = d1;
@@ -44,8 +45,8 @@ int count_slug(char * p, int len) {
     return s;
 }
 
-char * contains_slug(char * str) {
-    return strchr(str, '}');
+bool contains_slug(char * str) {
+    return strchr(str, '{') != NULL ? TRUE : FALSE;
 }
 
 /**

@@ -133,7 +133,10 @@ START_TEST (test_rnode_insert_routel)
 
     printf("Inserting /post/{handle}-{id}\n");
     rnode_insert_routel(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}") );
+    rnode_combine_patterns(n);
     rnode_dump(n, 0);
+
+
 
     /*
     fail_if(n == NULL, "rnode tree");

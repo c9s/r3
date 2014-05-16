@@ -8,9 +8,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-typedef unsigned char bool;
-#define FALSE 0
-#define TRUE 1
+#include "define.h"
 
 typedef struct _token_array {
   char **tokens;
