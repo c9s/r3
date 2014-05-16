@@ -54,11 +54,12 @@ $paths = [
     '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'create' , 'method' => 'POST' ]  , 
     '/blog'           => [ 'controller' => 'BlogController' , 'action' => 'list'   , 'method'   => 'GET' ] , 
 ];
-$rs = r2_compile_radix($paths, 'persisten-table-id');
-$ret = r2_dispatch_radix($rs, '/blog/post/3' );
+$rs = r3_compile($paths, 'persisten-table-id');
+$ret = r3_dispatch($rs, '/blog/post/3' );
 list($complete, $route, $variables) = $ret;
 
-list($error, $message) = r2_validate($route); // validate route conditions
+// matched conditions aren't done yet
+list($error, $message) = r3_validate($route); // validate route conditions
 if ( $error ) {
     echo $message; // "Method not allowed", "...";
 }
