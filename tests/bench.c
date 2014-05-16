@@ -50,7 +50,7 @@ double bench_iteration_speed(bench *b) {
 
 void bench_print_summary(bench *b) {
     printf("%ld runs, ", b->R);
-    printf("%ld iterations, ", b->N);
+    printf("%ld iterations each run, ", b->N);
     printf("finished in %lf seconds\n", b->end - b->start );
-    printf("%.2f i/sec\n", b->N / (b->end - b->start) );
+    printf("%.2f i/sec\n", (b->N * b->R) / (b->end - b->start) );
 }

@@ -618,7 +618,7 @@ START_TEST(benchmark_str)
     bench_print_summary(&B);
 
     FILE *fp = fopen("bench_str.csv", "a+");
-    fprintf(fp, "%ld,%.2f\n", unixtime(), B.N / (B.end - B.start));
+    fprintf(fp, "%ld,%.2f\n", unixtime(), (B.N * B.R) / (B.end - B.start));
     fclose(fp);
 
 }
