@@ -1,8 +1,9 @@
 AC_INIT([r3], 1.0)
+AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE
 LT_INIT
 AC_PROG_CC
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES(DEPS, [libpcre check])
+PKG_CHECK_MODULES(DEPS, [libpcre check jemalloc])
 AC_CONFIG_FILES(Makefile src/Makefile tests/Makefile)
 AC_OUTPUT
