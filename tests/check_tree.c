@@ -5,37 +5,8 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "bench.h"
 
-#include <sys/time.h>
-
-#define MICRO_IN_SEC 1000000.00
-#define SEC_IN_MIN 60
-#define NUL  '\0'
-
-long unixtime() {
-    struct timeval tp;
-    long sec = 0L;
-    if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
-        return tp.tv_sec;
-    }
-    return 0;
-}
-
-double microtime() {
-    struct timeval tp;
-    long sec = 0L;
-    double msec = 0.0;
-    char ret[100];
-    
-    if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
-        msec = (double) (tp.tv_usec / MICRO_IN_SEC);
-        sec = tp.tv_sec;
-        if (msec >= 1.0)
-            msec -= (long) msec;
-        return sec + msec;
-    }
-    return 0;
-}
 
 
 START_TEST (test_ltrim_slash)
@@ -640,19 +611,23 @@ START_TEST(benchmark_str)
 
 
     printf("Benchmarking...\n");
+    BENCHMARK(string_dispatch)
+    /*
     double s = microtime();
     long N = 5000000;
     for (int i = 0; i < 5000000 ; i++ ) {
+    */
         r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
+    /*
     }
     double e = microtime();
+    */
+    END_BENCHMARK()
 
-    printf("%ld iterations ", N);
-    printf("finished in %lf seconds\n", e - s );
-    printf("%.2f i/sec\n", N / (e - s) );
+    bench_summary(&B);
 
     FILE *fp = fopen("bench_str.csv", "a+");
-    fprintf(fp, "%ld,%.2f\n", unixtime(), N / (e - s));
+    fprintf(fp, "%ld,%.2f\n", unixtime(), B.N / (B.end - B.start));
     fclose(fp);
 
 }

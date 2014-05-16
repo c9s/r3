@@ -7,7 +7,7 @@
 TESTS                       = check_tree
 # noinst_PROGRAMS             = $(TESTS)
 check_PROGRAMS = $(TESTS)
-check_tree_SOURCES = check_tree.c
+check_tree_SOURCES = check_tree.c bench.c
 check_tree_LDADD=$(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
 check_tree_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir)/include
