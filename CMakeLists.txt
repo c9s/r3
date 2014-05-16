@@ -23,7 +23,7 @@ find_package(Jemalloc REQUIRED)
 
 set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Jemalloc_LIBRARIES} r3)
 
-set (CMAKE_CFLAGS "-Wall -pipe -g3 -funroll-loops")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -pipe -g3 -funroll-loops")
 # set (CMAKE_CXX_FLAGS "-std=c++0x -arch x86_64 -stdlib=libc++ -g3 -Wall -O0")
 enable_testing()
 
