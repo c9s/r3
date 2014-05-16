@@ -71,6 +71,18 @@ START_TEST (test_compile)
     */
     rnode *m = rnode_match( e->child , "foo", strlen("foo") );
     fail_if( NULL == m );
+
+    m = rnode_match( n , "/foo", strlen("/foo") );
+    fail_if( NULL == m );
+
+    m = rnode_match( n , "/zoo", strlen("/zoo") );
+    fail_if( NULL == m );
+
+    m = rnode_match( n , "/bar", strlen("/bar") );
+    fail_if( NULL == m );
+
+    m = rnode_match( n , "/zzz", strlen("/zzz") );
+    fail_if( NULL == m );
 }
 END_TEST
 

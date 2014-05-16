@@ -161,13 +161,14 @@ void rnode_compile_patterns(rnode * n) {
 }
 
 
-rnode * rnode_match(rnode * n, char * path, int path_len) {
-    int ovector_count = (n->edge_len + 1) * 2;
-    int ovector[ovector_count];
 
+
+rnode * rnode_match(rnode * n, char * path, int path_len) {
     if (n->combined_pattern && n->pcre_pattern) {
-        printf("pcre matching /%s/ on %s\n", n->combined_pattern, path);
-        // use PCRE for now
+        // printf("pcre matching /%s/ on %s\n", n->combined_pattern, path);
+        // int ovector_count = (n->edge_len + 1) * 2;
+        int ovector_count = 30;
+        int ovector[ovector_count];
         int rc;
         rc = pcre_exec(
                 n->pcre_pattern,   /* the compiled pattern */
@@ -197,15 +198,29 @@ rnode * rnode_match(rnode * n, char * path, int path_len) {
         for (i = 1; i < rc; i++)
         {
             char *substring_start = path + ovector[2*i];
-            int substring_length = ovector[2*i+1] - ovector[2*i];
+            int   substring_length = ovector[2*i+1] - ovector[2*i];
             printf("%2d: %.*s\n", i, substring_length, substring_start);
             if ( substring_length > 0) {
-                return n->edges[i]->child;
+                int len = path_len - substring_length; // fully match to the end
+                // printf("len:%d edges:%d i:%d\n", len, n->edge_len, i);
+                if (len) {
+                    return rnode_match( n->edges[i - 1]->child, substring_start, len);
+                }
+                return n->edges[i - 1]->child;
             }
         }
+        // does not match
+        return NULL;
+    }
 
-    } else {
-
+    redge *e = rnode_find_edge_str(n, path, path_len);
+    if (e) {
+        int len = path_len - e->pattern_len;
+        if(len == 0) {
+            return e->child;
+        } else {
+            return rnode_match(e->child, path + e->pattern_len, len);
+        }
     }
     return NULL;
 }
