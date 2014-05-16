@@ -1,9 +1,32 @@
+
+
+# cmake
 CMakeCache.txt
 CMakeFiles
-Makefile
 CTestTestfile.cmake
+Testing
 cmake_install.cmake
 install_manifest.txt
-*.a
-Testing
+
+# tags
 tags
+
+# autotools
+
+Makefile
+Makefile.in
+*.a
+*.am
+*.lo
+*.la
+*.dylib
+*.o
+/aclocal.m4
+/autom4te.cache
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/stamp-h1
+
