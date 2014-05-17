@@ -4,7 +4,7 @@ compiler:
   - gcc
 # for debian
 install:
-  - sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential
+  - sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf
 before_script:
   - ./autogen.sh
   - ./configure && make
