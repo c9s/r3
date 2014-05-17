@@ -262,6 +262,9 @@ START_TEST(benchmark_str)
     match_entry * entry = calloc( sizeof(entry) , 1 );
     node * n = r3_tree_create(1);
 
+
+    int route_data = 999;
+
     r3_tree_insert_path(n, "/foo/bar/baz", NULL);
     r3_tree_insert_path(n, "/foo/bar/qux", NULL);
     r3_tree_insert_path(n, "/foo/bar/quux", NULL);
@@ -397,7 +400,7 @@ START_TEST(benchmark_str)
     r3_tree_insert_path(n, "/qux/bar/foo", NULL);
     r3_tree_insert_path(n, "/qux/bar/baz", NULL);
     r3_tree_insert_path(n, "/qux/bar/quux", NULL);
-    r3_tree_insert_path(n, "/qux/bar/corge",  (void*) 999);
+    r3_tree_insert_path(n, "/qux/bar/corge",  (void*) &route_data);
     r3_tree_insert_path(n, "/qux/bar/grault", NULL);
     r3_tree_insert_path(n, "/qux/bar/garply", NULL);
     r3_tree_insert_path(n, "/qux/baz/foo", NULL);
@@ -607,7 +610,7 @@ START_TEST(benchmark_str)
     m = r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
     fail_if( m == NULL );
     // r3_tree_dump( m, 0 );
-    ck_assert_int_eq( (int) m->route_ptr, 999 );
+    ck_assert_int_eq( *((int*) m->route_ptr), 999 );
 
 
     printf("Benchmarking...\n");

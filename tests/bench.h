@@ -25,7 +25,6 @@ typedef struct {
 
 
 #define BENCHMARK(name) \
-    { \
         bench B; B.N = 5000000; B.R = 3; \
         bench_start(&B); \
         for (int _r = 0; _r < B.R ; _r++ ) { \
@@ -34,8 +33,7 @@ typedef struct {
 #define END_BENCHMARK() \
             } \
         } \
-        bench_stop(&B); \
-    }
+        bench_stop(&B);
 
 
 
