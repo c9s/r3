@@ -194,6 +194,23 @@ void r3_tree_compile_patterns(node * n) {
     }
 }
 
+route_info * route_info_create(char * path) {
+    return route_info_createl(path, strlen(path));
+}
+
+route_info * route_info_createl(char * path, int path_len) {
+    route_info * info = malloc(sizeof(route_info));
+    info->path = path;
+    info->path_len = path_len;
+    info->request_methods = 0; // can be (GET || POST)
+
+    info->host = NULL; // required host name
+    info->host_len = 0;
+
+    info->remote_addr_pattern = NULL;
+    info->remote_addr_pattern_len = 0;
+    return info;
+}
 
 match_entry * match_entry_create(char * path, int path_len) {
     match_entry * entry = malloc(sizeof(match_entry));

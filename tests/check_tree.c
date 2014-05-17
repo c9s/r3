@@ -257,9 +257,25 @@ START_TEST (test_str_array)
 }
 END_TEST
 
+
+START_TEST(test_insert_route)
+{
+    match_entry * entry = match_entry_create();
+
+
+    node * tree = r3_tree_create(2);
+
+
+    route_info *info = route_info_create("/blog/post", strlen("/blog/post") );
+
+    // r3_tree_insert_route(n, "/foo/bar/baz", NULL);
+
+}
+END_TEST
+
 START_TEST(benchmark_str)
 {
-    match_entry * entry = calloc( sizeof(entry) , 1 );
+    match_entry * entry = match_entry_create();
     node * n = r3_tree_create(1);
 
 
@@ -626,6 +642,7 @@ START_TEST(benchmark_str)
 
 }
 END_TEST
+
 
 Suite* r3_suite (void) {
         Suite *suite = suite_create("blah");

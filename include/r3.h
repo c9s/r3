@@ -129,4 +129,12 @@ match_entry * match_entry_create(char * path, int path_len);
 
 void match_entry_free(match_entry * entry);
 
+
+
+
+route_info * route_info_create(char * path);
+
+route_info * route_info_createl(char * path, int path_len);
+
+
 #endif /* !NODE_H */
