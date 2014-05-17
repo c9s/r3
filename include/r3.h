@@ -125,7 +125,9 @@ void r3_edge_free(edge * edge);
 
 
 
-match_entry * match_entry_create(char * path, int path_len);
+match_entry * match_entry_createl(char * path, int path_len);
+
+#define match_entry_create(path) match_entry_createl(path,strlen(path))
 
 void match_entry_free(match_entry * entry);
 

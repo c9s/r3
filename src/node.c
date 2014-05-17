@@ -212,7 +212,7 @@ route_info * route_info_createl(char * path, int path_len) {
     return info;
 }
 
-match_entry * match_entry_create(char * path, int path_len) {
+match_entry * match_entry_createl(char * path, int path_len) {
     match_entry * entry = malloc(sizeof(match_entry));
     if(!entry)
         return NULL;

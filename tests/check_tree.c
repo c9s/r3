@@ -88,27 +88,27 @@ START_TEST (test_compile)
 
     match_entry * entry;
 
-    entry = match_entry_create( "foo" , strlen("/foo") );
+    entry = match_entry_createl( "foo" , strlen("/foo") );
     m = r3_tree_match( n , "/foo", strlen("/foo"), entry);
     fail_if( NULL == m );
 
-    entry = match_entry_create( "/zoo" , strlen("/zoo") );
+    entry = match_entry_createl( "/zoo" , strlen("/zoo") );
     m = r3_tree_match( n , "/zoo", strlen("/zoo"), entry);
     fail_if( NULL == m );
 
-    entry = match_entry_create( "/bar" , strlen("/bar") );
+    entry = match_entry_createl( "/bar" , strlen("/bar") );
     m = r3_tree_match( n , "/bar", strlen("/bar"), entry);
     fail_if( NULL == m );
 
-    entry = match_entry_create( "/xxx" , strlen("/xxx") );
+    entry = match_entry_createl( "/xxx" , strlen("/xxx") );
     m = r3_tree_match( n , "/xxx", strlen("/xxx"), entry);
     fail_if( NULL == m );
 
-    entry = match_entry_create( "/foo/xxx" , strlen("/foo/xxx") );
+    entry = match_entry_createl( "/foo/xxx" , strlen("/foo/xxx") );
     m = r3_tree_match( n , "/foo/xxx", strlen("/foo/xxx"), entry);
     fail_if( NULL == m );
 
-    entry = match_entry_create( "/some_id" , strlen("/some_id") );
+    entry = match_entry_createl( "/some_id" , strlen("/some_id") );
     m = r3_tree_match( n , "/some_id", strlen("/some_id"), entry);
     fail_if( NULL == m );
     ck_assert_int_gt( m->endpoint , 0 ); // should not be an endpoint
@@ -260,13 +260,14 @@ END_TEST
 
 START_TEST(test_insert_route)
 {
-    match_entry * entry = match_entry_create();
+    match_entry * entry = match_entry_createl("/blog/post", strlen("/blog/post") );
+
+    match_entry * entry2 = match_entry_create("/blog/post");
 
 
     node * tree = r3_tree_create(2);
 
-
-    route_info *info = route_info_create("/blog/post", strlen("/blog/post") );
+    // route_info *info = route_info_create("/blog/post", strlen("/blog/post") );
 
     // r3_tree_insert_route(n, "/foo/bar/baz", NULL);
 
@@ -275,7 +276,7 @@ END_TEST
 
 START_TEST(benchmark_str)
 {
-    match_entry * entry = match_entry_create();
+    match_entry * entry = match_entry_createl("/blog/post", strlen("/blog/post") );
     node * n = r3_tree_create(1);
 
 
