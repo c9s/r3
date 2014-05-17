@@ -8,3 +8,6 @@ r3_include_HEADERS = \
 	include/r3_str.h \
 	include/str_array.h \
 	$(NULL)
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = r3.pc

@@ -28,5 +28,10 @@ PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES(DEPS, [libpcre check])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
-AC_CONFIG_FILES(Makefile src/Makefile tests/Makefile)
+AC_CONFIG_FILES([
+  r3.pc
+  Makefile
+  src/Makefile
+  tests/Makefile
+])
 AC_OUTPUT
