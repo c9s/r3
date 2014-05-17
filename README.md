@@ -1,7 +1,7 @@
 R3
 ================
 
-R3 is an URI router library with high performance, thus, it's implemented in C.
+R3 is an URL router library with high performance, thus, it's implemented in C.
 It compiles your route paths into a prefix trie.
 
 By using the constructed prefix trie in the start-up time, you can dispatch
@@ -11,7 +11,8 @@ routes with efficiency.
 Requirement
 -----------------------
 
-* cmake
+* autoconf
+* automake
 * check
 * pcre
 * jemalloc
@@ -110,7 +111,11 @@ if ( $error ) {
 Install
 ----------------------
 
-    cmake CMakeLists.txt -Wno-dev
-    make
+    ./autogen.sh
+    ./configure && make 
+    make check # run tests
     sudo make install
+
+
+
 
