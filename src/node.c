@@ -403,7 +403,7 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
         // printf("branch the edge dl: %d\n", dl);
 
 
-        /* it's partically matched with the pattern,
+        /* it's partially matched with the pattern,
          * we should split the end point and make a branch here...
          */
         node *c2; // child 1, child 2
