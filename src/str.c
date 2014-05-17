@@ -188,7 +188,7 @@ char *strdup(const char *s) {
     while( s[count] )
         ++count;
     ++count;
-    out = malloc(sizeof(char*) * count);
+    out = malloc(sizeof(char) * count);
     out[--count] = 0;
     while( --count >= 0 )
         out[count] = s[count];
@@ -203,7 +203,7 @@ char *strndup(const char *s, int n) {
     while( count < n && s[count] )
         ++count;
     ++count;
-    out = malloc(sizeof(char*) * count);
+    out = malloc(sizeof(char) * count);
     out[--count] = 0;
     while( --count >= 0 )
         out[count] = s[count];
