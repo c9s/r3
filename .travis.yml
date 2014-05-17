@@ -2,6 +2,7 @@ language: c
 compiler:
   - clang
   - gcc
+# for debian
 install:
   - sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1
 before_script:
