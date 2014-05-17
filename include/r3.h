@@ -58,9 +58,15 @@ struct _edge {
 
 typedef struct {
     str_array * vars;
-    char * path; // dispatched path
-    int    path_len;
+    char * path; // current path to dispatch
+    int    path_len; // the length of the current path
     void * route_ptr; // route ptr
+    int    request_method;  // current request method
+    char * host; // the request host 
+    int    host_len;
+
+    char * remote_addr;
+    int    remote_addr_len;
 } match_entry;
 
 
