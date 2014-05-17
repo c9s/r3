@@ -159,7 +159,6 @@ void r3_tree_compile_patterns(node * n) {
         }
     }
 
-
     n->ov_cnt = (1 + n->edge_len) * 3;
     n->ov = (int*) calloc(sizeof(int), n->ov_cnt);
 
@@ -185,7 +184,7 @@ void r3_tree_compile_patterns(node * n) {
             &erroffset,           /* for error offset */
             NULL);                /* use default character tables */
     if (n->pcre_pattern == NULL) {
-        printf("PCRE compilation failed at offset %d: %s\n", erroffset, error);
+        printf("PCRE compilation failed at offset %d: %s, pattern: %s\n", erroffset, error, n->combined_pattern);
         return;
     }
     n->pcre_extra = pcre_study(n->pcre_pattern, 0, &error);
