@@ -421,7 +421,7 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
         r3_tree_append_edge(e->child, e2);
 
         // truncate the original edge pattern 
-        free(e->pattern);
+       
         e->pattern = strndup(e->pattern, dl);
         e->pattern_len = dl;
 
