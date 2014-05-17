@@ -123,7 +123,7 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libr3_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libr3_la_OBJECTS = node.lo edge.lo list.lo str.lo token.lo
+am_libr3_la_OBJECTS = node.lo edge.lo list.lo str.lo token.lo gvz.lo
 libr3_la_OBJECTS = $(am_libr3_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -312,7 +312,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libr3.la
-libr3_la_SOURCES = node.c edge.c list.c str.c token.c
+libr3_la_SOURCES = node.c edge.c list.c str.c token.c gvz.c
 libr3_la_LIBADD = $(DEPS_LIBS)
 AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
 all: all-am
@@ -395,6 +395,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edge.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gvz.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/node.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/str.Plo@am__quote@
