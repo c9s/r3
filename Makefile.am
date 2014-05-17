@@ -1,5 +1,7 @@
 SUBDIRS=src tests
 
+ACLOCAL_AMFLAGS=-I m4
+
 r3_includedir = $(includedir)/r3
 r3_include_HEADERS = \
 	include/r3.h \
