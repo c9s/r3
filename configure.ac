@@ -26,7 +26,7 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
 
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES(DEPS, [libpcre check])
+PKG_CHECK_MODULES(DEPS, [libpcre check gvc])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 AC_CONFIG_FILES([
