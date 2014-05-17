@@ -66,10 +66,10 @@ And here is the result of the router journey:
 
 r3 uses the same route path data for benchmarking, and here is the benchmark:
 
-                5000000 iterations finished in 0.905591 seconds
-                5521256.22 i/sec
+                3 runs, 5000000 iterations each run, finished in 1.308894 seconds
+                11460057.83 i/sec
 
-The matching speed of r3 is 527+ times faster than rails' trie router.
+The matching speed of r3 is 1153+ times faster than rails' trie router.
 
 
 ### The benchmarking route paths 
