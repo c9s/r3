@@ -20,7 +20,7 @@ for l in glibtoolize libtoolize15 libtoolize14 libtoolize ; do
     echo "Did not find $l" 
 done
 
-if [ "x$libtoolize" == "x" ]; then
+if [ "x$libtoolize" = "x" ]; then
     echo "Can't find libtoolize on your system"
     exit 1
 fi
