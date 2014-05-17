@@ -1,6 +1,6 @@
 language: c
 compiler:
-  - clang
+  #  - clang
   - gcc
 # for debian
 install:
