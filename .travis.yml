@@ -6,6 +6,9 @@ compiler:
 install:
   - sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf m4 gnulib
 before_script:
+  - aclocal
+  - autoconf
+  - automake --add-missing --foreign
   - autoreconf -i -I/usr/share/gnulib/m4 && ./configure && make
     # - ./autogen.sh
     # - ./configure && make
