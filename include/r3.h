@@ -69,6 +69,20 @@ typedef struct {
     int    remote_addr_len;
 } match_entry;
 
+typedef struct {
+    char * path;
+    int    path_len;
+
+    int    request_methods; // can be (GET || POST)
+
+    char * host; // required host name
+    int    host_len;
+
+    char * remote_addr_pattern;
+    int    remote_addr_pattern_len;
+
+} route_info;
+
 
 node * r3_tree_create(int cap);
 
