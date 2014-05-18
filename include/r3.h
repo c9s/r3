@@ -81,7 +81,7 @@ typedef struct {
     char * remote_addr_pattern;
     int    remote_addr_pattern_len;
 
-} route_info;
+} route;
 
 
 node * r3_tree_create(int cap);
@@ -136,8 +136,8 @@ match_entry * match_entry_createl(char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
-route_info * route_info_create(char * path);
+route * route_create(char * path);
 
-route_info * route_info_createl(char * path, int path_len);
+route * route_createl(char * path, int path_len);
 
 #endif /* !NODE_H */

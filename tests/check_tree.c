@@ -267,7 +267,7 @@ START_TEST(test_insert_route)
 
     node * tree = r3_tree_create(2);
 
-    // route_info *info = route_info_create("/blog/post", strlen("/blog/post") );
+    // route *info = route_create("/blog/post", strlen("/blog/post") );
 
     // r3_tree_insert_route(n, "/foo/bar/baz", NULL);
 

@@ -194,12 +194,12 @@ void r3_tree_compile_patterns(node * n) {
     }
 }
 
-route_info * route_info_create(char * path) {
-    return route_info_createl(path, strlen(path));
+route * route_create(char * path) {
+    return route_createl(path, strlen(path));
 }
 
-route_info * route_info_createl(char * path, int path_len) {
-    route_info * info = malloc(sizeof(route_info));
+route * route_createl(char * path, int path_len) {
+    route * info = malloc(sizeof(route));
     info->path = path;
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
