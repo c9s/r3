@@ -6,7 +6,7 @@
 # endif
 TESTS                       = check_tree
 
-if GRAPHVIZ
+if ENABLE_GRAPHVIZ
 TESTS += check_gvc
 check_gvc_SOURCES = check_gvc.c bench.c
 check_gvc_LDADD=$(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
