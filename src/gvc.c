@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "r3.h"
+#include "r3_gvc.h"
 
 
 char * node_id_str(int id) {

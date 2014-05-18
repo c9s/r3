@@ -123,7 +123,7 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libr3_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libr3_la_OBJECTS = node.lo edge.lo list.lo str.lo token.lo gvc.lo
+am_libr3_la_OBJECTS = node.lo edge.lo list.lo str.lo token.lo
 libr3_la_OBJECTS = $(am_libr3_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -220,6 +220,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
+GVC_DEPS_CFLAGS = @GVC_DEPS_CFLAGS@
+GVC_DEPS_LIBS = @GVC_DEPS_LIBS@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -312,9 +314,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libr3.la
-libr3_la_SOURCES = node.c edge.c list.c str.c token.c gvc.c
+libr3_la_SOURCES = node.c edge.c list.c str.c token.c
 libr3_la_LIBADD = $(DEPS_LIBS)
-AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall -std=c99
+AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall
 all: all-am
 
 .SUFFIXES:
@@ -395,7 +397,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edge.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gvc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/node.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/str.Plo@am__quote@
@@ -633,6 +634,11 @@ uninstall-am: uninstall-libLTLIBRARIES
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+
+
+@GRAPHVIZ_TRUE@	libr3_la_SOURCES += gvc.c
+@GRAPHVIZ_TRUE@	libr3_la_LIBADD += $(GVC_DEPS_LIBS)
+@GRAPHVIZ_TRUE@	AM_CFLAGS += =$(GVC_DEPS_CFLAGS)
 
 # AM_CFLAGS=$(DEPS_CFLAGS)
 

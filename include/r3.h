@@ -13,7 +13,6 @@
 #include <string.h>
 #include <assert.h>
 #include <pcre.h>
-#include <gvc.h>
 
 #include "str_array.h"
 
@@ -134,6 +133,5 @@ match_entry * match_entry_create(char * path, int path_len);
 
 void match_entry_free(match_entry * entry);
 
-void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, int node_cnt);
 
 #endif /* !NODE_H */

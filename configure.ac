@@ -25,8 +25,21 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
 
+
+
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES(DEPS, [libpcre check libgvc])
+AC_ARG_ENABLE([graphviz],
+    AS_HELP_STRING([--enable-graphviz], [Enable graphviz feature]))
+
+AS_IF([test "x$enable_graphviz" = "xyes"], [
+    dnl Do the stuff needed for enabling the feature
+    PKG_CHECK_MODULES(GVC_DEPS, [libgvc])
+    AC_SUBST(GVC_DEPS_CFLAGS)
+    AC_SUBST(GVC_DEPS_LIBS)
+])
+AM_CONDITIONAL(GRAPHVIZ, test x$enable_graphviz = xyes)
+
+PKG_CHECK_MODULES(DEPS, [libpcre check])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 AC_CONFIG_FILES([
