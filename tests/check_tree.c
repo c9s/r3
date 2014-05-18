@@ -258,15 +258,17 @@ START_TEST(test_insert_route)
     r2->request_method = METHOD_POST;
 
     match_entry * entry = match_entry_create("/blog/post");
+    entry->request_method = METHOD_GET;
 
     node * n = r3_tree_create(2);
     r3_tree_insert_route(n, r1, &var1);
     r3_tree_insert_route(n, r2, &var2);
 
     node *m;
-    m = r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
+    m = r3_tree_match(n , "/blog/post", strlen("/blog/post"), entry);
 
     fail_if(m == NULL);
+    fail_if(m->endpoint == 0);
     condition *c = r3_node_match_condition(m, entry);
     fail_if(c == NULL);
 
@@ -663,6 +665,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_compile_slug);
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_route_cmp);
+        tcase_add_test(tcase, test_insert_route);
 
         tcase_add_test(tcase, benchmark_str);
 
