@@ -557,6 +557,12 @@ int route_cmp(route *r1, match_entry *r2) {
     }
 
     if (r1->remote_addr_pattern) {
+        /*
+         * XXX: consider "netinet/in.h"
+        if (r2->remote_addr) {
+            inet_addr(r2->remote_addr);
+        }
+        */
         if ( strcmp(r1->remote_addr_pattern, r2->remote_addr) != 0 ) {
             return -1;
         }
