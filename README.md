@@ -41,7 +41,7 @@ r3_tree_insert_pathl(n , "/zoo"       , strlen("/zoo")       , NULL, &route_data
 r3_tree_insert_pathl(n , "/foo/bar"   , strlen("/foo/bar")   , NULL, &route_data );
 r3_tree_insert_pathl(n , "/bar"       , strlen("/bar")       , NULL, &route_data );
 r3_tree_insert_pathl(n , "/post/{id}" , strlen("/post/{id}") , NULL, &route_data );
-r3_tree_insert_pathl(n , "/user/{id}" , strlen("/user/{id:\\d+}") , NULL, &route_data );
+r3_tree_insert_pathl(n , "/user/{id:\\d+}" , strlen("/user/{id:\\d+}") , NULL, &route_data );
 
 // let's compile the tree!
 r3_tree_compile(n);
