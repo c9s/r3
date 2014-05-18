@@ -6,6 +6,14 @@
 # endif
 TESTS                       = check_tree
 
+noinst_HEADERS = \
+	bench.h \
+	$(NULL)
+
+dist_noinst_DATA = \
+	bench_str.csv \
+	$(NULL)
+
 if ENABLE_GRAPHVIZ
 TESTS += check_gvc
 check_gvc_SOURCES = check_gvc.c bench.c
