@@ -432,7 +432,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
             r3_node_add_child(n, strndup(path, (int)(p - path)), child);
 
             // and insert the rest part to the child
-            return r3_tree_insert_pathl(tree, p, path_len - (int)(p - path),  route, data);
+            return r3_tree_insert_pathl(child, p, path_len - (int)(p - path),  route, data);
         } else {
             node * child = r3_tree_create(3);
             r3_node_add_child(n, strndup(path, path_len) , child);
@@ -478,6 +478,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
         int s2_len = 0;
 
         r3_edge_branch(e, prefix_len);
+        // return r3_tree_insert_pathl(e->child, s2 , s2_len, route , data);
 
         // here is the new edge from.
         c2 = r3_tree_create(3);
@@ -489,12 +490,13 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
         // move n->edges to c1
         c2->endpoint++;
         c2->data = data;
-
         if (route) {
             route->data = data;
             r3_node_append_route(c2, route);
         }
         return c2;
+        /*
+        */
     } else {
         printf("unexpected route.");
         return NULL;

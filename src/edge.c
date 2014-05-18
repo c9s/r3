@@ -38,13 +38,14 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
  * branch the edge pattern at "dl" offset,
  * insert a dummy child between the edges.
  *
- *    parent -> [edge1] -> childA
- *    parent -> [edge1] -> childB -> edge2 ->child A
+ *
+ * A -> [prefix..suffix] -> B
+ * A -> [prefix] -> C -> [suffix] -> B
  *
  */
-void r3_edge_branch(edge *e, int dl) {
-    node *c1; // child 1, child 2
-    edge *e1; // edge 1, edge 2
+node * r3_edge_branch(edge *e, int dl) {
+    node *new_child;
+    edge *e1;
     char * s1 = e->pattern + dl;
     int s1_len = 0;
 
@@ -52,14 +53,14 @@ void r3_edge_branch(edge *e, int dl) {
     int   tmp_edge_len = e->child->edge_len;
 
     // the suffix edge of the leaf
-    c1 = r3_tree_create(3);
+    new_child = r3_tree_create(3);
     s1_len = e->pattern_len - dl;
-    e1 = r3_edge_create(strndup(s1, s1_len), s1_len, c1);
+    e1 = r3_edge_create(strndup(s1, s1_len), s1_len, new_child);
     // printf("edge left: %s\n", e1->pattern);
 
     // Migrate the child edges to the new edge we just created.
     for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
-        r3_node_append_edge(c1, tmp_edges[i]);
+        r3_node_append_edge(new_child, tmp_edges[i]);
         e->child->edges[i] = NULL;
     }
     e->child->edge_len = 0;
@@ -68,8 +69,8 @@ void r3_edge_branch(edge *e, int dl) {
     // info("branched pattern: %s\n", e1->pattern);
 
     r3_node_append_edge(e->child, e1);
-    c1->endpoint++;
-    c1->data = e->child->data; // copy data pointer
+    new_child->endpoint++;
+    new_child->data = e->child->data; // copy data pointer
     e->child->data = NULL;
 
     // truncate the original edge pattern 

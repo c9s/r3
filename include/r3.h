@@ -132,7 +132,7 @@ bool r3_node_has_slug_edges(node *n);
 
 edge * r3_edge_create(char * pattern, int pattern_len, node * child);
 
-void r3_edge_branch(edge *e, int dl);
+node * r3_edge_branch(edge *e, int dl);
 
 void r3_edge_free(edge * edge);
 
