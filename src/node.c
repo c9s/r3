@@ -566,7 +566,7 @@ int route_cmp(route *r1, match_entry *r2) {
 
 
 /**
- * Create a data only node.
+ * 
  */
 void r3_node_append_route(node * n, route * route) {
     if (!n->routes) {

@@ -5,13 +5,16 @@
 # TESTS                       =
 # endif
 TESTS                       = check_tree
+AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include  @CHECK_CFLAGS@
 
 if ENABLE_GRAPHVIZ
 TESTS += check_gvc
 check_gvc_SOURCES = check_gvc.c bench.c
-check_gvc_LDADD=$(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
-check_gvc_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
+check_gvc_LDADD = $(GVC_DEPS_LIBS) $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
+check_gvc_CFLAGS = $(GVC_DEPS_CFLAGS) $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
+AM_CFLAGS += $(GVC_DEPS_CFLAGS)
 endif
+
 
 
 # noinst_PROGRAMS             = $(TESTS)

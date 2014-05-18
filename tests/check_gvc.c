@@ -18,13 +18,13 @@ START_TEST (test_gvc_render_dot)
 {
     node * n = r3_tree_create(1);
 
-    r3_tree_insert_path(n, "/foo/bar/baz", NULL);
-    r3_tree_insert_path(n, "/foo/bar/qux", NULL);
-    r3_tree_insert_path(n, "/foo/bar/quux", NULL);
-    r3_tree_insert_path(n, "/foo/bar/corge", NULL);
-    r3_tree_insert_path(n, "/foo/bar/grault", NULL);
-    r3_tree_insert_path(n, "/garply/grault/foo", NULL);
-    r3_tree_insert_path(n, "/garply/grault/bar", NULL);
+    r3_tree_insert_path(n, "/foo/bar/baz", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/qux", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/quux", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/corge", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/grault", NULL, NULL);
+    r3_tree_insert_path(n, "/garply/grault/foo", NULL, NULL);
+    r3_tree_insert_path(n, "/garply/grault/bar", NULL, NULL);
 
     r3_tree_compile(n);
 
@@ -39,13 +39,13 @@ START_TEST (test_gvc_render_file)
 
     node * n = r3_tree_create(1);
 
-    r3_tree_insert_path(n, "/foo/bar/baz", NULL);
-    r3_tree_insert_path(n, "/foo/bar/qux", NULL);
-    r3_tree_insert_path(n, "/foo/bar/quux", NULL);
-    r3_tree_insert_path(n, "/foo/bar/corge", NULL);
-    r3_tree_insert_path(n, "/foo/bar/grault", NULL);
-    r3_tree_insert_path(n, "/garply/grault/foo", NULL);
-    r3_tree_insert_path(n, "/garply/grault/bar", NULL);
+    r3_tree_insert_path(n, "/foo/bar/baz", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/qux", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/quux", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/corge", NULL, NULL);
+    r3_tree_insert_path(n, "/foo/bar/grault", NULL, NULL);
+    r3_tree_insert_path(n, "/garply/grault/foo", NULL, NULL);
+    r3_tree_insert_path(n, "/garply/grault/bar", NULL, NULL);
 
     r3_tree_compile(n);
 

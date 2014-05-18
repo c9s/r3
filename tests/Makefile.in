@@ -79,6 +79,7 @@ build_triplet = @build@
 host_triplet = @host@
 TESTS = check_tree$(EXEEXT) $(am__EXEEXT_1)
 @ENABLE_GRAPHVIZ_TRUE@am__append_1 = check_gvc
+@ENABLE_GRAPHVIZ_TRUE@am__append_2 = $(GVC_DEPS_CFLAGS)
 check_PROGRAMS = $(am__EXEEXT_2)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
@@ -102,7 +103,8 @@ am__check_gvc_SOURCES_DIST = check_gvc.c bench.c
 @ENABLE_GRAPHVIZ_TRUE@	check_gvc-bench.$(OBJEXT)
 check_gvc_OBJECTS = $(am_check_gvc_OBJECTS)
 am__DEPENDENCIES_1 =
-@ENABLE_GRAPHVIZ_TRUE@check_gvc_DEPENDENCIES = $(am__DEPENDENCIES_1)
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+@ENABLE_GRAPHVIZ_TRUE@	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -505,9 +507,11 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include \
+	@CHECK_CFLAGS@ $(am__append_2)
 @ENABLE_GRAPHVIZ_TRUE@check_gvc_SOURCES = check_gvc.c bench.c
-@ENABLE_GRAPHVIZ_TRUE@check_gvc_LDADD = $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
-@ENABLE_GRAPHVIZ_TRUE@check_gvc_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_LDADD = $(GVC_DEPS_LIBS) $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_CFLAGS = $(GVC_DEPS_CFLAGS) $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
 
 # noinst_PROGRAMS             = $(TESTS)
 check_tree_SOURCES = check_tree.c bench.c
