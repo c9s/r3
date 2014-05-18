@@ -1,4 +1,4 @@
-AC_INIT([r3], 1.0)
+AC_INIT([r3], 1.0.0)
 AC_PREREQ([2.64])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
