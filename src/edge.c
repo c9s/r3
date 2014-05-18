@@ -35,7 +35,11 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
 
 
 /**
- * branch the edge pattern at "dl" offset
+ * branch the edge pattern at "dl" offset,
+ * insert a dummy child between the edges.
+ *
+ *    parent -> [edge1] -> childA
+ *    parent -> [edge1] -> childB -> edge2 ->child A
  *
  */
 void r3_edge_branch(edge *e, int dl) {
@@ -61,12 +65,18 @@ void r3_edge_branch(edge *e, int dl) {
     e->child->edge_len = 0;
     e->child->endpoint--;
 
-    info("branched pattern: %s\n", e1->pattern);
+    // info("branched pattern: %s\n", e1->pattern);
 
     r3_node_append_edge(e->child, e1);
     c1->endpoint++;
     c1->data = e->child->data; // copy data pointer
     e->child->data = NULL;
+
+    // truncate the original edge pattern 
+    char *op = e->pattern;
+    e->pattern = strndup(e->pattern, dl);
+    e->pattern_len = dl;
+    free(op);
 }
 
 void r3_edge_free(edge * e) {

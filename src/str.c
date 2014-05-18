@@ -37,9 +37,16 @@ int strdiff(char * d1, char * d2) {
  */
 int count_slug(char * p, int len) {
     int s = 0;
+    int lev = 0;
     while( len-- ) {
-        if ( *p == '{' )
+        if ( lev == 0 && *p == '{' )
             s++;
+        if ( *p == '{' ) {
+            lev++;
+        }
+        if ( *p == '}' ) {
+            lev--;
+        }
         p++;
     }
     return s;
@@ -48,6 +55,89 @@ int count_slug(char * p, int len) {
 bool contains_slug(char * str) {
     return strchr(str, '{') != NULL ? TRUE : FALSE;
 }
+
+char * inside_slug(char * needle, int needle_len, char *offset) {
+    char * s1 = offset;
+    char * s2 = offset;
+
+    while( s1 >= needle ) {
+        if ( *s1 == '{' ) {
+            break;
+        }
+        s1--;
+    }
+
+    char *end = needle+ needle_len;
+    while( s2 < end ) {
+        if ( *s2 == '}' ) {
+            break;
+        }
+        s2++;
+    }
+
+    if ( *s1 == '{' && *s2 == '}' ) {
+        return s1;
+    }
+    return NULL;
+}
+
+char * find_slug_placeholder(char *s1, int *len) {
+    char *c;
+    char *s2;
+    int cnt = 0;
+    if ( NULL != (c = strchr(s1, '{')) ) {
+        // find closing '}'
+        s2 = c;
+        while(*s2) {
+            if (*s2 == '{' )
+                cnt++;
+            else if (*s2 == '}' )
+                cnt--;
+            if (cnt == 0)
+                break;
+            s2++;
+        }
+    } else {
+        return NULL;
+    }
+    if (cnt!=0) {
+        return NULL;
+    }
+    if(len) {
+        *len = s2 - c + 1;
+    }
+    return c;
+}
+
+
+/**
+ * given a slug string, duplicate the pattern string of the slug
+ */
+char * find_slug_pattern(char *s1) {
+    char *c;
+    char *s2;
+    int cnt = 1;
+    if ( NULL != (c = strchr(s1, ':')) ) {
+        c++;
+        // find closing '}'
+        s2 = c;
+        while(s2) {
+            if (*s2 == '{' )
+                cnt++;
+            else if (*s2 == '}' )
+                cnt--;
+            if (cnt == 0)
+                break;
+            s2++;
+        }
+
+    } else {
+        return NULL;
+    }
+    int len = s2 - c;
+    return strndup(c, len);
+}
+
 
 /**
  * @param char * sep separator

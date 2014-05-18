@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "r3.h"
 #include "r3_str.h"
+#include "r3_define.h"
 #include "str_array.h"
 #include "bench.h"
 
@@ -160,31 +161,40 @@ START_TEST (test_compile_slug)
 END_TEST
 
 
+START_TEST (test_r3_tree_pcre_patterns_insert)
+{
+    node * n = r3_tree_create(10);
+
+    // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
+    // r3_tree_dump(n, 0);
+    r3_tree_insert_pathl(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}"), NULL, NULL);
+    r3_tree_compile(n);
+    r3_tree_dump(n, 0);
+    r3_tree_free(n);
+}
+END_TEST
+
+
+
+
 START_TEST (test_r3_tree_insert_pathl)
 {
     node * n = r3_tree_create(10);
 
-    info("Inserting /foo/bar\n");
     r3_tree_insert_path(n, "/foo/bar", NULL, NULL);
     // r3_tree_dump(n, 0);
 
-    info("Inserting /foo/zoo\n");
     r3_tree_insert_path(n, "/foo/zoo", NULL, NULL);
     // r3_tree_dump(n, 0);
 
-    info("Inserting /f/id\n");
     r3_tree_insert_path(n, "/f/id" , NULL, NULL);
     // r3_tree_dump(n, 0);
 
-    info("Inserting /post/{id}\n");
     r3_tree_insert_pathl(n, "/post/{id}", strlen("/post/{id}"), NULL, NULL);
     // r3_tree_dump(n, 0);
 
-    info("Inserting /post/{handle}\n");
     r3_tree_insert_pathl(n, "/post/{handle}", strlen("/post/{handle}"), NULL, NULL);
-    // r3_tree_dump(n, 0);
 
-    info("Inserting /post/{handle}-{id}\n");
     r3_tree_insert_pathl(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}"), NULL, NULL);
     r3_tree_compile(n);
 
@@ -255,7 +265,7 @@ START_TEST(test_pcre_pattern_simple)
     r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), NULL, NULL);
     r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, NULL);
     r3_tree_compile(n);
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_match(n, "/user/123", strlen("/user/123"), entry);
     fail_if(matched == NULL);
@@ -286,7 +296,7 @@ START_TEST(test_pcre_pattern_more)
     r3_tree_insert_pathl(n, "/user3/{id:\\d{3}}", strlen("/user3/{id:\\d{3}}"), NULL, &var3);
     r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, &var0);
     r3_tree_compile(n);
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     node *matched;
 
     matched = r3_tree_match(n, "/user/123", strlen("/user/123"), entry);
@@ -735,6 +745,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_insert_route);
         tcase_add_test(tcase, test_pcre_pattern_simple);
         tcase_add_test(tcase, test_pcre_pattern_more);
+        tcase_add_test(tcase, test_r3_tree_pcre_patterns_insert);
 
 
         tcase_add_test(tcase, benchmark_str);
