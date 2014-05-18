@@ -24,6 +24,14 @@
 #include "r3.h"
 #include "str_array.h"
 
+edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
+    edge * e = (edge*) malloc( sizeof(edge) );
+    e->pattern = pattern;
+    e->pattern_len = pattern_len;
+    e->child = child;
+    return e;
+}
+
 
 
 /**
@@ -47,7 +55,7 @@ void r3_edge_branch(edge *e, int dl) {
 
     // Migrate the child edges to the new edge we just created.
     for ( int i = 0 ; i < tmp_r3_edge_len ; i++ ) {
-        r3_tree_append_edge(c1, tmp_edges[i]);
+        r3_node_append_edge(c1, tmp_edges[i]);
         e->child->edges[i] = NULL;
     }
     e->child->edge_len = 0;
@@ -55,18 +63,8 @@ void r3_edge_branch(edge *e, int dl) {
 
     info("branched pattern: %s\n", e1->pattern);
 
-    r3_tree_append_edge(e->child, e1);
+    r3_node_append_edge(e->child, e1);
     c1->endpoint++;
-}
-
-
-edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
-    edge * e = (edge*) malloc( sizeof(edge) );
-    e->pattern = pattern;
-    e->pattern_len = pattern_len;
-    e->child = child;
-    e->route = NULL;
-    return e;
 }
 
 void r3_edge_free(edge * e) {

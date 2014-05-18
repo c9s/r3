@@ -28,9 +28,13 @@ typedef struct _node node;
 typedef struct _route route;
 
 struct _node {
-    edge ** edges;
+    edge  ** edges;
     int      edge_len;
     int      edge_cap;
+
+    route ** conditions;
+    int      condition_len;
+    int      condition_cap;
 
 
     /** compile-time variables here.... **/
@@ -56,7 +60,6 @@ struct _edge {
     int    pattern_len;
     bool   has_slug;
     node * child;
-    route * route;
 };
 
 typedef struct {
@@ -85,7 +88,6 @@ struct _route {
 
     char * remote_addr_pattern;
     int    remote_addr_pattern_len;
-
 };
 
 
@@ -97,11 +99,11 @@ void r3_tree_free(node * tree);
 
 void r3_edge_free(edge * edge);
 
-edge * r3_tree_add_child(node * n, char * pat , node *child);
+edge * r3_node_add_child(node * n, char * pat , node *child);
 
 edge * r3_node_find_edge(node * n, char * pat);
 
-void r3_tree_append_edge(node *n, edge *child);
+void r3_node_append_edge(node *n, edge *child);
 
 node * r3_tree_insert_path(node *tree, char *path, route * route, void * data);
 
@@ -124,8 +126,6 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry);
 
 bool r3_node_has_slug_edges(node *n);
 
-node * r3_tree_lookup(node * tree, char * path, int path_len);
-
 edge * r3_edge_create(char * pattern, int pattern_len, node * child);
 
 void r3_edge_branch(edge *e, int dl);
@@ -133,6 +133,7 @@ void r3_edge_branch(edge *e, int dl);
 void r3_edge_free(edge * edge);
 
 
+node * r3_tree_insert_route(node *tree, route * route, void * data);
 
 match_entry * match_entry_createl(char * path, int path_len);
 
@@ -147,7 +148,15 @@ route * route_createl(char * path, int path_len);
 
 int route_cmp(route *r1, route *r2);
 
+edge * r3_edge_route_create(route * route, node * child);
+
+node * r3_node_append_condition(node * n, route * route, void * data);
+
+void route_free(route * route);
+
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
+#define METHOD_PUT 2<<1
+#define METHOD_DELETE 2<<1
 
 #endif /* !NODE_H */

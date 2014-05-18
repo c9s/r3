@@ -22,8 +22,8 @@ START_TEST (test_r3_node_construct_uniq)
 
     node * child = r3_tree_create(3);
 
-    // fail_if( r3_tree_add_child(n, strdup("/add") , child) != NULL );
-    // fail_if( r3_tree_add_child(n, strdup("/add") , child) != NULL );
+    // fail_if( r3_node_add_child(n, strdup("/add") , child) != NULL );
+    // fail_if( r3_node_add_child(n, strdup("/add") , child) != NULL );
 
     r3_tree_free(n);
 }
@@ -35,7 +35,7 @@ START_TEST (test_r3_node_find_edge)
 
     node * child = r3_tree_create(3);
 
-    fail_if( r3_tree_add_child(n, strdup("/add") , child) == FALSE );
+    fail_if( r3_node_add_child(n, strdup("/add") , child) == FALSE );
 
     fail_if( r3_node_find_edge(n, "/add") == NULL );
     fail_if( r3_node_find_edge(n, "/bar") != NULL );
@@ -198,41 +198,6 @@ END_TEST
 
 
 
-START_TEST (test_route_split)
-{
-    str_array *t;
-
-    t = split_route_pattern("/blog", strlen("/blog") );
-    fail_if( t == NULL );
-    // str_array_dump(t);
-    str_array_free(t);
-
-    t = split_route_pattern("/foo/{id}", strlen("/foo/{id}") );
-    fail_if( t == NULL );
-    // str_array_dump(t);
-    fail_if( t->len != 2 );
-    str_array_free(t);
-
-    t = split_route_pattern("/foo/bar/{id}", strlen("/foo/bar/{id}") );
-    fail_if( t == NULL );
-    // str_array_dump(t);
-    fail_if( t->len != 3 );
-    str_array_free(t);
-
-    t = split_route_pattern("/{title}", strlen("/{title}") );
-    fail_if( t == NULL );
-    // str_array_dump(t);
-    fail_if( t->len != 1 );
-    str_array_free(t);
-
-    t = split_route_pattern("/", strlen("/") );
-    fail_if( t == NULL );
-    // str_array_dump(t);
-    fail_if( t->len != 1 );
-    str_array_free(t);
-
-}
-END_TEST
 
 START_TEST (test_str_array)
 {
@@ -272,24 +237,37 @@ START_TEST(test_route_cmp)
     r2->request_method = METHOD_POST;
     fail_if( route_cmp(r1, r2) == 0, "should be different");
 
+
+    route_free(r1);
+    route_free(r2);
 }
 END_TEST
+
+
 
 START_TEST(test_insert_route)
 {
-    match_entry * entry = match_entry_createl("/blog/post", strlen("/blog/post") );
+    int   var1 = 22;
+    int   var2 = 33;
+    route *r1 = route_create("/blog/post");
+    route *r2 = route_create("/blog/post");
+    r1->request_method = METHOD_GET;
+    r2->request_method = METHOD_POST;
+    fail_if( route_cmp(r1, r2) == 0, "should be different");
 
-    match_entry * entry2 = match_entry_create("/blog/post");
+    match_entry * entry = match_entry_create("/blog/post");
 
+    node * n = r3_tree_create(2);
+    r3_tree_insert_route(n, r1, &var1);
+    r3_tree_insert_route(n, r2, &var2);
 
-    node * tree = r3_tree_create(2);
-
-    // route *info = route_create("/blog/post", strlen("/blog/post") );
-
-    // r3_tree_insert_route(n, "/foo/bar/baz", NULL);
-
+    match_entry_free(entry);
+    route_free(r1);
+    route_free(r2);
 }
 END_TEST
+
+
 
 START_TEST(benchmark_str)
 {
@@ -667,7 +645,6 @@ Suite* r3_suite (void) {
         Suite *suite = suite_create("blah");
 
         TCase *tcase = tcase_create("testcase");
-        tcase_add_test(tcase, test_route_split);
         tcase_add_test(tcase, test_str_array);
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_r3_node_construct_uniq);

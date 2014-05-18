@@ -63,7 +63,7 @@ void r3_tree_free(node * tree) {
 
 
 /* parent node, edge pattern, child */
-edge * r3_tree_add_child(node * n, char * pat , node *child) {
+edge * r3_node_add_child(node * n, char * pat , node *child) {
     // find the same sub-pattern, if it does not exist, create one
 
     edge * e;
@@ -74,7 +74,7 @@ edge * r3_tree_add_child(node * n, char * pat , node *child) {
     }
 
     e = r3_edge_create( pat, strlen(pat), child);
-    r3_tree_append_edge(n, e);
+    r3_node_append_edge(n, e);
     // str_array_append(n->edge_patterns, pat);
     // assert( str_array_len(n->edge_patterns) == n->edge_len );
     return e;
@@ -82,8 +82,7 @@ edge * r3_tree_add_child(node * n, char * pat , node *child) {
 
 
 
-void r3_tree_append_edge(node *n, edge *e) {
-
+void r3_node_append_edge(node *n, edge *e) {
     if (!n->edges) {
         n->edge_cap = 3;
         n->edges = malloc(sizeof(edge) * n->edge_cap);
@@ -194,27 +193,6 @@ void r3_tree_compile_patterns(node * n) {
     }
 }
 
-route * route_create(char * path) {
-    return route_createl(path, strlen(path));
-}
-
-void route_free(route * route) {
-    free(route);
-}
-
-route * route_createl(char * path, int path_len) {
-    route * info = malloc(sizeof(route));
-    info->path = path;
-    info->path_len = path_len;
-    info->request_method = 0; // can be (GET || POST)
-
-    info->host = NULL; // required host name
-    info->host_len = 0;
-
-    info->remote_addr_pattern = NULL;
-    info->remote_addr_pattern_len = 0;
-    return info;
-}
 
 match_entry * match_entry_createl(char * path, int path_len) {
     match_entry * entry = malloc(sizeof(match_entry));
@@ -337,30 +315,17 @@ inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
 }
 
 
-node * r3_tree_lookup(node * tree, char * path, int path_len) {
-    str_array * tokens = split_route_pattern(path, path_len);
-
-    node * n = tree;
-    edge * e = NULL;
-    int i = 0;
-    for (; i < tokens->len ; i++ ) {
-        e = r3_node_find_edge(n, str_array_fetch(tokens, i) );
-        if (!e) {
-            return NULL;
-        }
-        n = e->child;
-    }
-    if (n->endpoint) {
-        return n;
-    }
-    return NULL;
-}
 
 node * r3_node_create() {
     node * n = (node*) malloc( sizeof(node) );
     n->edges = NULL;
     n->edge_len = 0;
     n->edge_cap = 0;
+
+    n->conditions = NULL;
+    n->condition_len = 0;
+    n->condition_cap = 0;
+
     n->endpoint = 0;
     n->combined_pattern = NULL;
     n->pcre_pattern = NULL;
@@ -368,11 +333,41 @@ node * r3_node_create() {
 }
 
 
+route * route_create(char * path) {
+    return route_createl(path, strlen(path));
+}
+
+void route_free(route * route) {
+    free(route);
+}
+
+route * route_createl(char * path, int path_len) {
+    route * info = malloc(sizeof(route));
+    info->path = path;
+    info->path_len = path_len;
+    info->request_method = 0; // can be (GET || POST)
+
+    info->host = NULL; // required host name
+    info->host_len = 0;
+
+    info->remote_addr_pattern = NULL;
+    info->remote_addr_pattern_len = 0;
+    return info;
+}
+
+node * r3_tree_insert_route(node *tree, route * route, void * data) {
+    return r3_tree_insert_pathl(tree, route->path, route->path_len, route, data);
+}
+
 node * r3_tree_insert_path(node *tree, char *path, route * route, void * data)
 {
     return r3_tree_insert_pathl(tree, path, strlen(path) , route , data);
 }
 
+
+/**
+ * Return the last inserted node.
+ */
 node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data)
 {
     node * n = tree;
@@ -405,19 +400,19 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
     if ( offset == 0 ) {
         // not found, we should just insert a whole new edge
         node * child = r3_tree_create(3);
-        r3_tree_add_child(n, strndup(path, path_len) , child);
+        r3_node_add_child(n, strndup(path, path_len) , child);
         info("edge not found, insert one: %s\n", path);
         child->data = data;
         child->endpoint++;
         return child;
     } else if ( offset == e->pattern_len ) {    // fully-equal to the pattern of the edge
 
-        char * subroute = path + offset;
-        int    subroute_len = path_len - offset;
+        char * subpath = path + offset;
+        int    subpath_len = path_len - offset;
 
         // there are something more we can insert
-        if ( subroute_len > 0 ) {
-            return r3_tree_insert_pathl(e->child, subroute, subroute_len, route, data);
+        if ( subpath_len > 0 ) {
+            return r3_tree_insert_pathl(e->child, subpath, subpath_len, route, data);
         } else {
             // no more path to insert
             e->child->endpoint++; // make it as an endpoint
@@ -444,7 +439,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
         s2_len = path_len - offset;
         e2 = r3_edge_create(strndup(s2, s2_len), s2_len, c2);
         // printf("edge right: %s\n", e2->pattern);
-        r3_tree_append_edge(e->child, e2);
+        r3_node_append_edge(e->child, e2);
 
 
         char *op = e->pattern;
@@ -549,6 +544,39 @@ int route_cmp(route *r1, route *r2) {
         return -1;
     }
     return 0;
+}
+
+
+/**
+ * Create a data only node.
+ */
+node * r3_node_append_condition(node * n, route * route, void * data) {
+    /*
+    if (!n->conditions) {
+        n->condition_cap = 3;
+        n->conditions = malloc(sizeof(condition) * n->condition_cap);
+    }
+    if (n->condition_len >= n->condition_cap) {
+        n->condition_cap *= 2;
+        n->conditions = realloc(n->conditions, sizeof(condition) * n->condition_cap);
+    }
+    n->conditions[ n->condition_len++ ] = condition;
+    */
+    return n;
+}
+
+/**
+ * Create a route-only edge. (without pattern)
+ */
+edge * r3_edge_route_create(route * route, node * child) {
+    edge * e = (edge*) malloc( sizeof(edge) );
+    /*
+    e->pattern = NULL;
+    e->pattern_len = 0;
+    e->child = child;
+    // e->route = NULL;
+    */
+    return e;
 }
 
 /*
