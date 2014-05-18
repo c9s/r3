@@ -757,9 +757,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_pattern_simple);
         tcase_add_test(tcase, test_pcre_pattern_more);
         tcase_add_test(tcase, test_pcre_patterns_insert);
-
-
-        // tcase_add_test(tcase, benchmark_str);
+        tcase_add_test(tcase, benchmark_str);
 
         suite_add_tcase(suite, tcase);
 
