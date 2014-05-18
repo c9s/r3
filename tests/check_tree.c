@@ -247,6 +247,23 @@ START_TEST(test_route_cmp)
 END_TEST
 
 
+START_TEST(test_pcre_pattern_simple)
+{
+    match_entry * entry;
+    entry = match_entry_createl( "/user/123" , strlen("/user/123") );
+
+    n = r3_tree_create(10);
+    r3_tree_insert_pathl(n, "/user/{id}", strlen("/user/{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, NULL);
+    r3_tree_compile(n);
+    r3_tree_dump(n, 0);
+
+
+    node *matched;
+    matched = r3_tree_match(n , "/blog/post", strlen("/blog/post"), entry);
+
+
+}
 
 START_TEST(test_insert_route)
 {

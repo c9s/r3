@@ -64,6 +64,7 @@ n = r3_tree_create(10);
 int route_data = 3;
 
 match_entry * entry = match_entry_create("/foo/bar");
+entry->request_method = METHOD_GET;
 
 // insert the route path into the router tree
 route *r1 = route_create("/blog/post");
