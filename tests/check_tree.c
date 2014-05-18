@@ -225,7 +225,7 @@ END_TEST
 START_TEST(test_route_cmp)
 {
     condition *r1 = condition_create("/blog/post");
-    condition *r2 = condition_create("/blog/post");
+    match_entry * r2 = match_entry_create("/blog/post");
 
     fail_if( condition_cmp(r1, r2) == -1, "should be the same");
 
@@ -239,7 +239,7 @@ START_TEST(test_route_cmp)
 
 
     condition_free(r1);
-    condition_free(r2);
+    match_entry_free(r2);
 }
 END_TEST
 
@@ -253,7 +253,6 @@ START_TEST(test_insert_route)
     condition *r2 = condition_create("/blog/post");
     r1->request_method = METHOD_GET;
     r2->request_method = METHOD_POST;
-    fail_if( condition_cmp(r1, r2) == 0, "should be different");
 
     match_entry * entry = match_entry_create("/blog/post");
 

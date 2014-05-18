@@ -150,7 +150,7 @@ condition * condition_create(char * path);
 
 condition * condition_createl(char * path, int path_len);
 
-int condition_cmp(condition *r1, condition *r2);
+int condition_cmp(condition *r1, match_entry *r2);
 
 void r3_node_append_condition(node * n, condition * condition);
 
