@@ -86,6 +86,28 @@ end
 ```
 
 
+Rendering routes with graphviz
+-------------------------------
+
+The `test_gvc_render_file` API let you render the whole route trie into a image.
+
+[Imgur](http://i.imgur.com/J2LdzeK.png)
+
+Or you can even export it with dot format:
+
+```dot
+digraph g {
+	graph [bb="0,0,205.1,471"];
+	node [label="\N"];
+	"{root}"	 [height=0.5,
+		pos="35.097,453",
+		width=0.97491];
+	"#1"	 [height=0.5,
+		pos="35.097,366",
+		width=0.75];
+        ....
+```
+
 Use case in PHP
 -----------------------
 
