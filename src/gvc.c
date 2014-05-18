@@ -17,7 +17,7 @@ char * node_id_str(int id) {
     return name;
 }
 
-int r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, int node_cnt) {
+void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, int node_cnt) {
     edge * e;
     Agnode_t *agn_child;
     Agedge_t *agn_edge;

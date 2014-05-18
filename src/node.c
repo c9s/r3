@@ -299,11 +299,18 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
 
 inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
     int i = 0;
+    int matched_idx = 0;
+
     for (; i < n->edge_len ; i++ ) {
-        info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
-        if ( strncmp( node_edge_pattern(n,i), str, node_edge_pattern_len(n,i) ) == 0 ) {
-            return n->edges[i];
+        if ( *str == *(n->edges[i]->pattern) ) {
+            matched_idx = i;
+            break;
         }
+    }
+
+        // info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
+    if ( strncmp( node_edge_pattern(n,matched_idx), str, node_edge_pattern_len(n,matched_idx) ) == 0 ) {
+        return n->edges[matched_idx];
     }
     return NULL;
 }
