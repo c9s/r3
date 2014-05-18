@@ -106,6 +106,8 @@ void r3_tree_dump(node * n, int level);
 
 int r3_tree_render_file(node * tree, char * format, char * filename);
 
+int r3_tree_render_dot(node * tree);
+
 edge * r3_node_find_edge_str(node * n, char * str, int str_len);
 
 
