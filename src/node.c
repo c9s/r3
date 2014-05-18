@@ -506,33 +506,31 @@ bool r3_node_has_slug_edges(node *n) {
 
 
 void r3_tree_dump(node * n, int level) {
-    if ( n->edge_len ) {
-        if ( n->combined_pattern ) {
-            printf(" regexp:%s", n->combined_pattern);
+    if ( n->combined_pattern ) {
+        printf(" regexp:%s", n->combined_pattern);
+    }
+
+    printf(" endpoint:%d", n->endpoint);
+
+    if (n->data) {
+        printf(" data:%p", n->data);
+    }
+    printf("\n");
+
+    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+        edge * e = n->edges[i];
+        print_indent(level);
+        printf("  |-\"%s\"", e->pattern);
+
+        if (e->has_slug) {
+            printf(" slug:");
+            printf("%s", compile_slug(e->pattern, e->pattern_len) );
         }
 
-        printf(" endpoint:%d", n->endpoint);
-
-        if (n->data) {
-            printf(" data:%p", n->data);
+        if ( e->child ) {
+            r3_tree_dump( e->child, level + 1);
         }
         printf("\n");
-
-        for ( int i = 0 ; i < n->edge_len ; i++ ) {
-            edge * e = n->edges[i];
-            print_indent(level);
-            printf("  |-\"%s\"", e->pattern);
-
-            if (e->has_slug) {
-                printf(" slug:");
-                printf("%s", compile_slug(e->pattern, e->pattern_len) );
-            }
-
-            if ( e->child ) {
-                r3_tree_dump( e->child, level + 1);
-            }
-            printf("\n");
-        }
     }
 }
 
