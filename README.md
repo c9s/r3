@@ -17,6 +17,7 @@ Requirement
 * pcre
 * jemalloc
 * graphviz version 2.38.0 (20140413.2041)
+* pkg-config
 
 Pattern Syntax
 -----------------------
@@ -168,7 +169,7 @@ if ( $error ) {
 Install
 ----------------------
 
-    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf graphviz-dev graphviz
+    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf graphviz-dev graphviz pkg-config
     ./autogen.sh
     ./configure && make
     make check # run tests
