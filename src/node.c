@@ -300,12 +300,12 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
     return NULL;
 }
 
-condition * r3_node_match_condition(node *n, match_entry * entry) {
-    if (n->conditions && n->condition_len > 0) {
+route * r3_node_match_route(node *n, match_entry * entry) {
+    if (n->routes && n->route_len > 0) {
         int i;
-        for (i = 0; i < n->condition_len ; i++ ) {
-            if ( condition_cmp(n->conditions[i], entry) == 0 ) {
-                return n->conditions[i];
+        for (i = 0; i < n->route_len ; i++ ) {
+            if ( route_cmp(n->routes[i], entry) == 0 ) {
+                return n->routes[i];
             }
         }
     }
@@ -338,9 +338,9 @@ node * r3_node_create() {
     n->edge_len = 0;
     n->edge_cap = 0;
 
-    n->conditions = NULL;
-    n->condition_len = 0;
-    n->condition_cap = 0;
+    n->routes = NULL;
+    n->route_len = 0;
+    n->route_cap = 0;
 
     n->endpoint = 0;
     n->combined_pattern = NULL;
@@ -349,16 +349,16 @@ node * r3_node_create() {
 }
 
 
-condition * condition_create(char * path) {
-    return condition_createl(path, strlen(path));
+route * route_create(char * path) {
+    return route_createl(path, strlen(path));
 }
 
-void condition_free(condition * condition) {
-    free(condition);
+void route_free(route * route) {
+    free(route);
 }
 
-condition * condition_createl(char * path, int path_len) {
-    condition * info = malloc(sizeof(condition));
+route * route_createl(char * path, int path_len) {
+    route * info = malloc(sizeof(route));
     info->path = path;
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
@@ -373,20 +373,20 @@ condition * condition_createl(char * path, int path_len) {
     return info;
 }
 
-node * r3_tree_insert_route(node *tree, condition * condition, void * data) {
-    return r3_tree_insert_pathl(tree, condition->path, condition->path_len, condition, data);
+node * r3_tree_insert_route(node *tree, route * route, void * data) {
+    return r3_tree_insert_pathl(tree, route->path, route->path_len, route, data);
 }
 
-node * r3_tree_insert_path(node *tree, char *path, condition * condition, void * data)
+node * r3_tree_insert_path(node *tree, char *path, route * route, void * data)
 {
-    return r3_tree_insert_pathl(tree, path, strlen(path) , condition , data);
+    return r3_tree_insert_pathl(tree, path, strlen(path) , route , data);
 }
 
 
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * condition, void * data)
+node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data)
 {
     node * n = tree;
     edge * e = NULL;
@@ -423,9 +423,9 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * co
         child->data = data;
         child->endpoint++;
 
-        if (condition) {
-            condition->data = data;
-            r3_node_append_condition(child, condition);
+        if (route) {
+            route->data = data;
+            r3_node_append_route(child, route);
         }
         return child;
     } else if ( offset == e->pattern_len ) {    // fully-equal to the pattern of the edge
@@ -435,14 +435,14 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * co
 
         // there are something more we can insert
         if ( subpath_len > 0 ) {
-            return r3_tree_insert_pathl(e->child, subpath, subpath_len, condition, data);
+            return r3_tree_insert_pathl(e->child, subpath, subpath_len, route, data);
         } else {
             // no more path to insert
             e->child->endpoint++; // make it as an endpoint
             e->child->data = data;
-            if (condition) {
-                condition->data = data;
-                r3_node_append_condition(e->child, condition);
+            if (route) {
+                route->data = data;
+                r3_node_append_route(e->child, route);
             }
             return e->child;
         }
@@ -479,13 +479,13 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * co
         c2->endpoint++;
         c2->data = data;
 
-        if (condition) {
-            condition->data = data;
-            r3_node_append_condition(c2, condition);
+        if (route) {
+            route->data = data;
+            r3_node_append_route(c2, route);
         }
         return c2;
     } else {
-        printf("unexpected condition.");
+        printf("unexpected route.");
         return NULL;
     }
     return n;
@@ -535,9 +535,9 @@ void r3_tree_dump(node * n, int level) {
 /**
  * return 0 == equal
  *
- * -1 == different condition
+ * -1 == different route
  */
-int condition_cmp(condition *r1, match_entry *r2) {
+int route_cmp(route *r1, match_entry *r2) {
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;
@@ -568,16 +568,16 @@ int condition_cmp(condition *r1, match_entry *r2) {
 /**
  * Create a data only node.
  */
-void r3_node_append_condition(node * n, condition * condition) {
-    if (!n->conditions) {
-        n->condition_cap = 3;
-        n->conditions = malloc(sizeof(condition) * n->condition_cap);
+void r3_node_append_route(node * n, route * route) {
+    if (!n->routes) {
+        n->route_cap = 3;
+        n->routes = malloc(sizeof(route) * n->route_cap);
     }
-    if (n->condition_len >= n->condition_cap) {
-        n->condition_cap *= 2;
-        n->conditions = realloc(n->conditions, sizeof(condition) * n->condition_cap);
+    if (n->route_len >= n->route_cap) {
+        n->route_cap *= 2;
+        n->routes = realloc(n->routes, sizeof(route) * n->route_cap);
     }
-    n->conditions[ n->condition_len++ ] = condition;
+    n->routes[ n->route_len++ ] = route;
 }
 
 

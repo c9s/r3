@@ -22,19 +22,19 @@
 
 struct _edge;
 struct _node;
-struct _condition;
+struct _route;
 typedef struct _edge edge;
 typedef struct _node node;
-typedef struct _condition condition;
+typedef struct _route route;
 
 struct _node {
     edge  ** edges;
     int      edge_len;
     int      edge_cap;
 
-    condition ** conditions;
-    int      condition_len;
-    int      condition_cap;
+    route ** routes;
+    int      route_len;
+    int      route_cap;
 
 
     /** compile-time variables here.... **/
@@ -48,7 +48,7 @@ struct _node {
     int *  ov;
 
     /**
-     * the pointer of condition data
+     * the pointer of route data
      */
     void * data;
 
@@ -68,7 +68,7 @@ typedef struct {
     int    path_len; // the length of the current path
     int    request_method;  // current request method
 
-    void * data; // condition ptr
+    void * data; // route ptr
 
     char * host; // the request host 
     int    host_len;
@@ -77,7 +77,7 @@ typedef struct {
     int    remote_addr_len;
 } match_entry;
 
-struct _condition {
+struct _route {
     char * path;
     int    path_len;
 
@@ -107,9 +107,9 @@ edge * r3_node_find_edge(node * n, char * pat);
 
 void r3_node_append_edge(node *n, edge *child);
 
-node * r3_tree_insert_path(node *tree, char *path, condition * condition, void * data);
+node * r3_tree_insert_path(node *tree, char *path, route * route, void * data);
 
-node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * condition, void * data);
+node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data);
 
 void r3_tree_dump(node * n, int level);
 
@@ -137,7 +137,7 @@ void r3_edge_branch(edge *e, int dl);
 void r3_edge_free(edge * edge);
 
 
-node * r3_tree_insert_route(node *tree, condition * condition, void * data);
+node * r3_tree_insert_route(node *tree, route * route, void * data);
 
 match_entry * match_entry_createl(char * path, int path_len);
 
@@ -146,17 +146,17 @@ match_entry * match_entry_createl(char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
-condition * condition_create(char * path);
+route * route_create(char * path);
 
-condition * condition_createl(char * path, int path_len);
+route * route_createl(char * path, int path_len);
 
-int condition_cmp(condition *r1, match_entry *r2);
+int route_cmp(route *r1, match_entry *r2);
 
-void r3_node_append_condition(node * n, condition * condition);
+void r3_node_append_route(node * n, route * route);
 
-void condition_free(condition * condition);
+void route_free(route * route);
 
-condition * r3_node_match_condition(node *n, match_entry * entry);
+route * r3_node_match_route(node *n, match_entry * entry);
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
