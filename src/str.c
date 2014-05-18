@@ -83,8 +83,22 @@ char * compile_slug(char * str, int len)
     if ( NULL != (pat = strchr(s1, ':')) ) {
         pat++;
 
+        // find closing '}'
+        int cnt = 1;
+        s2 = pat;
+        while(s2) {
+            if (*s2 == '{' )
+                cnt++;
+            else if (*s2 == '}' )
+                cnt--;
+
+            if (cnt == 0)
+                break;
+            s2++;
+        }
+
         // this slug contains a pattern
-        s2 = strchr(pat, '}');
+        // s2 = strchr(pat, '}');
 
         *o = '(';
         o++;

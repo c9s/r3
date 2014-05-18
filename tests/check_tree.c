@@ -251,19 +251,54 @@ START_TEST(test_pcre_pattern_simple)
 {
     match_entry * entry;
     entry = match_entry_createl( "/user/123" , strlen("/user/123") );
-
     node * n = r3_tree_create(10);
-    r3_tree_insert_pathl(n, "/user/{id}", strlen("/user/{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), NULL, NULL);
     r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, NULL);
     r3_tree_compile(n);
     r3_tree_dump(n, 0);
-
     node *matched;
     matched = r3_tree_match(n, "/user/123", strlen("/user/123"), entry);
+    fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
 }
 END_TEST
+
+
+START_TEST(test_pcre_pattern_more)
+{
+    match_entry * entry;
+    entry = match_entry_createl( "/user/123" , strlen("/user/123") );
+    node * n = r3_tree_create(10);
+
+    r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/user2/{id:\\d+}", strlen("/user2/{id:\\d+}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/user3/{id:\\d{3}}", strlen("/user3/{id:\\d{3}}"), NULL, NULL);
+
+    r3_tree_compile(n);
+    r3_tree_dump(n, 0);
+    node *matched;
+
+    matched = r3_tree_match(n, "/user/123", strlen("/user/123"), entry);
+    fail_if(matched == NULL);
+    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert_str_eq(entry->vars->tokens[0],"123");
+
+    matched = r3_tree_match(n, "/user2/123", strlen("/user2/123"), entry);
+    fail_if(matched == NULL);
+    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert_str_eq(entry->vars->tokens[0],"123");
+
+    matched = r3_tree_match(n, "/user3/123", strlen("/user3/123"), entry);
+    fail_if(matched == NULL);
+    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert_str_eq(entry->vars->tokens[0],"123");
+}
+END_TEST
+
+
+
 
 START_TEST(test_insert_route)
 {
@@ -683,6 +718,9 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
+        tcase_add_test(tcase, test_pcre_pattern_simple);
+        tcase_add_test(tcase, test_pcre_pattern_more);
+
 
         tcase_add_test(tcase, benchmark_str);
 
