@@ -78,6 +78,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@ENABLE_GRAPHVIZ_TRUE@am__append_1 = gvc.c
+@ENABLE_GRAPHVIZ_TRUE@am__append_2 = $(GVC_DEPS_LIBS)
+@ENABLE_GRAPHVIZ_TRUE@am__append_3 = $(GVC_DEPS_CFLAGS)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -122,8 +125,12 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-libr3_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libr3_la_OBJECTS = node.lo edge.lo list.lo str.lo token.lo
+@ENABLE_GRAPHVIZ_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+libr3_la_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
+am__libr3_la_SOURCES_DIST = node.c edge.c list.c str.c token.c gvc.c
+@ENABLE_GRAPHVIZ_TRUE@am__objects_1 = gvc.lo
+am_libr3_la_OBJECTS = node.lo edge.lo list.lo str.lo token.lo \
+	$(am__objects_1)
 libr3_la_OBJECTS = $(am_libr3_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -164,7 +171,7 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libr3_la_SOURCES)
-DIST_SOURCES = $(libr3_la_SOURCES)
+DIST_SOURCES = $(am__libr3_la_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -220,6 +227,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
+GVC_DEPS_CFLAGS = @GVC_DEPS_CFLAGS@
+GVC_DEPS_LIBS = @GVC_DEPS_LIBS@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -312,9 +321,11 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libr3.la
-libr3_la_SOURCES = node.c edge.c list.c str.c token.c
-libr3_la_LIBADD = $(DEPS_LIBS)
-AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
+# lib_LIBRARIES = libr3.a
+libr3_la_SOURCES = node.c edge.c list.c str.c token.c $(am__append_1)
+libr3_la_LIBADD = $(DEPS_LIBS) $(am__append_2)
+AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include \
+	-Wall $(am__append_3)
 all: all-am
 
 .SUFFIXES:
@@ -395,6 +406,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edge.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gvc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/node.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/str.Plo@am__quote@
@@ -632,6 +644,7 @@ uninstall-am: uninstall-libLTLIBRARIES
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+
 
 # AM_CFLAGS=$(DEPS_CFLAGS)
 

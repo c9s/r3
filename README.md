@@ -16,6 +16,7 @@ Requirement
 * check
 * pcre
 * jemalloc
+* graphviz version 2.38.0 (20140413.2041)
 
 Pattern Syntax
 -----------------------
@@ -28,6 +29,8 @@ C API
 ------------------------
 
 ```c
+#include <r3.h>
+
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
 n = r3_tree_create(10);
 
@@ -86,6 +89,28 @@ end
 ```
 
 
+Rendering routes with graphviz
+-------------------------------
+
+The `test_gvc_render_file` API let you render the whole route trie into a image.
+
+![Imgur](http://i.imgur.com/J2LdzeK.png)
+
+Or you can even export it with dot format:
+
+```dot
+digraph g {
+	graph [bb="0,0,205.1,471"];
+	node [label="\N"];
+	"{root}"	 [height=0.5,
+		pos="35.097,453",
+		width=0.97491];
+	"#1"	 [height=0.5,
+		pos="35.097,366",
+		width=0.75];
+        ....
+```
+
 Use case in PHP
 -----------------------
 
@@ -111,12 +136,18 @@ if ( $error ) {
 Install
 ----------------------
 
-    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf
+    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf graphviz-dev graphviz
     ./autogen.sh
     ./configure && make
     make check # run tests
     sudo make install
 
+### Enable Graphviz
+
+    ./configure --enable-graphviz
 
 
 
+License
+--------------------
+This software is released under MIT License.

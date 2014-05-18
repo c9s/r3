@@ -1,4 +1,4 @@
-AC_INIT([r3], 1.0)
+AC_INIT([r3], 1.0.0)
 AC_PREREQ([2.64])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
@@ -25,7 +25,23 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
 
+
+
 PKG_PROG_PKG_CONFIG
+
+AC_ARG_ENABLE(graphviz,
+              AS_HELP_STRING([--enable-graphviz],
+                             [enable graphviz support]),
+              , enable_graphviz=unset)
+if test "x$enable_graphviz" != "xunset" ; then
+   PKG_CHECK_MODULES(GVC_DEPS, [libgvc])
+   AC_SUBST(GVC_DEPS_CFLAGS)
+   AC_SUBST(GVC_DEPS_LIBS)
+fi
+
+AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
+
+
 PKG_CHECK_MODULES(DEPS, [libpcre check])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)

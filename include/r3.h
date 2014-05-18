@@ -104,6 +104,10 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
 
 void r3_tree_dump(node * n, int level);
 
+int r3_tree_render_file(node * tree, char * format, char * filename);
+
+int r3_tree_render_dot(node * tree);
+
 edge * r3_node_find_edge_str(node * n, char * str, int str_len);
 
 
@@ -132,11 +136,8 @@ match_entry * match_entry_createl(char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
-
-
 route_info * route_info_create(char * path);
 
 route_info * route_info_createl(char * path, int path_len);
-
 
 #endif /* !NODE_H */

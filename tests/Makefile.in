@@ -77,8 +77,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-TESTS = check_tree$(EXEEXT)
-check_PROGRAMS = $(am__EXEEXT_1)
+TESTS = check_tree$(EXEEXT) $(am__EXEEXT_1)
+@ENABLE_GRAPHVIZ_TRUE@am__append_1 = check_gvc
+check_PROGRAMS = $(am__EXEEXT_2)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp $(top_srcdir)/test-driver
@@ -93,16 +94,26 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__EXEEXT_1 = check_tree$(EXEEXT)
-am_check_tree_OBJECTS = check_tree-check_tree.$(OBJEXT) \
-	check_tree-bench.$(OBJEXT)
-check_tree_OBJECTS = $(am_check_tree_OBJECTS)
+@ENABLE_GRAPHVIZ_TRUE@am__EXEEXT_1 = check_gvc$(EXEEXT)
+am__EXEEXT_2 = check_tree$(EXEEXT) $(am__EXEEXT_1)
+am__check_gvc_SOURCES_DIST = check_gvc.c bench.c
+@ENABLE_GRAPHVIZ_TRUE@am_check_gvc_OBJECTS =  \
+@ENABLE_GRAPHVIZ_TRUE@	check_gvc-check_gvc.$(OBJEXT) \
+@ENABLE_GRAPHVIZ_TRUE@	check_gvc-bench.$(OBJEXT)
+check_gvc_OBJECTS = $(am_check_gvc_OBJECTS)
 am__DEPENDENCIES_1 =
-check_tree_DEPENDENCIES = $(am__DEPENDENCIES_1)
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_DEPENDENCIES = $(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+check_gvc_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(check_gvc_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_check_tree_OBJECTS = check_tree-check_tree.$(OBJEXT) \
+	check_tree-bench.$(OBJEXT)
+check_tree_OBJECTS = $(am_check_tree_OBJECTS)
+check_tree_DEPENDENCIES = $(am__DEPENDENCIES_1)
 check_tree_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(check_tree_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -140,8 +151,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(check_tree_SOURCES)
-DIST_SOURCES = $(check_tree_SOURCES)
+SOURCES = $(check_gvc_SOURCES) $(check_tree_SOURCES)
+DIST_SOURCES = $(am__check_gvc_SOURCES_DIST) $(check_tree_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -401,6 +412,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
+GVC_DEPS_CFLAGS = @GVC_DEPS_CFLAGS@
+GVC_DEPS_LIBS = @GVC_DEPS_LIBS@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -492,9 +505,15 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_SOURCES = check_gvc.c bench.c
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_LDADD = $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
+@ENABLE_GRAPHVIZ_TRUE@check_gvc_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
+
+# noinst_PROGRAMS             = $(TESTS)
 check_tree_SOURCES = check_tree.c bench.c
 check_tree_LDADD = $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
 check_tree_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include @CHECK_CFLAGS@
+
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir)/include
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
 CLEANFILES = check_tree.log
@@ -542,6 +561,10 @@ clean-checkPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+check_gvc$(EXEEXT): $(check_gvc_OBJECTS) $(check_gvc_DEPENDENCIES) $(EXTRA_check_gvc_DEPENDENCIES) 
+	@rm -f check_gvc$(EXEEXT)
+	$(AM_V_CCLD)$(check_gvc_LINK) $(check_gvc_OBJECTS) $(check_gvc_LDADD) $(LIBS)
+
 check_tree$(EXEEXT): $(check_tree_OBJECTS) $(check_tree_DEPENDENCIES) $(EXTRA_check_tree_DEPENDENCIES) 
 	@rm -f check_tree$(EXEEXT)
 	$(AM_V_CCLD)$(check_tree_LINK) $(check_tree_OBJECTS) $(check_tree_LDADD) $(LIBS)
@@ -552,6 +575,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_gvc-bench.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_gvc-check_gvc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_tree-bench.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_tree-check_tree.Po@am__quote@
 
@@ -575,6 +600,34 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+check_gvc-check_gvc.o: check_gvc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -MT check_gvc-check_gvc.o -MD -MP -MF $(DEPDIR)/check_gvc-check_gvc.Tpo -c -o check_gvc-check_gvc.o `test -f 'check_gvc.c' || echo '$(srcdir)/'`check_gvc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_gvc-check_gvc.Tpo $(DEPDIR)/check_gvc-check_gvc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_gvc.c' object='check_gvc-check_gvc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -c -o check_gvc-check_gvc.o `test -f 'check_gvc.c' || echo '$(srcdir)/'`check_gvc.c
+
+check_gvc-check_gvc.obj: check_gvc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -MT check_gvc-check_gvc.obj -MD -MP -MF $(DEPDIR)/check_gvc-check_gvc.Tpo -c -o check_gvc-check_gvc.obj `if test -f 'check_gvc.c'; then $(CYGPATH_W) 'check_gvc.c'; else $(CYGPATH_W) '$(srcdir)/check_gvc.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_gvc-check_gvc.Tpo $(DEPDIR)/check_gvc-check_gvc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_gvc.c' object='check_gvc-check_gvc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -c -o check_gvc-check_gvc.obj `if test -f 'check_gvc.c'; then $(CYGPATH_W) 'check_gvc.c'; else $(CYGPATH_W) '$(srcdir)/check_gvc.c'; fi`
+
+check_gvc-bench.o: bench.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -MT check_gvc-bench.o -MD -MP -MF $(DEPDIR)/check_gvc-bench.Tpo -c -o check_gvc-bench.o `test -f 'bench.c' || echo '$(srcdir)/'`bench.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_gvc-bench.Tpo $(DEPDIR)/check_gvc-bench.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bench.c' object='check_gvc-bench.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -c -o check_gvc-bench.o `test -f 'bench.c' || echo '$(srcdir)/'`bench.c
+
+check_gvc-bench.obj: bench.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -MT check_gvc-bench.obj -MD -MP -MF $(DEPDIR)/check_gvc-bench.Tpo -c -o check_gvc-bench.obj `if test -f 'bench.c'; then $(CYGPATH_W) 'bench.c'; else $(CYGPATH_W) '$(srcdir)/bench.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_gvc-bench.Tpo $(DEPDIR)/check_gvc-bench.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bench.c' object='check_gvc-bench.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_gvc_CFLAGS) $(CFLAGS) -c -o check_gvc-bench.obj `if test -f 'bench.c'; then $(CYGPATH_W) 'bench.c'; else $(CYGPATH_W) '$(srcdir)/bench.c'; fi`
 
 check_tree-check_tree.o: check_tree.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_tree_CFLAGS) $(CFLAGS) -MT check_tree-check_tree.o -MD -MP -MF $(DEPDIR)/check_tree-check_tree.Tpo -c -o check_tree-check_tree.o `test -f 'check_tree.c' || echo '$(srcdir)/'`check_tree.c
@@ -806,6 +859,13 @@ recheck: all $(check_PROGRAMS)
 check_tree.log: check_tree$(EXEEXT)
 	@p='check_tree$(EXEEXT)'; \
 	b='check_tree'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+check_gvc.log: check_gvc$(EXEEXT)
+	@p='check_gvc$(EXEEXT)'; \
+	b='check_gvc'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

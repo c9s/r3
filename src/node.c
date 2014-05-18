@@ -169,7 +169,7 @@ void r3_tree_compile_patterns(node * n) {
 
     const char *error;
     int erroffset;
-    unsigned int option_bits;
+    unsigned int option_bits = 0;
 
     if (n->pcre_pattern)
         free(n->pcre_pattern);
@@ -179,7 +179,7 @@ void r3_tree_compile_patterns(node * n) {
     // n->pcre_pattern;
     n->pcre_pattern = pcre_compile(
             n->combined_pattern,              /* the pattern */
-            0,                                /* default options */
+            option_bits,                                /* default options */
             &error,               /* for error message */
             &erroffset,           /* for error offset */
             NULL);                /* use default character tables */
@@ -316,11 +316,18 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
 
 inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
     int i = 0;
+    int matched_idx = 0;
+
     for (; i < n->edge_len ; i++ ) {
-        info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
-        if ( strncmp( node_edge_pattern(n,i), str, node_edge_pattern_len(n,i) ) == 0 ) {
-            return n->edges[i];
+        if ( *str == *(n->edges[i]->pattern) ) {
+            matched_idx = i;
+            break;
         }
+    }
+
+        // info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
+    if ( strncmp( node_edge_pattern(n,matched_idx), str, node_edge_pattern_len(n,matched_idx) ) == 0 ) {
+        return n->edges[matched_idx];
     }
     return NULL;
 }
@@ -367,17 +374,15 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
     node * n = tree;
     edge * e = NULL;
 
-    char * p = route;
-
     /* length of common prefix */
-    int dl = 0;
+    int offset = 0;
     for( int i = 0 ; i < n->edge_len ; i++ ) {
-        dl = strndiff(route, n->edges[i]->pattern, n->edges[i]->pattern_len);
+        offset = strndiff(route, n->edges[i]->pattern, n->edges[i]->pattern_len);
 
-        // printf("dl: %d   %s vs %s\n", dl, route, n->edges[i]->pattern );
+        // printf("offset: %d   %s vs %s\n", offset, route, n->edges[i]->pattern );
 
         // no common, consider insert a new edge
-        if ( dl > 0 ) {
+        if ( offset > 0 ) {
             e = n->edges[i];
             break;
         }
@@ -387,13 +392,13 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
     char *slug_s = strchr(route, '{');
     char *slug_e = strchr(route, '}');
     if ( slug_s && slug_e ) {
-        if ( dl > (slug_s - route) && dl < (slug_e - route) ) {
+        if ( offset > (slug_s - route) && offset < (slug_e - route) ) {
             // break before '{'
-            dl = slug_s - route;
+            offset = slug_s - route;
         }
     }
 
-    if ( dl == 0 ) {
+    if ( offset == 0 ) {
         // not found, we should just insert a whole new edge
         node * child = r3_tree_create(3);
         r3_tree_add_child(n, strndup(route, route_len) , child);
@@ -401,10 +406,10 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
         child->route_ptr = route_ptr;
         child->endpoint++;
         return child;
-    } else if ( dl == e->pattern_len ) {    // fully-equal to the pattern of the edge
+    } else if ( offset == e->pattern_len ) {    // fully-equal to the pattern of the edge
 
-        char * subroute = route + dl;
-        int    subroute_len = route_len - dl;
+        char * subroute = route + offset;
+        int    subroute_len = route_len - offset;
 
         // there are something more we can insert
         if ( subroute_len > 0 ) {
@@ -416,8 +421,8 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
             return e->child;
         }
 
-    } else if ( dl < e->pattern_len ) {
-        // printf("branch the edge dl: %d\n", dl);
+    } else if ( offset < e->pattern_len ) {
+        // printf("branch the edge offset: %d\n", offset);
 
 
         /* it's partially matched with the pattern,
@@ -425,21 +430,24 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
          */
         node *c2; // child 1, child 2
         edge *e2; // edge 1, edge 2
-        char * s2 = route + dl;
+        char * s2 = route + offset;
         int s2_len = 0;
 
-        r3_edge_branch(e, dl);
+        r3_edge_branch(e, offset);
 
         // here is the new edge from.
         c2 = r3_tree_create(3);
-        s2_len = route_len - dl;
+        s2_len = route_len - offset;
         e2 = r3_edge_create(strndup(s2, s2_len), s2_len, c2);
         // printf("edge right: %s\n", e2->pattern);
         r3_tree_append_edge(e->child, e2);
 
+
+        char *op = e->pattern;
         // truncate the original edge pattern 
-        // e->pattern = strndup(e->pattern, dl);
-        e->pattern_len = dl;
+        e->pattern = strndup(e->pattern, offset);
+        e->pattern_len = offset;
+        free(op);
 
         // move n->edges to c1
         c2->endpoint++;

@@ -633,6 +633,12 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 DEPS_LIBS
 DEPS_CFLAGS
+DEBUG_FALSE
+DEBUG_TRUE
+ENABLE_GRAPHVIZ_FALSE
+ENABLE_GRAPHVIZ_TRUE
+GVC_DEPS_LIBS
+GVC_DEPS_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
@@ -766,6 +772,8 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 with_check
+enable_graphviz
+enable_debug
 '
       ac_precious_vars='build_alias
 host_alias
@@ -779,6 +787,8 @@ CPP
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
+GVC_DEPS_CFLAGS
+GVC_DEPS_LIBS
 DEPS_CFLAGS
 DEPS_LIBS'
 
@@ -1410,6 +1420,8 @@ Optional Features:
   --disable-dependency-tracking
                           speeds up one-time build
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-graphviz       enable graphviz support
+  --enable-debug    Turn on debugging
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1435,6 +1447,10 @@ Some influential environment variables:
               directories to add to pkg-config's search path
   PKG_CONFIG_LIBDIR
               path overriding pkg-config's built-in search path
+  GVC_DEPS_CFLAGS
+              C compiler flags for GVC_DEPS, overriding pkg-config
+  GVC_DEPS_LIBS
+              linker flags for GVC_DEPS, overriding pkg-config
   DEPS_CFLAGS C compiler flags for DEPS, overriding pkg-config
   DEPS_LIBS   linker flags for DEPS, overriding pkg-config
 
@@ -13009,6 +13025,8 @@ done
 
 
 
+
+
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
 	if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
@@ -13122,6 +13140,167 @@ $as_echo "no" >&6; }
 		PKG_CONFIG=""
 	fi
 fi
+
+# AC_ARG_ENABLE([graphviz],
+#   AS_HELP_STRING([--enable-graphviz], [Enable graphviz feature]))
+
+
+# Check whether --enable-graphviz was given.
+if test "${enable_graphviz+set}" = set; then :
+  enableval=$enable_graphviz;
+else
+  enable_graphviz=unset
+fi
+
+
+
+
+
+
+if test "x$enable_graphviz" != "xunset" ; then
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GVC_DEPS" >&5
+$as_echo_n "checking for GVC_DEPS... " >&6; }
+
+if test -n "$GVC_DEPS_CFLAGS"; then
+    pkg_cv_GVC_DEPS_CFLAGS="$GVC_DEPS_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libgvc\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libgvc") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GVC_DEPS_CFLAGS=`$PKG_CONFIG --cflags "libgvc" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GVC_DEPS_LIBS"; then
+    pkg_cv_GVC_DEPS_LIBS="$GVC_DEPS_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libgvc\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libgvc") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GVC_DEPS_LIBS=`$PKG_CONFIG --libs "libgvc" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GVC_DEPS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libgvc" 2>&1`
+        else
+	        GVC_DEPS_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libgvc" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GVC_DEPS_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (libgvc) were not met:
+
+$GVC_DEPS_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GVC_DEPS_CFLAGS
+and GVC_DEPS_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GVC_DEPS_CFLAGS
+and GVC_DEPS_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	GVC_DEPS_CFLAGS=$pkg_cv_GVC_DEPS_CFLAGS
+	GVC_DEPS_LIBS=$pkg_cv_GVC_DEPS_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+
+
+fi
+
+ if test "x$enable_graphviz" = "xyes"; then
+  ENABLE_GRAPHVIZ_TRUE=
+  ENABLE_GRAPHVIZ_FALSE='#'
+else
+  ENABLE_GRAPHVIZ_TRUE='#'
+  ENABLE_GRAPHVIZ_FALSE=
+fi
+
+
+
+# Check whether --enable-debug was given.
+if test "${enable_debug+set}" = set; then :
+  enableval=$enable_debug; case "${enableval}" in
+  yes) enable_debug=true ;;
+  no)  enable_debug=false ;;
+  *) as_fn_error $? "bad value ${enableval} for --enable-debug" "$LINENO" 5 ;;
+esac
+else
+  enable_debug=false
+fi
+
+ if test x$enable_debug = xtrue; then
+  DEBUG_TRUE=
+  DEBUG_FALSE='#'
+else
+  DEBUG_TRUE='#'
+  DEBUG_FALSE=
+fi
+
+
+
+#  fi],[
+#     AC_DEFINE(ENABLE_GRAPHVIZ, 0, [Graphviz support disabled.])
+#     AM_CONDITIONAL(ENABLE_GRAPHVIZ, 0)
+# AC_ARG_ENABLE(graphviz,
+#  [ --enable-graphvizviz Build with graphviz support],
+#  [if test x$enableval != xyes; then
+#     AC_DEFINE(ENABLE_GRAPHVIZ, 1, [Graphviz support enabled.])
+#     PKG_CHECK_MODULES(GVC_DEPS, [libgvc])
+#     AC_SUBST(GVC_DEPS_CFLAGS)
+#     AC_SUBST(GVC_DEPS_LIBS)
+#     AM_CONDITIONAL(ENABLE_GRAPHVIZ, 1)
+#  fi],[
+#     AC_DEFINE(ENABLE_GRAPHVIZ, 0, [Graphviz support disabled.])
+#     AM_CONDITIONAL(ENABLE_GRAPHVIZ, 0)
+#  ])
+
+
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for DEPS" >&5
@@ -13356,6 +13535,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${HAVE_CHECK_TRUE}" && test -z "${HAVE_CHECK_FALSE}"; then
   as_fn_error $? "conditional \"HAVE_CHECK\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_GRAPHVIZ_TRUE}" && test -z "${ENABLE_GRAPHVIZ_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_GRAPHVIZ\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${DEBUG_TRUE}" && test -z "${DEBUG_FALSE}"; then
+  as_fn_error $? "conditional \"DEBUG\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
