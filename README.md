@@ -145,3 +145,7 @@ Install
     ./configure --enable-graphviz
 
 
+
+License
+--------------------
+This software is released under MIT License.
