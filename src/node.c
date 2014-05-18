@@ -198,6 +198,10 @@ route * route_create(char * path) {
     return route_createl(path, strlen(path));
 }
 
+void route_free(route * route) {
+    free(route);
+}
+
 route * route_createl(char * path, int path_len) {
     route * info = malloc(sizeof(route));
     info->path = path;
@@ -415,8 +419,8 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
         if ( subroute_len > 0 ) {
             return r3_tree_insert_pathl(e->child, subroute, subroute_len, route, data);
         } else {
-            // no more,
-            e->child->endpoint++; // make it as an endpoint, TODO: put the path value
+            // no more path to insert
+            e->child->endpoint++; // make it as an endpoint
             e->child->data = data;
             return e->child;
         }
@@ -498,6 +502,53 @@ void r3_tree_dump(node * n, int level) {
             printf("\n");
         }
     }
+}
+
+
+/**
+ * return 0 == equal
+ *
+ * -1 == different route
+ */
+int route_cmp(route *r1, route *r2) {
+    if ( r1 == r2 ) {
+        return 0;
+    }
+
+    if (r1->request_method != r2->request_method) {
+        return -1;
+    }
+
+    int ret;
+
+
+    if ( r1->path && r2->path ) {
+        ret = strcmp(r1->path, r2->path);
+        if (ret != 0) {
+            return -1;
+        }
+    } else if ((r1->path && !r2->path) || (!r1->path && r2->path )) {
+        return -1;
+    }
+
+    if ( r1->host && r2->host ) {
+        ret = strcmp(r1->host, r2->host);
+        if (ret != 0) {
+            return -1;
+        }
+    } else if ((r1->host && !r2->host) || (!r1->host && r2->host )) {
+        return -1;
+    }
+
+    if (r1->remote_addr_pattern && r2->remote_addr_pattern ) {
+        ret = strcmp(r1->remote_addr_pattern, r2->remote_addr_pattern);
+        if (ret != 0) {
+            return -1;
+        }
+    } else if ((r1->remote_addr_pattern && !r2->remote_addr_pattern) || (!r1->remote_addr_pattern && r2->remote_addr_pattern )) {
+        return -1;
+    }
+    return 0;
 }
 
 /*

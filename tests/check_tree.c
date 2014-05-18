@@ -257,6 +257,23 @@ START_TEST (test_str_array)
 }
 END_TEST
 
+START_TEST(test_route_cmp)
+{
+    route *r1 = route_create("/blog/post");
+    route *r2 = route_create("/blog/post");
+
+    fail_if( route_cmp(r1, r2) == -1, "should be the same");
+
+    r1->request_method = METHOD_GET;
+    r2->request_method = METHOD_GET;
+    fail_if( route_cmp(r1, r2) == -1, "should be the same");
+
+    r1->request_method = METHOD_GET;
+    r2->request_method = METHOD_POST;
+    fail_if( route_cmp(r1, r2) == 0, "should be different");
+
+}
+END_TEST
 
 START_TEST(test_insert_route)
 {
@@ -658,6 +675,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_r3_tree_insert_pathl);
         tcase_add_test(tcase, test_compile_slug);
         tcase_add_test(tcase, test_compile);
+        tcase_add_test(tcase, test_route_cmp);
 
         tcase_add_test(tcase, benchmark_str);
 

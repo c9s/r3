@@ -22,8 +22,10 @@
 
 struct _edge;
 struct _node;
+struct _route;
 typedef struct _edge edge;
 typedef struct _node node;
+typedef struct _route route;
 
 struct _node {
     edge ** edges;
@@ -54,6 +56,7 @@ struct _edge {
     int    pattern_len;
     bool   has_slug;
     node * child;
+    route * route;
 };
 
 typedef struct {
@@ -71,7 +74,7 @@ typedef struct {
     int    remote_addr_len;
 } match_entry;
 
-typedef struct {
+struct _route {
     char * path;
     int    path_len;
 
@@ -83,7 +86,7 @@ typedef struct {
     char * remote_addr_pattern;
     int    remote_addr_pattern_len;
 
-} route;
+};
 
 
 node * r3_tree_create(int cap);
@@ -141,5 +144,10 @@ void match_entry_free(match_entry * entry);
 route * route_create(char * path);
 
 route * route_createl(char * path, int path_len);
+
+int route_cmp(route *r1, route *r2);
+
+#define METHOD_GET 2
+#define METHOD_POST 2<<1
 
 #endif /* !NODE_H */
