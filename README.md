@@ -37,10 +37,10 @@ n = r3_tree_create(10);
 int route_data = 3;
 
 // insert the route path into the router tree
-r3_tree_insert_pathl(n , "/zoo"       , strlen("/zoo")       , &route_data );
-r3_tree_insert_pathl(n , "/foo/bar"   , strlen("/foo/bar")   , &route_data );
-r3_tree_insert_pathl(n , "/bar"       , strlen("/bar")       , &route_data );
-r3_tree_insert_pathl(n , "/post/{id}" , strlen("/post/{id}") , &route_data );
+r3_tree_insert_pathl(n , "/zoo"       , strlen("/zoo")       , NULL, &route_data );
+r3_tree_insert_pathl(n , "/foo/bar"   , strlen("/foo/bar")   , NULL, &route_data );
+r3_tree_insert_pathl(n , "/bar"       , strlen("/bar")       , NULL, &route_data );
+r3_tree_insert_pathl(n , "/post/{id}" , strlen("/post/{id}") , NULL, &route_data );
 
 // let's compile the tree!
 r3_tree_compile(n);
@@ -50,7 +50,7 @@ r3_tree_compile(n);
 r3_tree_dump(n, 0);
 
 // match a route
-node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar") );
+node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar"), NULL);
 matched_node->endpoint; // make sure there is a route end at here.
 int ret = *( (*int) matched_node->route_ptr );
 ```
