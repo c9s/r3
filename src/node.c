@@ -352,6 +352,8 @@ condition * condition_createl(char * path, int path_len) {
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
 
+    info->data = NULL;
+
     info->host = NULL; // required host name
     info->host_len = 0;
 
@@ -411,7 +413,8 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * co
         child->endpoint++;
 
         if (condition) {
-            r3_node_append_condition(child, condition, data);
+            condition->data = data;
+            r3_node_append_condition(child, condition);
         }
         return child;
     } else if ( offset == e->pattern_len ) {    // fully-equal to the pattern of the edge
@@ -427,7 +430,8 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * co
             e->child->endpoint++; // make it as an endpoint
             e->child->data = data;
             if (condition) {
-                r3_node_append_condition(e->child, condition, data);
+                condition->data = data;
+                r3_node_append_condition(e->child, condition);
             }
             return e->child;
         }
@@ -465,7 +469,8 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, condition * co
         c2->data = data;
 
         if (condition) {
-            r3_node_append_condition(c2, condition, data);
+            condition->data = data;
+            r3_node_append_condition(c2, condition);
         }
         return c2;
     } else {
@@ -566,7 +571,7 @@ int condition_cmp(condition *r1, condition *r2) {
 /**
  * Create a data only node.
  */
-void r3_node_append_condition(node * n, condition * condition, void * data) {
+void r3_node_append_condition(node * n, condition * condition) {
     if (!n->conditions) {
         n->condition_cap = 3;
         n->conditions = malloc(sizeof(condition) * n->condition_cap);

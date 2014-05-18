@@ -22,10 +22,10 @@
 
 struct _edge;
 struct _node;
-struct _route;
+struct _condition;
 typedef struct _edge edge;
 typedef struct _node node;
-typedef struct _route condition;
+typedef struct _condition condition;
 
 struct _node {
     edge  ** edges;
@@ -77,7 +77,7 @@ typedef struct {
     int    remote_addr_len;
 } match_entry;
 
-struct _route {
+struct _condition {
     char * path;
     int    path_len;
 
@@ -85,6 +85,8 @@ struct _route {
 
     char * host; // required host name
     int    host_len;
+
+    void * data;
 
     char * remote_addr_pattern;
     int    remote_addr_pattern_len;
@@ -150,7 +152,7 @@ condition * condition_createl(char * path, int path_len);
 
 int condition_cmp(condition *r1, condition *r2);
 
-void r3_node_append_condition(node * n, condition * condition, void * data);
+void r3_node_append_condition(node * n, condition * condition);
 
 void condition_free(condition * condition);
 
