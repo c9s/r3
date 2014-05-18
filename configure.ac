@@ -29,19 +29,10 @@ AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
 
 PKG_PROG_PKG_CONFIG
 
-# AC_ARG_ENABLE([graphviz],
-#   AS_HELP_STRING([--enable-graphviz], [Enable graphviz feature]))
-
-
 AC_ARG_ENABLE(graphviz,
               AS_HELP_STRING([--enable-graphviz],
                              [enable graphviz support]),
               , enable_graphviz=unset)
-
-
-
-
-
 if test "x$enable_graphviz" != "xunset" ; then
    PKG_CHECK_MODULES(GVC_DEPS, [libgvc])
    AC_SUBST(GVC_DEPS_CFLAGS)
@@ -49,33 +40,6 @@ if test "x$enable_graphviz" != "xunset" ; then
 fi
 
 AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
-
-
-AC_ARG_ENABLE([debug],
-[  --enable-debug    Turn on debugging],
-[case "${enableval}" in
-  yes) enable_debug=true ;;
-  no)  enable_debug=false ;;
-  *) AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
-esac],[enable_debug=false])
-AM_CONDITIONAL([DEBUG], [test x$enable_debug = xtrue])
-
-
-#  fi],[
-#     AC_DEFINE(ENABLE_GRAPHVIZ, 0, [Graphviz support disabled.])
-#     AM_CONDITIONAL(ENABLE_GRAPHVIZ, 0)
-# AC_ARG_ENABLE(graphviz,
-#  [ --enable-graphvizviz Build with graphviz support],
-#  [if test x$enableval != xyes; then
-#     AC_DEFINE(ENABLE_GRAPHVIZ, 1, [Graphviz support enabled.])
-#     PKG_CHECK_MODULES(GVC_DEPS, [libgvc])
-#     AC_SUBST(GVC_DEPS_CFLAGS)
-#     AC_SUBST(GVC_DEPS_LIBS)
-#     AM_CONDITIONAL(ENABLE_GRAPHVIZ, 1)
-#  fi],[
-#     AC_DEFINE(ENABLE_GRAPHVIZ, 0, [Graphviz support disabled.])
-#     AM_CONDITIONAL(ENABLE_GRAPHVIZ, 0)
-#  ])
 
 
 PKG_CHECK_MODULES(DEPS, [libpcre check])
