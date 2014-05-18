@@ -140,6 +140,8 @@ Install
     make check # run tests
     sudo make install
 
+### Enable Graphviz
 
+    ./configure --enable-graphviz
 
 
