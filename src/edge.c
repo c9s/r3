@@ -78,6 +78,7 @@ node * r3_edge_branch(edge *e, int dl) {
     e->pattern = strndup(e->pattern, dl);
     e->pattern_len = dl;
     free(op);
+    return new_child;
 }
 
 void r3_edge_free(edge * e) {
