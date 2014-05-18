@@ -20,7 +20,7 @@ char * compile_slug(char * str, int len);
 
 bool contains_slug(char * str);
 
-char * find_slug_pattern(char *s1);
+char * find_slug_pattern(char *s1, int *len);
 
 char * find_slug_placeholder(char *s1, int *len);
 

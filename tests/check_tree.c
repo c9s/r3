@@ -161,15 +161,26 @@ START_TEST (test_compile_slug)
 END_TEST
 
 
-START_TEST (test_r3_tree_pcre_patterns_insert)
+START_TEST (test_pcre_patterns_insert)
 {
     node * n = r3_tree_create(10);
 
     // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
     // r3_tree_dump(n, 0);
-    r3_tree_insert_pathl(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/post/{handle:\\d+}-{id:\\d+}", strlen("/post/{handle:\\d+}-{id:\\d+}"), NULL, NULL);
     r3_tree_compile(n);
     r3_tree_dump(n, 0);
+
+    node *matched;
+    matched = r3_tree_match(n, "/post/111-222", strlen("/post/111-222"), NULL);
+    ck_assert(matched);
+    ck_assert_int_gt(matched->endpoint, 0);
+
+    // incomplete string shouldn't match
+    matched = r3_tree_match(n, "/post/111-", strlen("/post/111-"), NULL);
+    ck_assert(matched);
+    ck_assert_int_eq(matched->endpoint, 0);
+
     r3_tree_free(n);
 }
 END_TEST
@@ -745,10 +756,10 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_insert_route);
         tcase_add_test(tcase, test_pcre_pattern_simple);
         tcase_add_test(tcase, test_pcre_pattern_more);
-        tcase_add_test(tcase, test_r3_tree_pcre_patterns_insert);
+        tcase_add_test(tcase, test_pcre_patterns_insert);
 
 
-        tcase_add_test(tcase, benchmark_str);
+        // tcase_add_test(tcase, benchmark_str);
 
         suite_add_tcase(suite, tcase);
 

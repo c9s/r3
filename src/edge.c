@@ -40,7 +40,7 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
  *
  *
  * A -> [prefix..suffix] -> B
- * A -> [prefix] -> C -> [suffix] -> B
+ * A -> [prefix] -> B -> [suffix] -> New Child (Copy Data, Edges from B)
  *
  */
 node * r3_edge_branch(edge *e, int dl) {

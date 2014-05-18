@@ -113,7 +113,7 @@ char * find_slug_placeholder(char *s1, int *len) {
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * find_slug_pattern(char *s1) {
+char * find_slug_pattern(char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 1;
@@ -134,8 +134,8 @@ char * find_slug_pattern(char *s1) {
     } else {
         return NULL;
     }
-    int len = s2 - c;
-    return strndup(c, len);
+    *len = s2 - c;
+    return c;
 }
 
 
@@ -144,75 +144,45 @@ char * find_slug_pattern(char *s1) {
  */
 char * compile_slug(char * str, int len)
 {
-    char *s1 = NULL, *s2 = NULL, *o = NULL;
+    char *s1 = NULL, *o = NULL;
     char *pat = NULL;
     char sep = '/';
 
-    // find '{'
-    s1 = strchr(str, '{');
+
+    // append prefix
+    int s1_len;
+    s1 = find_slug_placeholder(str, &s1_len);
 
     if ( s1 == NULL ) {
         return strdup(str);
     }
 
-    if ( (s1 - str) > 0 ) {
-        sep = *(s1-1);
-    }
-
     char * out = NULL;
-    if ((out = calloc(sizeof(char),128)) == NULL) {
+    if ((out = calloc(sizeof(char),200)) == NULL) {
         return (NULL);
     }
 
-    // append prefix
     o = out;
-    strncat(o, str, s1 - str);
+    strncat(o, str, s1 - str); // string before slug
     o += (s1 - str);
 
-    // start after ':'
-    if ( NULL != (pat = strchr(s1, ':')) ) {
-        pat++;
 
-        // find closing '}'
-        int cnt = 1;
-        s2 = pat;
-        while(s2) {
-            if (*s2 == '{' )
-                cnt++;
-            else if (*s2 == '}' )
-                cnt--;
+    int pat_len;
+    pat = find_slug_pattern(s1, &pat_len);
 
-            if (cnt == 0)
-                break;
-            s2++;
-        }
-
-        // this slug contains a pattern
-        // s2 = strchr(pat, '}');
-
+    if (pat) {
         *o = '(';
         o++;
-
-        strncat(o, pat, (s2 - pat) );
-        o += (s2 - pat);
-
+        strncat(o, pat, pat_len );
+        o += pat_len;
         *o = ')';
         o++;
-
     } else {
-        // should return a '[^/]+' pattern
-        // strncat(c, "([^%c]+)", strlen("([^%c]+)") );
-        // snprintf(pat, 128, "([^%c]+)", sep);
         sprintf(o, "([^%c]+)", sep);
-        o+= sizeof("([^%c]+)");
+        o+= strlen("([^*]+)");
     }
-
-    s2++;
-    while( (s2 - str) > len ) {
-        *o = *s2;
-        s2++;
-        o++;
-    }
+    s1 += s1_len;
+    strncat(o, s1, strlen(s1));
     return out;
 }
 

@@ -153,10 +153,12 @@ void r3_tree_compile_patterns(node * n) {
             strncat(p++,")", 1);
         }
 
-        if ( i + 1 < n->edge_len ) {
+        if ( i + 1 < n->edge_len && n->edge_len > 1 ) {
             strncat(p++,"|",1);
         }
     }
+
+    info("pattern: %s\n",cpat);
 
     n->ov_cnt = (1 + n->edge_len) * 3;
     n->ov = (int*) calloc(sizeof(int), n->ov_cnt);
@@ -227,7 +229,7 @@ node * r3_tree_match_with_entry(node * n, match_entry * entry) {
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
 node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
-    // info("try matching: %s\n", path);
+    info("try matching: %s\n", path);
 
     edge *e;
     int rc;
@@ -236,7 +238,7 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
     // if the pcre_pattern is found, and the pointer is not NULL, then it's
     // pcre pattern node, we use pcre_exec to match the nodes
     if (n->pcre_pattern) {
-        // info("pcre matching %s on %s\n", n->combined_pattern, path);
+        info("pcre matching %s on %s\n", n->combined_pattern, path);
 
         rc = pcre_exec(
                 n->pcre_pattern,   /* the compiled pattern */
@@ -264,6 +266,7 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
             return NULL;
         }
 
+
         for (i = 1; i < rc; i++)
         {
             char *substring_start = path + n->ov[2*i];
@@ -271,7 +274,7 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
             // info("%2d: %.*s\n", i, substring_length, substring_start);
 
             if ( substring_length > 0) {
-                int restlen = path_len - n->ov[2*i+1]; // fully match to the end
+                int restlen = path_len - n->ov[1]; // fully match to the end
                 // info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
 
                 e = n->edges[i - 1];
@@ -283,7 +286,8 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
                 if (restlen == 0) {
                     return e->child;
                 }
-                return r3_tree_match( e->child, substring_start + substring_length, restlen, entry);
+                // get the length of orginal string: $0
+                return r3_tree_match( e->child, path + (n->ov[1] - n->ov[0]), restlen, entry);
             }
         }
         // does not match
@@ -323,7 +327,7 @@ inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
         }
     }
 
-    // info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
+    info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
     if ( strncmp( node_edge_pattern(n,matched_idx), str, node_edge_pattern_len(n,matched_idx) ) == 0 ) {
         return n->edges[matched_idx];
     }
@@ -472,31 +476,10 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
         /* it's partially matched with the pattern,
          * we should split the end point and make a branch here...
          */
-        node *c2; // child 1, child 2
-        edge *e2; // edge 1, edge 2
         char * s2 = path + prefix_len;
-        int s2_len = 0;
-
+        int   s2_len = path_len - prefix_len;
         r3_edge_branch(e, prefix_len);
-        // return r3_tree_insert_pathl(e->child, s2 , s2_len, route , data);
-
-        // here is the new edge from.
-        c2 = r3_tree_create(3);
-        s2_len = path_len - prefix_len;
-        e2 = r3_edge_create(strndup(s2, s2_len), s2_len, c2);
-        // printf("edge right: %s\n", e2->pattern);
-        r3_node_append_edge(e->child, e2);
-
-        // move n->edges to c1
-        c2->endpoint++;
-        c2->data = data;
-        if (route) {
-            route->data = data;
-            r3_node_append_route(c2, route);
-        }
-        return c2;
-        /*
-        */
+        return r3_tree_insert_pathl(e->child, s2 , s2_len, route , data);
     } else {
         printf("unexpected route.");
         return NULL;
@@ -519,6 +502,7 @@ bool r3_node_has_slug_edges(node *n) {
 
 
 void r3_tree_dump(node * n, int level) {
+    print_indent(level);
     if ( n->combined_pattern ) {
         printf(" regexp:%s", n->combined_pattern);
     }
@@ -532,15 +516,11 @@ void r3_tree_dump(node * n, int level) {
 
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         edge * e = n->edges[i];
-        print_indent(level);
-        printf("  |-\"%s\"", e->pattern);
-
-        if (e->has_slug) {
-            printf(" slug:");
-            printf("%s", compile_slug(e->pattern, e->pattern_len) );
-        }
+        print_indent(level + 1);
+        printf("|-\"%s\"", e->pattern);
 
         if ( e->child ) {
+            printf("\n");
             r3_tree_dump( e->child, level + 1);
         }
         printf("\n");
