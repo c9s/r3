@@ -42,9 +42,9 @@ struct _node {
     int *  ov;
 
     /**
-     * the pointer of route structure
+     * the pointer of route data
      */
-    void * route_ptr;
+    void * data;
 
     int endpoint;
 };
@@ -60,8 +60,10 @@ typedef struct {
     str_array * vars;
     char * path; // current path to dispatch
     int    path_len; // the length of the current path
-    void * route_ptr; // route ptr
     int    request_method;  // current request method
+
+    void * data; // route ptr
+
     char * host; // the request host 
     int    host_len;
 
@@ -98,9 +100,9 @@ edge * r3_node_find_edge(node * n, char * pat);
 
 void r3_tree_append_edge(node *n, edge *child);
 
-node * r3_tree_insert_path(node *tree, char *route, void * route_ptr);
+node * r3_tree_insert_path(node *tree, char *route, void * data);
 
-node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr);
+node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * data);
 
 void r3_tree_dump(node * n, int level);
 

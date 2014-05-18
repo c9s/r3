@@ -219,7 +219,7 @@ match_entry * match_entry_createl(char * path, int path_len) {
     entry->vars = str_array_create(3);
     entry->path = path;
     entry->path_len = path_len;
-    entry->route_ptr = NULL;
+    entry->data = NULL;
     return entry;
 }
 
@@ -364,12 +364,12 @@ node * r3_node_create() {
 }
 
 
-node * r3_tree_insert_path(node *tree, char *route, void * route_ptr)
+node * r3_tree_insert_path(node *tree, char *route, void * data)
 {
-    return r3_tree_insert_pathn(tree, route, strlen(route) , route_ptr);
+    return r3_tree_insert_pathn(tree, route, strlen(route) , data);
 }
 
-node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route_ptr)
+node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * data)
 {
     node * n = tree;
     edge * e = NULL;
@@ -403,7 +403,7 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
         node * child = r3_tree_create(3);
         r3_tree_add_child(n, strndup(route, route_len) , child);
         info("edge not found, insert one: %s\n", route);
-        child->route_ptr = route_ptr;
+        child->data = data;
         child->endpoint++;
         return child;
     } else if ( offset == e->pattern_len ) {    // fully-equal to the pattern of the edge
@@ -413,11 +413,11 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
 
         // there are something more we can insert
         if ( subroute_len > 0 ) {
-            return r3_tree_insert_pathn(e->child, subroute, subroute_len, route_ptr);
+            return r3_tree_insert_pathn(e->child, subroute, subroute_len, data);
         } else {
             // no more,
             e->child->endpoint++; // make it as an endpoint, TODO: put the route value
-            e->child->route_ptr = route_ptr;
+            e->child->data = data;
             return e->child;
         }
 
@@ -451,7 +451,7 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
 
         // move n->edges to c1
         c2->endpoint++;
-        c2->route_ptr = route_ptr;
+        c2->data = data;
         return c2;
     } else {
         printf("unexpected condition.");

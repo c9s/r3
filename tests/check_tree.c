@@ -627,7 +627,7 @@ START_TEST(benchmark_str)
     m = r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
     fail_if( m == NULL );
     // r3_tree_dump( m, 0 );
-    ck_assert_int_eq( *((int*) m->route_ptr), 999 );
+    ck_assert_int_eq( *((int*) m->data), 999 );
 
 
     printf("Benchmarking...\n");
