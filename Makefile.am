@@ -13,3 +13,13 @@ r3_include_HEADERS = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = r3.pc
+
+EXTRA_DIST = \
+	autogen.sh \
+	bench.html \
+	demo.c \
+	gen_routes.rb \
+	HACKING.md \
+	LICENSE \
+	README.md \
+	$(NULL)
