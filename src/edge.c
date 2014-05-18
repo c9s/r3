@@ -65,6 +65,7 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
     e->pattern = pattern;
     e->pattern_len = pattern_len;
     e->child = child;
+    e->route = NULL;
     return e;
 }
 
