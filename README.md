@@ -16,6 +16,7 @@ Requirement
 * check
 * pcre
 * jemalloc
+* graphviz version 2.38.0 (20140413.2041)
 
 Pattern Syntax
 -----------------------
