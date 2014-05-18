@@ -420,9 +420,12 @@ node * r3_tree_insert_pathn(node *tree, char *route, int route_len, void * route
         // printf("edge right: %s\n", e2->pattern);
         r3_tree_append_edge(e->child, e2);
 
+
+        char *op = e->pattern;
         // truncate the original edge pattern 
-        // e->pattern = strndup(e->pattern, dl);
+        e->pattern = strndup(e->pattern, dl);
         e->pattern_len = dl;
+        free(op);
 
         // move n->edges to c1
         c2->endpoint++;
