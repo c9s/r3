@@ -304,9 +304,12 @@ condition * r3_node_match_condition(node *n, match_entry * entry) {
     if (n->conditions && n->condition_len > 0) {
         int i;
         for (i = 0; i < n->condition_len ; i++ ) {
-
+            if ( condition_cmp(n->conditions[i], entry) == 0 ) {
+                return n->conditions[i];
+            }
         }
     }
+    return NULL;
 }
 
 inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
@@ -541,25 +544,20 @@ int condition_cmp(condition *r1, match_entry *r2) {
         }
     }
 
-    int ret;
-
     if ( r1->path && r2->path ) {
-        ret = strcmp(r1->path, r2->path);
-        if (ret != 0) {
+        if ( strcmp(r1->path, r2->path) != 0 ) {
             return -1;
         }
     }
 
     if ( r1->host && r2->host ) {
-        ret = strcmp(r1->host, r2->host);
-        if (ret != 0) {
+        if (strcmp(r1->host, r2->host) != 0 ) {
             return -1;
         }
     }
 
     if (r1->remote_addr_pattern) {
-        ret = strcmp(r1->remote_addr_pattern, r2->remote_addr);
-        if (ret != 0) {
+        if ( strcmp(r1->remote_addr_pattern, r2->remote_addr) != 0 ) {
             return -1;
         }
     }

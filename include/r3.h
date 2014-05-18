@@ -156,6 +156,8 @@ void r3_node_append_condition(node * n, condition * condition);
 
 void condition_free(condition * condition);
 
+condition * r3_node_match_condition(node *n, match_entry * entry);
+
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
 #define METHOD_PUT 2<<1

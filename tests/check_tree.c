@@ -225,21 +225,24 @@ END_TEST
 START_TEST(test_route_cmp)
 {
     condition *r1 = condition_create("/blog/post");
-    match_entry * r2 = match_entry_create("/blog/post");
+    match_entry * m = match_entry_create("/blog/post");
 
-    fail_if( condition_cmp(r1, r2) == -1, "should be the same");
-
-    r1->request_method = METHOD_GET;
-    r2->request_method = METHOD_GET;
-    fail_if( condition_cmp(r1, r2) == -1, "should be the same");
+    fail_if( condition_cmp(r1, m) == -1, "should match");
 
     r1->request_method = METHOD_GET;
-    r2->request_method = METHOD_POST;
-    fail_if( condition_cmp(r1, r2) == 0, "should be different");
+    m->request_method = METHOD_GET;
+    fail_if( condition_cmp(r1, m) == -1, "should match");
 
+    r1->request_method = METHOD_GET;
+    m->request_method = METHOD_POST;
+    fail_if( condition_cmp(r1, m) == 0, "should be different");
+
+    r1->request_method = METHOD_GET;
+    m->request_method = METHOD_POST | METHOD_GET;
+    fail_if( condition_cmp(r1, m) == -1, "should match");
 
     condition_free(r1);
-    match_entry_free(r2);
+    match_entry_free(m);
 }
 END_TEST
 
@@ -262,6 +265,11 @@ START_TEST(test_insert_route)
 
     node *m;
     m = r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
+
+    fail_if(m == NULL);
+    condition *c = r3_node_match_condition(m, entry);
+    fail_if(c == NULL);
+
 
     match_entry_free(entry);
     condition_free(r1);
