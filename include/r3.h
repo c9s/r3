@@ -29,30 +29,28 @@ typedef struct _route route;
 
 struct _node {
     edge  ** edges;
+    route ** routes;
     int      edge_len;
     int      edge_cap;
-
-    route ** routes;
     int      route_len;
     int      route_cap;
-
+    int endpoint;
 
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
     char * combined_pattern;
     int    combined_pattern_len;
-    pcre * pcre_pattern;
-    pcre_extra * pcre_extra;
     int    ov_cnt;
     int *  ov;
+    pcre * pcre_pattern;
+    pcre_extra * pcre_extra;
 
     /**
      * the pointer of route data
      */
     void * data;
 
-    int endpoint;
 };
 
 struct _edge {
