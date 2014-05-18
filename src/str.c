@@ -54,7 +54,7 @@ bool contains_slug(char * str) {
  */
 char * compile_slug(char * str, int len)
 {
-    char *s1 = NULL, *s2 = NULL, *i = NULL, *o = NULL;
+    char *s1 = NULL, *s2 = NULL, *o = NULL;
     char *pat = NULL;
     char sep = '/';
 

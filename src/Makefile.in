@@ -78,9 +78,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@ENABLE_GRAPHVIZ_TRUE@am__append_1 = gvc.c
-@ENABLE_GRAPHVIZ_TRUE@am__append_2 = $(GVC_DEPS_LIBS)
-@ENABLE_GRAPHVIZ_TRUE@am__append_3 = $(GVC_DEPS_CFLAGS)
+@ENABLE_DEBUG_TRUE@am__append_1 = -g
+@ENABLE_GRAPHVIZ_TRUE@am__append_2 = gvc.c
+@ENABLE_GRAPHVIZ_TRUE@am__append_3 = $(GVC_DEPS_LIBS)
+@ENABLE_GRAPHVIZ_TRUE@am__append_4 = $(GVC_DEPS_CFLAGS)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -322,10 +323,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libr3.la
 # lib_LIBRARIES = libr3.a
-libr3_la_SOURCES = node.c edge.c list.c str.c token.c $(am__append_1)
-libr3_la_LIBADD = $(DEPS_LIBS) $(am__append_2)
+libr3_la_SOURCES = node.c edge.c list.c str.c token.c $(am__append_2)
+libr3_la_LIBADD = $(DEPS_LIBS) $(am__append_3)
 AM_CFLAGS = $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include \
-	-Wall $(am__append_3)
+	-Wall $(am__append_1) $(am__append_4)
 all: all-am
 
 .SUFFIXES:

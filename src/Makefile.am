@@ -5,6 +5,10 @@ libr3_la_SOURCES = node.c edge.c list.c str.c token.c
 libr3_la_LIBADD=$(DEPS_LIBS)
 AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall
 
+if ENABLE_DEBUG
+AM_CFLAGS += -g
+endif
+
 if ENABLE_GRAPHVIZ
 libr3_la_SOURCES += gvc.c
 libr3_la_LIBADD += $(GVC_DEPS_LIBS)

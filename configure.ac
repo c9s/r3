@@ -39,6 +39,12 @@ if test "x$enable_graphviz" != "xunset" ; then
    AC_SUBST(GVC_DEPS_LIBS)
 fi
 
+AC_ARG_ENABLE(debug,
+              AS_HELP_STRING([--enable-debug],
+                             [enable debug]),
+              , enable_debug=unset)
+
+AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
 
 
