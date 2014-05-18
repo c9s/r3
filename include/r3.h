@@ -124,6 +124,8 @@ void r3_tree_compile_patterns(node * n);
 
 node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry);
 
+node * r3_tree_match_with_entry(node * n, match_entry * entry);
+
 bool r3_node_has_slug_edges(node *n);
 
 edge * r3_edge_create(char * pattern, int pattern_len, node * child);
@@ -147,8 +149,6 @@ condition * condition_create(char * path);
 condition * condition_createl(char * path, int path_len);
 
 int condition_cmp(condition *r1, condition *r2);
-
-edge * r3_edge_route_create(condition * condition, node * child);
 
 void r3_node_append_condition(node * n, condition * condition, void * data);
 

@@ -211,6 +211,11 @@ void match_entry_free(match_entry * entry) {
 }
 
 
+node * r3_tree_match_with_entry(node * n, match_entry * entry) {
+    return r3_tree_match(n, entry->path, entry->path_len, entry);
+}
+
+
 /**
  * This function matches the URL path and return the left node
  *
@@ -573,22 +578,4 @@ void r3_node_append_condition(node * n, condition * condition, void * data) {
     n->conditions[ n->condition_len++ ] = condition;
 }
 
-/**
- * Create a condition-only edge. (without pattern)
- */
-edge * r3_edge_route_create(condition * condition, node * child) {
-    edge * e = (edge*) malloc( sizeof(edge) );
-    /*
-    e->pattern = NULL;
-    e->pattern_len = 0;
-    e->child = child;
-    // e->condition = NULL;
-    */
-    return e;
-}
 
-/*
-char * r3_node_trace(node * n) {
-
-}
-*/

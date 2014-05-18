@@ -261,6 +261,9 @@ START_TEST(test_insert_route)
     r3_tree_insert_route(n, r1, &var1);
     r3_tree_insert_route(n, r2, &var2);
 
+    node *m;
+    m = r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
+
     match_entry_free(entry);
     condition_free(r1);
     condition_free(r2);
