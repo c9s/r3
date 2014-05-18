@@ -102,7 +102,7 @@ void r3_tree_append_edge(node *n, edge *child);
 
 node * r3_tree_insert_path(node *tree, char *path, route * route, void * data);
 
-node * r3_tree_insert_pathn(node *tree, char *path, int path_len, route * route, void * data);
+node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data);
 
 void r3_tree_dump(node * n, int level);
 

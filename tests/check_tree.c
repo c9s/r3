@@ -55,9 +55,9 @@ START_TEST (test_compile)
     node *m;
     edge *e ;
 
-    r3_tree_insert_pathn(n, "/zoo", strlen("/zoo"), NULL, NULL);
-    r3_tree_insert_pathn(n, "/foo", strlen("/foo"), NULL, NULL);
-    r3_tree_insert_pathn(n, "/bar", strlen("/bar"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/zoo", strlen("/zoo"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/foo", strlen("/foo"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/bar", strlen("/bar"), NULL, NULL);
     r3_tree_compile(n);
     fail_if( n->combined_pattern );
     fail_if( NULL == r3_node_find_edge_str(n, "/", strlen("/") ) );
@@ -66,8 +66,8 @@ START_TEST (test_compile)
     r3_tree_dump(n, 0);
 #endif
 
-    r3_tree_insert_pathn(n, "/foo/{id}", strlen("/foo/{id}"), NULL, NULL);
-    r3_tree_insert_pathn(n, "/{id}", strlen("/{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/foo/{id}", strlen("/foo/{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/{id}", strlen("/{id}"), NULL, NULL);
     r3_tree_compile(n);
     r3_tree_compile(n); // test double compile
 #ifdef DEBUG
@@ -160,7 +160,7 @@ START_TEST (test_compile_slug)
 END_TEST
 
 
-START_TEST (test_r3_tree_insert_pathn)
+START_TEST (test_r3_tree_insert_pathl)
 {
     node * n = r3_tree_create(10);
 
@@ -177,15 +177,15 @@ START_TEST (test_r3_tree_insert_pathn)
     // r3_tree_dump(n, 0);
 
     info("Inserting /post/{id}\n");
-    r3_tree_insert_pathn(n, "/post/{id}", strlen("/post/{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/post/{id}", strlen("/post/{id}"), NULL, NULL);
     // r3_tree_dump(n, 0);
 
     info("Inserting /post/{handle}\n");
-    r3_tree_insert_pathn(n, "/post/{handle}", strlen("/post/{handle}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/post/{handle}", strlen("/post/{handle}"), NULL, NULL);
     // r3_tree_dump(n, 0);
 
     info("Inserting /post/{handle}-{id}\n");
-    r3_tree_insert_pathn(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}"), NULL, NULL);
+    r3_tree_insert_pathl(n, "/post/{handle}-{id}", strlen("/post/{handle}-{id}"), NULL, NULL);
     r3_tree_compile(n);
 
 #ifdef DEBUG
@@ -655,7 +655,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_r3_node_construct_uniq);
         tcase_add_test(tcase, test_r3_node_find_edge);
-        tcase_add_test(tcase, test_r3_tree_insert_pathn);
+        tcase_add_test(tcase, test_r3_tree_insert_pathl);
         tcase_add_test(tcase, test_compile_slug);
         tcase_add_test(tcase, test_compile);
 

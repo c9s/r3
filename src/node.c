@@ -366,10 +366,10 @@ node * r3_node_create() {
 
 node * r3_tree_insert_path(node *tree, char *path, route * route, void * data)
 {
-    return r3_tree_insert_pathn(tree, path, strlen(path) , route , data);
+    return r3_tree_insert_pathl(tree, path, strlen(path) , route , data);
 }
 
-node * r3_tree_insert_pathn(node *tree, char *path, int path_len, route * route, void * data)
+node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data)
 {
     node * n = tree;
     edge * e = NULL;
@@ -413,7 +413,7 @@ node * r3_tree_insert_pathn(node *tree, char *path, int path_len, route * route,
 
         // there are something more we can insert
         if ( subroute_len > 0 ) {
-            return r3_tree_insert_pathn(e->child, subroute, subroute_len, route, data);
+            return r3_tree_insert_pathl(e->child, subroute, subroute_len, route, data);
         } else {
             // no more,
             e->child->endpoint++; // make it as an endpoint, TODO: put the path value

@@ -37,10 +37,10 @@ n = r3_tree_create(10);
 int route_data = 3;
 
 // insert the route path into the router tree
-r3_tree_insert_pathn(n , "/zoo"       , strlen("/zoo")       , &route_data );
-r3_tree_insert_pathn(n , "/foo/bar"   , strlen("/foo/bar")   , &route_data );
-r3_tree_insert_pathn(n , "/bar"       , strlen("/bar")       , &route_data );
-r3_tree_insert_pathn(n , "/post/{id}" , strlen("/post/{id}") , &route_data );
+r3_tree_insert_pathl(n , "/zoo"       , strlen("/zoo")       , &route_data );
+r3_tree_insert_pathl(n , "/foo/bar"   , strlen("/foo/bar")   , &route_data );
+r3_tree_insert_pathl(n , "/bar"       , strlen("/bar")       , &route_data );
+r3_tree_insert_pathl(n , "/post/{id}" , strlen("/post/{id}") , &route_data );
 
 // let's compile the tree!
 r3_tree_compile(n);
