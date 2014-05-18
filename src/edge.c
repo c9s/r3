@@ -45,7 +45,7 @@ void r3_edge_branch(edge *e, int dl) {
     int s1_len = 0;
 
     edge **tmp_edges = e->child->edges;
-    int   tmp_r3_edge_len = e->child->edge_len;
+    int   tmp_edge_len = e->child->edge_len;
 
     // the suffix edge of the leaf
     c1 = r3_tree_create(3);
@@ -54,7 +54,7 @@ void r3_edge_branch(edge *e, int dl) {
     // printf("edge left: %s\n", e1->pattern);
 
     // Migrate the child edges to the new edge we just created.
-    for ( int i = 0 ; i < tmp_r3_edge_len ; i++ ) {
+    for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
         r3_node_append_edge(c1, tmp_edges[i]);
         e->child->edges[i] = NULL;
     }
@@ -65,6 +65,8 @@ void r3_edge_branch(edge *e, int dl) {
 
     r3_node_append_edge(e->child, e1);
     c1->endpoint++;
+    c1->data = e->child->data; // copy data pointer
+    e->child->data = NULL;
 }
 
 void r3_edge_free(edge * e) {

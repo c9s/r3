@@ -271,11 +271,24 @@ START_TEST(test_pcre_pattern_more)
     entry = match_entry_createl( "/user/123" , strlen("/user/123") );
     node * n = r3_tree_create(10);
 
-    r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, NULL);
-    r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), NULL, NULL);
-    r3_tree_insert_pathl(n, "/user2/{id:\\d+}", strlen("/user2/{id:\\d+}"), NULL, NULL);
-    r3_tree_insert_pathl(n, "/user3/{id:\\d{3}}", strlen("/user3/{id:\\d{3}}"), NULL, NULL);
+    int var0 = 5;
+    int var1 = 100;
+    int var2 = 200;
+    int var3 = 300;
 
+    printf("var0: %p\n", &var0);
+    printf("var1: %p\n", &var1);
+    printf("var2: %p\n", &var2);
+    printf("var3: %p\n", &var3);
+
+    r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), NULL, &var1);
+    r3_tree_dump(n, 0);
+    r3_tree_insert_pathl(n, "/user2/{id:\\d+}", strlen("/user2/{id:\\d+}"), NULL, &var2);
+    r3_tree_dump(n, 0);
+    r3_tree_insert_pathl(n, "/user3/{id:\\d{3}}", strlen("/user3/{id:\\d{3}}"), NULL, &var3);
+    r3_tree_dump(n, 0);
+    r3_tree_insert_pathl(n, "/user", strlen("/user"), NULL, &var0);
+    r3_tree_dump(n, 0);
     r3_tree_compile(n);
     r3_tree_dump(n, 0);
     node *matched;
@@ -284,16 +297,21 @@ START_TEST(test_pcre_pattern_more)
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
+    fail_if( *((int*) matched->data), var1);
 
+    /*
     matched = r3_tree_match(n, "/user2/123", strlen("/user2/123"), entry);
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
+    fail_if( *((int*)matched->data), var2);
 
     matched = r3_tree_match(n, "/user3/123", strlen("/user3/123"), entry);
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
+    fail_if( *((int*)matched->data), var3);
+    */
 }
 END_TEST
 

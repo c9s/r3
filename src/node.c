@@ -511,7 +511,12 @@ void r3_tree_dump(node * n, int level) {
             printf(" regexp:%s", n->combined_pattern);
         }
 
-        printf(" endpoint:%d\n", n->endpoint);
+        printf(" endpoint:%d", n->endpoint);
+
+        if (n->data) {
+            printf(" data:%p", n->data);
+        }
+        printf("\n");
 
         for ( int i = 0 ; i < n->edge_len ; i++ ) {
             edge * e = n->edges[i];
@@ -523,7 +528,7 @@ void r3_tree_dump(node * n, int level) {
                 printf("%s", compile_slug(e->pattern, e->pattern_len) );
             }
 
-            if ( e->child && e->child->edges ) {
+            if ( e->child ) {
                 r3_tree_dump( e->child, level + 1);
             }
             printf("\n");
