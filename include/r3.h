@@ -73,7 +73,7 @@ typedef struct {
     char * path;
     int    path_len;
 
-    int    request_methods; // can be (GET || POST)
+    int    request_method; // can be (GET || POST)
 
     char * host; // required host name
     int    host_len;

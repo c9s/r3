@@ -202,7 +202,7 @@ route_info * route_info_createl(char * path, int path_len) {
     route_info * info = malloc(sizeof(route_info));
     info->path = path;
     info->path_len = path_len;
-    info->request_methods = 0; // can be (GET || POST)
+    info->request_method = 0; // can be (GET || POST)
 
     info->host = NULL; // required host name
     info->host_len = 0;
