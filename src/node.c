@@ -5,7 +5,7 @@
 #include <assert.h>
 
 // Jemalloc memory management
-#include <jemalloc/jemalloc.h>
+// #include <jemalloc/jemalloc.h>
 
 // PCRE
 #include <pcre.h>
