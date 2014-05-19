@@ -12,9 +12,10 @@
 #include "str_array.h"
 #include "r3_define.h"
 
-int strndiff(char * d1, char * d2, unsigned int n) {
+int strndiff(char * d1, char * d2, unsigned int n)
+{
     char * o = d1;
-    while ( *d1 == *d2 && n-- > 0 ) { 
+    while ( *d1 == *d2 && n-- > 0 ) {
         d1++;
         d2++;
     }
@@ -22,9 +23,10 @@ int strndiff(char * d1, char * d2, unsigned int n) {
 }
 
 
-int strdiff(char * d1, char * d2) {
+int strdiff(char * d1, char * d2)
+{
     char * o = d1;
-    while( *d1 == *d2 ) { 
+    while( *d1 == *d2 ) {
         d1++;
         d2++;
     }
@@ -35,7 +37,8 @@ int strdiff(char * d1, char * d2) {
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
-int count_slug(char * p, int len) {
+int count_slug(char * p, int len)
+{
     int s = 0;
     int lev = 0;
     while( len-- ) {
@@ -52,11 +55,13 @@ int count_slug(char * p, int len) {
     return s;
 }
 
-bool contains_slug(char * str) {
+bool contains_slug(char * str)
+{
     return strchr(str, '{') != NULL ? TRUE : FALSE;
 }
 
-char * inside_slug(char * needle, int needle_len, char *offset) {
+char * inside_slug(char * needle, int needle_len, char *offset)
+{
     char * s1 = offset;
     char * s2 = offset;
 
@@ -81,7 +86,8 @@ char * inside_slug(char * needle, int needle_len, char *offset) {
     return NULL;
 }
 
-char * find_slug_placeholder(char *s1, int *len) {
+char * find_slug_placeholder(char *s1, int *len)
+{
     char *c;
     char *s2;
     int cnt = 0;
@@ -113,7 +119,8 @@ char * find_slug_placeholder(char *s1, int *len) {
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * find_slug_pattern(char *s1, int *len) {
+char * find_slug_pattern(char *s1, int *len)
+{
     char *c;
     char *s2;
     int cnt = 1;
@@ -205,10 +212,8 @@ char** str_split(char* a_str, const char a_delim)
     delim[1] = 0;
 
     /* Count how many elements will be extracted. */
-    while (*tmp)
-    {
-        if (a_delim == *tmp)
-        {
+    while (*tmp) {
+        if (a_delim == *tmp) {
             count++;
             last_comma = tmp;
         }
@@ -224,13 +229,11 @@ char** str_split(char* a_str, const char a_delim)
 
     result = malloc(sizeof(char*) * count);
 
-    if (result)
-    {
+    if (result) {
         size_t idx  = 0;
         char* token = strtok(a_str, delim);
 
-        while (token)
-        {
+        while (token) {
             assert(idx < count);
             *(result + idx++) = strdup(token);
             token = strtok(0, delim);
@@ -242,13 +245,15 @@ char** str_split(char* a_str, const char a_delim)
     return result;
 }
 
-void str_repeat(char *s, char *c, int len) {
+void str_repeat(char *s, char *c, int len)
+{
     while(len--) {
         s[len - 1] = *c;
     }
 }
 
-void print_indent(int level) {
+void print_indent(int level)
+{
     int len = level * 2;
     while(len--) {
         printf(" ");
@@ -256,7 +261,8 @@ void print_indent(int level) {
 }
 
 #ifndef HAVE_STRDUP
-char *strdup(const char *s) {
+char *strdup(const char *s)
+{
     char *out;
     int count = 0;
     while( s[count] )
@@ -271,7 +277,8 @@ char *strdup(const char *s) {
 #endif
 
 #ifndef HAVE_STRNDUP
-char *strndup(const char *s, int n) {
+char *strndup(const char *s, int n)
+{
     char *out;
     int count = 0;
     while( count < n && s[count] )

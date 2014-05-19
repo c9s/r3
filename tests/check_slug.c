@@ -78,27 +78,29 @@ START_TEST (test_find_slug_placeholder_with_broken_slug)
 END_TEST
 
 
-Suite* r3_suite (void) {
-        Suite *suite = suite_create("slug test");
-        TCase *tcase = tcase_create("test_slug");
-        tcase_add_test(tcase, test_contains_slug);
-        tcase_add_test(tcase, test_inside_slug);
-        tcase_add_test(tcase, test_find_slug_pattern);
-        tcase_add_test(tcase, test_find_slug_placeholder);
-        tcase_add_test(tcase, test_find_slug_placeholder_with_broken_slug);
-        tcase_add_test(tcase, test_count_slug);
-        tcase_add_test(tcase, test_compile_slug);
+Suite* r3_suite (void)
+{
+    Suite *suite = suite_create("slug test");
+    TCase *tcase = tcase_create("test_slug");
+    tcase_add_test(tcase, test_contains_slug);
+    tcase_add_test(tcase, test_inside_slug);
+    tcase_add_test(tcase, test_find_slug_pattern);
+    tcase_add_test(tcase, test_find_slug_placeholder);
+    tcase_add_test(tcase, test_find_slug_placeholder_with_broken_slug);
+    tcase_add_test(tcase, test_count_slug);
+    tcase_add_test(tcase, test_compile_slug);
 
-        suite_add_tcase(suite, tcase);
-        return suite;
+    suite_add_tcase(suite, tcase);
+    return suite;
 }
 
-int main (int argc, char *argv[]) {
-        int number_failed;
-        Suite *suite = r3_suite();
-        SRunner *runner = srunner_create(suite);
-        srunner_run_all(runner, CK_NORMAL);
-        number_failed = srunner_ntests_failed(runner);
-        srunner_free(runner);
-        return number_failed;
+int main (int argc, char *argv[])
+{
+    int number_failed;
+    Suite *suite = r3_suite();
+    SRunner *runner = srunner_create(suite);
+    srunner_run_all(runner, CK_NORMAL);
+    number_failed = srunner_ntests_failed(runner);
+    srunner_free(runner);
+    return number_failed;
 }

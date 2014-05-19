@@ -11,9 +11,9 @@
 #include "r3_define.h"
 
 typedef struct _str_array {
-  char **tokens;
-  int    len;
-  int    cap;
+    char **tokens;
+    int    len;
+    int    cap;
 } str_array;
 
 str_array * str_array_create(int cap);

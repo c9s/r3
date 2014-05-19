@@ -10,7 +10,8 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-long unixtime() {
+long unixtime()
+{
     struct timeval tp;
     long sec = 0L;
     if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
@@ -19,12 +20,13 @@ long unixtime() {
     return 0;
 }
 
-double microtime() {
+double microtime()
+{
     struct timeval tp;
     long sec = 0L;
     double msec = 0.0;
     char ret[100];
-    
+
     if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
         msec = (double) (tp.tv_usec / MICRO_IN_SEC);
         sec = tp.tv_sec;
@@ -36,19 +38,23 @@ double microtime() {
 }
 
 
-void bench_start(bench *b) {
+void bench_start(bench *b)
+{
     b->start = microtime();
 }
 
-void bench_stop(bench *b) {
+void bench_stop(bench *b)
+{
     b->end = microtime();
 }
 
-double bench_iteration_speed(bench *b) {
+double bench_iteration_speed(bench *b)
+{
     return b->N / (b->end - b->start);
 }
 
-void bench_print_summary(bench *b) {
+void bench_print_summary(bench *b)
+{
     printf("%ld runs, ", b->R);
     printf("%ld iterations each run, ", b->N);
     printf("finished in %lf seconds\n", b->end - b->start );
