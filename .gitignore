@@ -47,3 +47,6 @@ configure.scan
 autoscan.log
 .libs
 .deps
+r3.pc
+stamp-h1
+tests/bench_str.csv
