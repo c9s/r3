@@ -56,21 +56,23 @@ START_TEST (test_gvc_render_file)
 END_TEST
 
 
-Suite* r3_suite (void) {
-        Suite *suite = suite_create("gvc test");
-        TCase *tcase = tcase_create("test_gvc");
-        tcase_add_test(tcase, test_gvc_render_file);
-        tcase_add_test(tcase, test_gvc_render_dot);
-        suite_add_tcase(suite, tcase);
-        return suite;
+Suite* r3_suite (void)
+{
+    Suite *suite = suite_create("gvc test");
+    TCase *tcase = tcase_create("test_gvc");
+    tcase_add_test(tcase, test_gvc_render_file);
+    tcase_add_test(tcase, test_gvc_render_dot);
+    suite_add_tcase(suite, tcase);
+    return suite;
 }
 
-int main (int argc, char *argv[]) {
-        int number_failed;
-        Suite *suite = r3_suite();
-        SRunner *runner = srunner_create(suite);
-        srunner_run_all(runner, CK_NORMAL);
-        number_failed = srunner_ntests_failed(runner);
-        srunner_free(runner);
-        return number_failed;
+int main (int argc, char *argv[])
+{
+    int number_failed;
+    Suite *suite = r3_suite();
+    SRunner *runner = srunner_create(suite);
+    srunner_run_all(runner, CK_NORMAL);
+    number_failed = srunner_ntests_failed(runner);
+    srunner_free(runner);
+    return number_failed;
 }

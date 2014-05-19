@@ -24,7 +24,8 @@
 /**
  * Create a node object
  */
-node * r3_tree_create(int cap) {
+node * r3_tree_create(int cap)
+{
     node * n = (node*) malloc( sizeof(node) );
 
     n->edges = (edge**) malloc( sizeof(edge*) * 10 );
@@ -39,7 +40,8 @@ node * r3_tree_create(int cap) {
     return n;
 }
 
-void r3_tree_free(node * tree) {
+void r3_tree_free(node * tree)
+{
     for (int i = 0 ; i < tree->edge_len ; i++ ) {
         if (tree->edges[i]) {
             r3_edge_free(tree->edges[ i ]);
@@ -52,7 +54,7 @@ void r3_tree_free(node * tree) {
         free(tree->pcre_pattern);
     if (tree->pcre_extra)
         free(tree->pcre_extra);
-    if (tree->ov) 
+    if (tree->ov)
         free(tree->ov);
     free(tree->edges);
     // str_array_free(tree->edge_patterns);
@@ -63,7 +65,8 @@ void r3_tree_free(node * tree) {
 
 
 /* parent node, edge pattern, child */
-edge * r3_node_add_child(node * n, char * pat , node *child) {
+edge * r3_node_add_child(node * n, char * pat , node *child)
+{
     // find the same sub-pattern, if it does not exist, create one
 
     edge * e;
@@ -82,7 +85,8 @@ edge * r3_node_add_child(node * n, char * pat , node *child) {
 
 
 
-void r3_node_append_edge(node *n, edge *e) {
+void r3_node_append_edge(node *n, edge *e)
+{
     if (!n->edges) {
         n->edge_cap = 3;
         n->edges = malloc(sizeof(edge) * n->edge_cap);
@@ -94,7 +98,8 @@ void r3_node_append_edge(node *n, edge *e) {
     n->edges[ n->edge_len++ ] = e;
 }
 
-edge * r3_node_find_edge(node * n, char * pat) {
+edge * r3_node_find_edge(node * n, char * pat)
+{
     edge * e;
     for (int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
@@ -125,7 +130,8 @@ void r3_tree_compile(node *n)
  * This function combines ['/foo', '/bar', '/{slug}'] into (/foo)|(/bar)|/([^/]+)}
  *
  */
-void r3_tree_compile_patterns(node * n) {
+void r3_tree_compile_patterns(node * n)
+{
     char * cpat;
     char * p;
 
@@ -179,11 +185,11 @@ void r3_tree_compile_patterns(node * n) {
 
     // n->pcre_pattern;
     n->pcre_pattern = pcre_compile(
-            n->combined_pattern,              /* the pattern */
-            option_bits,                                /* default options */
-            &error,               /* for error message */
-            &erroffset,           /* for error offset */
-            NULL);                /* use default character tables */
+                          n->combined_pattern,              /* the pattern */
+                          option_bits,                                /* default options */
+                          &error,               /* for error message */
+                          &erroffset,           /* for error offset */
+                          NULL);                /* use default character tables */
     if (n->pcre_pattern == NULL) {
         printf("PCRE compilation failed at offset %d: %s, pattern: %s\n", erroffset, error, n->combined_pattern);
         return;
@@ -196,7 +202,8 @@ void r3_tree_compile_patterns(node * n) {
 }
 
 
-match_entry * match_entry_createl(char * path, int path_len) {
+match_entry * match_entry_createl(char * path, int path_len)
+{
     match_entry * entry = malloc(sizeof(match_entry));
     if(!entry)
         return NULL;
@@ -207,7 +214,8 @@ match_entry * match_entry_createl(char * path, int path_len) {
     return entry;
 }
 
-void match_entry_free(match_entry * entry) {
+void match_entry_free(match_entry * entry)
+{
     str_array_free(entry->vars);
     free(entry);
 }
@@ -224,7 +232,8 @@ void match_entry_free(match_entry * entry) {
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) {
+node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry)
+{
     info("try matching: %s\n", path);
 
     edge *e;
@@ -237,34 +246,36 @@ node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) 
         info("pcre matching %s on %s\n", n->combined_pattern, path);
 
         rc = pcre_exec(
-                n->pcre_pattern,   /* the compiled pattern */
+                 n->pcre_pattern,   /* the compiled pattern */
 
-                // PCRE Study makes this slow
-                NULL, // n->pcre_extra,     /* no extra data - we didn't study the pattern */
-                path,              /* the subject string */
-                path_len,          /* the length of the subject */
-                0,                 /* start at offset 0 in the subject */
-                0,                 /* default options */
-                n->ov,           /* output vector for substring information */
-                n->ov_cnt);      /* number of elements in the output vector */
+                 // PCRE Study makes this slow
+                 NULL, // n->pcre_extra,     /* no extra data - we didn't study the pattern */
+                 path,              /* the subject string */
+                 path_len,          /* the length of the subject */
+                 0,                 /* start at offset 0 in the subject */
+                 0,                 /* default options */
+                 n->ov,           /* output vector for substring information */
+                 n->ov_cnt);      /* number of elements in the output vector */
 
         // info("rc: %d\n", rc );
         if (rc < 0) {
-            switch(rc)
-            {
-                case PCRE_ERROR_NOMATCH: printf("No match\n"); break;
-                /*
-                Handle other special cases if you like
-                */
-                default: printf("Matching error %d\n", rc); break;
+            switch(rc) {
+            case PCRE_ERROR_NOMATCH:
+                printf("No match\n");
+                break;
+            /*
+            Handle other special cases if you like
+            */
+            default:
+                printf("Matching error %d\n", rc);
+                break;
             }
             // does not match all edges, return NULL;
             return NULL;
         }
 
 
-        for (i = 1; i < rc; i++)
-        {
+        for (i = 1; i < rc; i++) {
             char *substring_start = path + n->ov[2*i];
             int   substring_length = n->ov[2*i+1] - n->ov[2*i];
             // info("%2d: %.*s\n", i, substring_length, substring_start);
@@ -300,7 +311,8 @@ node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) 
     return NULL;
 }
 
-route * r3_tree_match_route(node *tree, match_entry * entry) {
+route * r3_tree_match_route(node *tree, match_entry * entry)
+{
     node *n;
     n = r3_tree_match_entry(tree, entry);
     if (n->routes && n->route_len > 0) {
@@ -314,7 +326,8 @@ route * r3_tree_match_route(node *tree, match_entry * entry) {
     return NULL;
 }
 
-inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
+inline edge * r3_node_find_edge_str(node * n, char * str, int str_len)
+{
     int i = 0;
     int matched_idx = 0;
 
@@ -334,7 +347,8 @@ inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
 
 
 
-node * r3_node_create() {
+node * r3_node_create()
+{
     node * n = (node*) malloc( sizeof(node) );
     n->edges = NULL;
     n->edge_len = 0;
@@ -351,15 +365,18 @@ node * r3_node_create() {
 }
 
 
-route * r3_route_create(char * path) {
+route * r3_route_create(char * path)
+{
     return r3_route_createl(path, strlen(path));
 }
 
-void r3_route_free(route * route) {
+void r3_route_free(route * route)
+{
     free(route);
 }
 
-route * r3_route_createl(char * path, int path_len) {
+route * r3_route_createl(char * path, int path_len)
+{
     route * info = malloc(sizeof(route));
     info->path = path;
     info->path_len = path_len;
@@ -487,13 +504,14 @@ node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route
     return n;
 }
 
-bool r3_node_has_slug_edges(node *n) {
+bool r3_node_has_slug_edges(node *n)
+{
     bool found = FALSE;
     edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         e->has_slug = contains_slug(e->pattern);
-        if (e->has_slug) 
+        if (e->has_slug)
             found = TRUE;
     }
     return found;
@@ -501,7 +519,8 @@ bool r3_node_has_slug_edges(node *n) {
 
 
 
-void r3_tree_dump(node * n, int level) {
+void r3_tree_dump(node * n, int level)
+{
     print_indent(level);
     if ( n->combined_pattern ) {
         printf(" regexp:%s", n->combined_pattern);
@@ -533,7 +552,8 @@ void r3_tree_dump(node * n, int level) {
  *
  * -1 == different route
  */
-int r3_route_cmp(route *r1, match_entry *r2) {
+int r3_route_cmp(route *r1, match_entry *r2)
+{
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;
@@ -568,9 +588,10 @@ int r3_route_cmp(route *r1, match_entry *r2) {
 
 
 /**
- * 
+ *
  */
-void r3_node_append_route(node * n, route * route) {
+void r3_node_append_route(node * n, route * route)
+{
     if (!n->routes) {
         n->route_cap = 3;
         n->routes = malloc(sizeof(route) * n->route_cap);
