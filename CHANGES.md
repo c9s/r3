@@ -22,7 +22,9 @@ This reduce the interface complexity, e.g.,
 
 5. Added `r3_tree_match_entry` for users want to match a `match_entry`, which is just a macro to simplify the use:
 
-    #define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path, entry->path_len, entry)
+
+        #define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path, entry->path_len, entry)
+
 
 6. Please note that A path that is inserted by `r3_tree_insert_route` can only be matched by `r3_tree_match_route`.
 
