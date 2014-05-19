@@ -453,7 +453,13 @@ node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route
         if ( subpath_len > 0 ) {
             return _r3_tree_insert_pathl(e->child, subpath, subpath_len, route, data);
         } else {
-            // no more path to insert
+            // there are no more path to insert
+
+            // see if there is an endpoint already
+            if (e->child->endpoint) {
+                // XXX: return an error code instead of NULL
+                return NULL;
+            }
             e->child->endpoint++; // make it as an endpoint
             e->child->data = data;
             if (route) {
