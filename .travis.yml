@@ -5,7 +5,8 @@ compiler:
 # for debian
 install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf m4 gnulib
+  - sudo apt-get install -qq automake pkg-config build-essential libtool automake autoconf m4 gnulib
+  - sudo apt-get install -qq check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1
 before_script:
   #  - aclocal
   #  - autoconf
