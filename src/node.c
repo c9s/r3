@@ -306,7 +306,7 @@ route * r3_tree_match_route(node *tree, match_entry * entry) {
     if (n->routes && n->route_len > 0) {
         int i;
         for (i = 0; i < n->route_len ; i++ ) {
-            if ( route_cmp(n->routes[i], entry) == 0 ) {
+            if ( r3_route_cmp(n->routes[i], entry) == 0 ) {
                 return n->routes[i];
             }
         }
@@ -351,15 +351,15 @@ node * r3_node_create() {
 }
 
 
-route * route_create(char * path) {
-    return route_createl(path, strlen(path));
+route * r3_route_create(char * path) {
+    return r3_route_createl(path, strlen(path));
 }
 
-void route_free(route * route) {
+void r3_route_free(route * route) {
     free(route);
 }
 
-route * route_createl(char * path, int path_len) {
+route * r3_route_createl(char * path, int path_len) {
     route * info = malloc(sizeof(route));
     info->path = path;
     info->path_len = path_len;
@@ -527,7 +527,7 @@ void r3_tree_dump(node * n, int level) {
  *
  * -1 == different route
  */
-int route_cmp(route *r1, match_entry *r2) {
+int r3_route_cmp(route *r1, match_entry *r2) {
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;

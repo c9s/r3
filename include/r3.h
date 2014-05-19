@@ -155,15 +155,15 @@ match_entry * match_entry_createl(char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
-route * route_create(char * path);
+route * r3_route_create(char * path);
 
-route * route_createl(char * path, int path_len);
+route * r3_route_createl(char * path, int path_len);
 
-int route_cmp(route *r1, match_entry *r2);
+int r3_route_cmp(route *r1, match_entry *r2);
 
 void r3_node_append_route(node * n, route * route);
 
-void route_free(route * route);
+void r3_route_free(route * route);
 
 route * r3_tree_match_route(node *n, match_entry * entry);
 

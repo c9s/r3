@@ -67,6 +67,9 @@ the catched variables will be pushed into the match entry structure:
 
 ```c
 match_entry * entry = match_entry_create("/foo/bar");
+
+// free the match entry
+match_entry_free(entry);
 ```
 
 And you can even specify the request method restriction:
@@ -105,6 +108,10 @@ r3_tree_compile(n);
 
 route *matched_route = r3_tree_match_route(n, entry);
 matched_route->data; // get the data from matched route
+
+// free the objects at the end
+r3_route_free(r1);
+r3_tree_free(n);
 ```
 
 

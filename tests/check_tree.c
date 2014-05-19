@@ -245,24 +245,24 @@ END_TEST
 
 START_TEST(test_route_cmp)
 {
-    route *r1 = route_create("/blog/post");
+    route *r1 = r3_route_create("/blog/post");
     match_entry * m = match_entry_create("/blog/post");
 
-    fail_if( route_cmp(r1, m) == -1, "should match");
+    fail_if( r3_route_cmp(r1, m) == -1, "should match");
 
     r1->request_method = METHOD_GET;
     m->request_method = METHOD_GET;
-    fail_if( route_cmp(r1, m) == -1, "should match");
+    fail_if( r3_route_cmp(r1, m) == -1, "should match");
 
     r1->request_method = METHOD_GET;
     m->request_method = METHOD_POST;
-    fail_if( route_cmp(r1, m) == 0, "should be different");
+    fail_if( r3_route_cmp(r1, m) == 0, "should be different");
 
     r1->request_method = METHOD_GET;
     m->request_method = METHOD_POST | METHOD_GET;
-    fail_if( route_cmp(r1, m) == -1, "should match");
+    fail_if( r3_route_cmp(r1, m) == -1, "should match");
 
-    route_free(r1);
+    r3_route_free(r1);
     match_entry_free(m);
 }
 END_TEST
@@ -340,8 +340,8 @@ START_TEST(test_insert_route)
 {
     int   var1 = 22;
     int   var2 = 33;
-    route *r1 = route_create("/blog/post");
-    route *r2 = route_create("/blog/post");
+    route *r1 = r3_route_create("/blog/post");
+    route *r2 = r3_route_create("/blog/post");
     r1->request_method = METHOD_GET;
     r2->request_method = METHOD_POST;
 
@@ -356,8 +356,8 @@ START_TEST(test_insert_route)
     fail_if(c == NULL);
 
     match_entry_free(entry);
-    route_free(r1);
-    route_free(r2);
+    r3_route_free(r1);
+    r3_route_free(r2);
 }
 END_TEST
 
