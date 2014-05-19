@@ -38,10 +38,13 @@ n = r3_tree_create(10);
 int route_data = 3;
 
 // insert the route path into the router tree
-r3_tree_insert_pathl(n , "/zoo"       , strlen("/zoo")       , NULL, &route_data );
-r3_tree_insert_pathl(n , "/foo/bar"   , strlen("/foo/bar")   , NULL, &route_data );
-r3_tree_insert_pathl(n , "/bar"       , strlen("/bar")       , NULL, &route_data );
-r3_tree_insert_pathl(n , "/post/{id}" , strlen("/post/{id}") , NULL, &route_data );
+r3_tree_insert_path(n,  "/bar", &route_data ); // ignore the length of path
+
+r3_tree_insert_pathl(n, "/zoo"       , strlen("/zoo")       , &route_data );
+r3_tree_insert_pathl(n, "/foo/bar"   , strlen("/foo/bar")   , &route_data );
+
+r3_tree_insert_pathl(n , "/post/{id}" , strlen("/post/{id}") , &route_data );
+
 r3_tree_insert_pathl(n , "/user/{id:\\d+}" , strlen("/user/{id:\\d+}") , NULL, &route_data );
 
 // let's compile the tree!
@@ -53,8 +56,31 @@ r3_tree_dump(n, 0);
 
 // match a route
 node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar"), NULL);
-matched_node->endpoint; // make sure there is a route end at here.
-int ret = *( (*int) matched_node->route_ptr );
+if (matched_node) {
+    matched_node->endpoint; // make sure there is a route end at here.
+    int ret = *( (*int) matched_node->route_ptr );
+}
+```
+
+If you want to capture the variables from regular expression, you will need to create a match entry,
+the catched variables will be pushed into the match entry structure:
+
+```c
+match_entry * entry = match_entry_create("/foo/bar");
+```
+
+And you can even specify the request method restriction:
+
+```c
+entry->request_method = METHOD_GET;
+entry->request_method = METHOD_POST;
+entry->request_method = METHOD_GET | METHOD_POST;
+```
+
+When using `match_entry`, you may match the route with `r3_tree_match_entry` function:
+
+```c
+node *matched_node = r3_tree_match_entry(n, entry);
 ```
 
 ### Routing with conditions
@@ -71,21 +97,14 @@ int route_data = 3;
 
 // define the route with conditions
 route *r1 = route_create("/blog/post");
-r1->request_method = METHOD_GET | METHOD_POST; // ALLOW GET OR POST
+r1->request_method = METHOD_GET | METHOD_POST; // ALLOW GET OR POST METHOD
 
 // insert the route path into the router tree
-r3_tree_insert_route(n, r1, NULL, &route_data );
-
+r3_tree_insert_route(n, r1, &route_data );
 r3_tree_compile(n);
 
-node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar"), entry);
-matched_node->endpoint; // make sure there is a route end at here.
-
-if (matched_node->routes) {
-    // find the route with matched condition
-    route *c = r3_node_match_route(m, entry);
-    c->data; // get the data from matched route
-}
+route *matched_route = r3_tree_match_route(n, entry);
+matched_route->data; // get the data from matched route
 ```
 
 

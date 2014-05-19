@@ -213,22 +213,18 @@ void match_entry_free(match_entry * entry) {
 }
 
 
-node * r3_tree_match_with_entry(node * n, match_entry * entry) {
-    return r3_tree_match(n, entry->path, entry->path_len, entry);
-}
-
 
 /**
  * This function matches the URL path and return the left node
  *
- * r3_tree_match returns NULL when the path does not match. returns *node when the path matches.
+ * r3_tree_matchl returns NULL when the path does not match. returns *node when the path matches.
  *
  * @param node         n        the root of the tree
  * @param char*        path     the URL path to dispatch
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
+node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) {
     info("try matching: %s\n", path);
 
     edge *e;
@@ -287,7 +283,7 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
                     return e->child;
                 }
                 // get the length of orginal string: $0
-                return r3_tree_match( e->child, path + (n->ov[1] - n->ov[0]), restlen, entry);
+                return r3_tree_matchl( e->child, path + (n->ov[1] - n->ov[0]), restlen, entry);
             }
         }
         // does not match
@@ -297,14 +293,16 @@ node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry) {
     if ( (e = r3_node_find_edge_str(n, path, path_len)) != NULL ) {
         int restlen = path_len - e->pattern_len;
         if(restlen > 0) {
-            return r3_tree_match(e->child, path + e->pattern_len, restlen, entry);
+            return r3_tree_matchl(e->child, path + e->pattern_len, restlen, entry);
         }
         return e->child;
     }
     return NULL;
 }
 
-route * r3_node_match_route(node *n, match_entry * entry) {
+route * r3_tree_match_route(node *tree, match_entry * entry) {
+    node *n;
+    n = r3_tree_match_entry(tree, entry);
     if (n->routes && n->route_len > 0) {
         int i;
         for (i = 0; i < n->route_len ; i++ ) {
@@ -375,16 +373,6 @@ route * route_createl(char * path, int path_len) {
     info->remote_addr_pattern = NULL;
     info->remote_addr_pattern_len = 0;
     return info;
-}
-
-
-node * r3_tree_insert_route(node *tree, route * route, void * data) {
-    return _r3_tree_insert_pathl(tree, route->path, route->path_len, route, data);
-}
-
-node * r3_tree_insert_path(node *tree, char *path, void * data)
-{
-    return _r3_tree_insert_pathl(tree, path, strlen(path) , NULL , data);
 }
 
 node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data)

@@ -105,11 +105,13 @@ edge * r3_node_find_edge(node * n, char * pat);
 
 void r3_node_append_edge(node *n, edge *child);
 
-node * r3_tree_insert_path(node *tree, char *path, void * data);
 
 node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
 
-node * r3_tree_insert_route(node *tree, route * route, void * data);
+#define r3_tree_insert_path(n,p,d) _r3_tree_insert_pathl(n,p,strlen(p), NULL, d)
+
+// node * r3_tree_insert_route(node *tree, route * route, void * data);
+#define r3_tree_insert_route(n,r,d) _r3_tree_insert_pathl(n, r->path, r->path_len, r, d)
 
 /**
  * The private API to insert a path
@@ -129,9 +131,12 @@ void r3_tree_compile(node *n);
 
 void r3_tree_compile_patterns(node * n);
 
-node * r3_tree_match(node * n, char * path, int path_len, match_entry * entry);
+node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry);
 
-node * r3_tree_match_with_entry(node * n, match_entry * entry);
+#define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
+
+// node * r3_tree_match_entry(node * n, match_entry * entry);
+#define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path, entry->path_len, entry)
 
 bool r3_node_has_slug_edges(node *n);
 
@@ -160,7 +165,7 @@ void r3_node_append_route(node * n, route * route);
 
 void route_free(route * route);
 
-route * r3_node_match_route(node *n, match_entry * entry);
+route * r3_tree_match_route(node *n, match_entry * entry);
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1

@@ -90,27 +90,27 @@ START_TEST (test_compile)
     match_entry * entry;
 
     entry = match_entry_createl( "foo" , strlen("/foo") );
-    m = r3_tree_match( n , "/foo", strlen("/foo"), entry);
+    m = r3_tree_matchl( n , "/foo", strlen("/foo"), entry);
     fail_if( NULL == m );
 
     entry = match_entry_createl( "/zoo" , strlen("/zoo") );
-    m = r3_tree_match( n , "/zoo", strlen("/zoo"), entry);
+    m = r3_tree_matchl( n , "/zoo", strlen("/zoo"), entry);
     fail_if( NULL == m );
 
     entry = match_entry_createl( "/bar" , strlen("/bar") );
-    m = r3_tree_match( n , "/bar", strlen("/bar"), entry);
+    m = r3_tree_matchl( n , "/bar", strlen("/bar"), entry);
     fail_if( NULL == m );
 
     entry = match_entry_createl( "/xxx" , strlen("/xxx") );
-    m = r3_tree_match( n , "/xxx", strlen("/xxx"), entry);
+    m = r3_tree_matchl( n , "/xxx", strlen("/xxx"), entry);
     fail_if( NULL == m );
 
     entry = match_entry_createl( "/foo/xxx" , strlen("/foo/xxx") );
-    m = r3_tree_match( n , "/foo/xxx", strlen("/foo/xxx"), entry);
+    m = r3_tree_matchl( n , "/foo/xxx", strlen("/foo/xxx"), entry);
     fail_if( NULL == m );
 
     entry = match_entry_createl( "/some_id" , strlen("/some_id") );
-    m = r3_tree_match( n , "/some_id", strlen("/some_id"), entry);
+    m = r3_tree_matchl( n , "/some_id", strlen("/some_id"), entry);
     fail_if( NULL == m );
     ck_assert_int_gt( m->endpoint , 0 ); // should not be an endpoint
 }
@@ -172,12 +172,12 @@ START_TEST (test_pcre_patterns_insert)
     r3_tree_dump(n, 0);
 
     node *matched;
-    matched = r3_tree_match(n, "/post/111-222", strlen("/post/111-222"), NULL);
+    matched = r3_tree_matchl(n, "/post/111-222", strlen("/post/111-222"), NULL);
     ck_assert(matched);
     ck_assert_int_gt(matched->endpoint, 0);
 
     // incomplete string shouldn't match
-    matched = r3_tree_match(n, "/post/111-", strlen("/post/111-"), NULL);
+    matched = r3_tree_matchl(n, "/post/111-", strlen("/post/111-"), NULL);
     ck_assert(matched);
     ck_assert_int_eq(matched->endpoint, 0);
 
@@ -278,7 +278,7 @@ START_TEST(test_pcre_pattern_simple)
     r3_tree_compile(n);
     // r3_tree_dump(n, 0);
     node *matched;
-    matched = r3_tree_match(n, "/user/123", strlen("/user/123"), entry);
+    matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
@@ -310,7 +310,7 @@ START_TEST(test_pcre_pattern_more)
     // r3_tree_dump(n, 0);
     node *matched;
 
-    matched = r3_tree_match(n, "/user/123", strlen("/user/123"), entry);
+    matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
@@ -319,13 +319,13 @@ START_TEST(test_pcre_pattern_more)
     info("matched %p\n", matched->data);
     ck_assert_int_eq( *((int*) matched->data), var1);
 
-    matched = r3_tree_match(n, "/user2/123", strlen("/user2/123"), entry);
+    matched = r3_tree_matchl(n, "/user2/123", strlen("/user2/123"), entry);
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     ck_assert_int_eq( *((int*)matched->data), var2);
 
-    matched = r3_tree_match(n, "/user3/123", strlen("/user3/123"), entry);
+    matched = r3_tree_matchl(n, "/user3/123", strlen("/user3/123"), entry);
     fail_if(matched == NULL);
     ck_assert_int_gt(entry->vars->len, 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
@@ -352,14 +352,8 @@ START_TEST(test_insert_route)
     r3_tree_insert_route(n, r1, &var1);
     r3_tree_insert_route(n, r2, &var2);
 
-    node *m;
-    m = r3_tree_match(n , "/blog/post", strlen("/blog/post"), entry);
-
-    fail_if(m == NULL);
-    fail_if(m->endpoint == 0);
-    route *c = r3_node_match_route(m, entry);
+    route *c = r3_tree_match_route(n, entry);
     fail_if(c == NULL);
-
 
     match_entry_free(entry);
     route_free(r1);
@@ -720,7 +714,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     // match_entry *entry = calloc( sizeof(entry) , 1 );
 
     node *m;
-    m = r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
+    m = r3_tree_match(n , "/qux/bar/corge", NULL);
     fail_if( m == NULL );
     // r3_tree_dump( m, 0 );
     ck_assert_int_eq( *((int*) m->data), 999 );
@@ -728,7 +722,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
     printf("Benchmarking...\n");
     BENCHMARK(string_dispatch)
-    r3_tree_match(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
+    r3_tree_match(n , "/qux/bar/corge", NULL);
     END_BENCHMARK()
 
     bench_print_summary(&B);
