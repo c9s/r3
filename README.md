@@ -60,6 +60,9 @@ if (matched_node) {
     matched_node->endpoint; // make sure there is a route end at here.
     int ret = *( (*int) matched_node->route_ptr );
 }
+
+// release the tree
+r3_tree_free(n);
 ```
 
 If you want to capture the variables from regular expression, you will need to create a match entry,
