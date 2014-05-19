@@ -722,7 +722,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
     printf("Benchmarking...\n");
     BENCHMARK(string_dispatch)
-    r3_tree_match(n , "/qux/bar/corge", NULL);
+    r3_tree_matchl(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
     END_BENCHMARK()
 
     bench_print_summary(&B);
