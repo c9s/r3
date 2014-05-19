@@ -377,20 +377,26 @@ route * route_createl(char * path, int path_len) {
     return info;
 }
 
+
 node * r3_tree_insert_route(node *tree, route * route, void * data) {
-    return r3_tree_insert_pathl(tree, route->path, route->path_len, route, data);
+    return _r3_tree_insert_pathl(tree, route->path, route->path_len, route, data);
 }
 
-node * r3_tree_insert_path(node *tree, char *path, route * route, void * data)
+node * r3_tree_insert_path(node *tree, char *path, void * data)
 {
-    return r3_tree_insert_pathl(tree, path, strlen(path) , route , data);
+    return _r3_tree_insert_pathl(tree, path, strlen(path) , NULL , data);
+}
+
+node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data)
+{
+    return _r3_tree_insert_pathl(tree, path, path_len, NULL , data);
 }
 
 
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data)
+node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data)
 {
     node * n = tree;
     edge * e = NULL;
@@ -436,7 +442,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
             r3_node_add_child(n, strndup(path, (int)(p - path)), child);
 
             // and insert the rest part to the child
-            return r3_tree_insert_pathl(child, p, path_len - (int)(p - path),  route, data);
+            return _r3_tree_insert_pathl(child, p, path_len - (int)(p - path),  route, data);
         } else {
             node * child = r3_tree_create(3);
             r3_node_add_child(n, strndup(path, path_len) , child);
@@ -457,7 +463,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
 
         // there are something more we can insert
         if ( subpath_len > 0 ) {
-            return r3_tree_insert_pathl(e->child, subpath, subpath_len, route, data);
+            return _r3_tree_insert_pathl(e->child, subpath, subpath_len, route, data);
         } else {
             // no more path to insert
             e->child->endpoint++; // make it as an endpoint
@@ -479,7 +485,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route,
         char * s2 = path + prefix_len;
         int   s2_len = path_len - prefix_len;
         r3_edge_branch(e, prefix_len);
-        return r3_tree_insert_pathl(e->child, s2 , s2_len, route , data);
+        return _r3_tree_insert_pathl(e->child, s2 , s2_len, route , data);
     } else {
         printf("unexpected route.");
         return NULL;
