@@ -501,30 +501,59 @@ bool r3_node_has_slug_edges(node *n) {
 
 
 
-void r3_tree_dump(node * n, int level) {
-    print_indent(level);
-    if ( n->combined_pattern ) {
-        printf(" regexp:%s", n->combined_pattern);
+void r3_tree_dump(node * n, int level, char *out) {
+    if (out)
+    {
+	    print_indent(level, out);
+	    if ( n->combined_pattern ) {
+		sprintf(out, " regexp:%s", n->combined_pattern);
+	    }
+
+	    sprintf(out, " endpoint:%d", n->endpoint);
+
+	    if (n->data) {
+		sprintf(out, " data:%p", n->data);
+	    }
+	    sprintf(out, "\n");
+
+	    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+		edge * e = n->edges[i];
+		print_indent(level + 1, out);
+		sprintf(out, "|-\"%s\"", e->pattern);
+
+		if ( e->child ) {
+		    sprintf(out, "\n");
+		    r3_tree_dump(e->child, level + 1, out);
+		}
+		sprintf(out, "\n");
+	    }
     }
+    else
+    {
+	    print_indent(level, out);
+	    if ( n->combined_pattern ) {
+		printf(" regexp:%s", n->combined_pattern);
+	    }
 
-    printf(" endpoint:%d", n->endpoint);
+	    printf(" endpoint:%d", n->endpoint);
 
-    if (n->data) {
-        printf(" data:%p", n->data);
-    }
-    printf("\n");
+	    if (n->data) {
+		printf(" data:%p", n->data);
+	    }
+	    printf("\n");
 
-    for ( int i = 0 ; i < n->edge_len ; i++ ) {
-        edge * e = n->edges[i];
-        print_indent(level + 1);
-        printf("|-\"%s\"", e->pattern);
+	    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+		edge * e = n->edges[i];
+		print_indent(level + 1, out);
+		printf("|-\"%s\"", e->pattern);
 
-        if ( e->child ) {
-            printf("\n");
-            r3_tree_dump( e->child, level + 1);
-        }
-        printf("\n");
-    }
+		if ( e->child ) {
+		    printf("\n");
+		    r3_tree_dump(e->child, level + 1, out);
+		}
+		printf("\n");
+	    }
+	}
 }
 
 
