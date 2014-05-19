@@ -198,7 +198,8 @@ if ( $error ) {
 Install
 ----------------------
 
-    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf graphviz-dev graphviz pkg-config
+    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf pkg-config
+    sudo apt-get install graphviz-dev graphviz  # if you want graphviz
     ./autogen.sh
     ./configure && make
     make check # run tests
