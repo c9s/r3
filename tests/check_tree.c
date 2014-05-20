@@ -17,16 +17,12 @@ START_TEST (test_ltrim_slash)
 }
 END_TEST
 
-START_TEST (test_r3_node_construct_uniq)
+START_TEST (test_r3_node_construct_and_free)
 {
     node * n = r3_tree_create(10);
-
     node * child = r3_tree_create(3);
-
-    // fail_if( r3_node_add_child(n, strdup("/add") , child) != NULL );
-    // fail_if( r3_node_add_child(n, strdup("/add") , child) != NULL );
-
     r3_tree_free(n);
+    r3_tree_free(child);
 }
 END_TEST
 
@@ -282,6 +278,7 @@ START_TEST(test_pcre_pattern_simple)
     fail_if(matched == NULL);
     ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
+    r3_tree_free(n);
 }
 END_TEST
 
@@ -330,6 +327,8 @@ START_TEST(test_pcre_pattern_more)
     ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     ck_assert_int_eq( *((int*)matched->data), var3);
+
+    r3_tree_free(n);
 }
 END_TEST
 
@@ -739,9 +738,9 @@ Suite* r3_suite (void) {
         Suite *suite = suite_create("blah");
 
         TCase *tcase = tcase_create("testcase");
+        tcase_add_test(tcase, test_r3_node_construct_and_free);
         tcase_add_test(tcase, test_str_array);
         tcase_add_test(tcase, test_ltrim_slash);
-        tcase_add_test(tcase, test_r3_node_construct_uniq);
         tcase_add_test(tcase, test_r3_node_find_edge);
         tcase_add_test(tcase, test_r3_tree_insert_pathl);
         tcase_add_test(tcase, test_compile_slug);
