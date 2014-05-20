@@ -345,9 +345,9 @@ route * r3_tree_match_route(node *tree, match_entry * entry) {
 inline edge * r3_node_find_edge_str(node * n, char * str, int str_len) {
     int i = 0;
     int matched_idx = 0;
-
+    char firstbyte = *str;
     for (; i < n->edge_len ; i++ ) {
-        if ( *str == *(n->edges[i]->pattern) ) {
+        if ( firstbyte == *(n->edges[i]->pattern) ) {
             matched_idx = i;
             break;
         }
