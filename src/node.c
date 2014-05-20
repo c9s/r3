@@ -421,7 +421,7 @@ node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route
     // common prefix not found, insert a new edge for this pattern
     if ( prefix_len == 0 ) {
         // there are two more slugs, we should break them into several parts
-        if ( count_slug(path, path_len) > 1 ) {
+        if ( slug_count(path, path_len) > 1 ) {
             int   slug_len;
             char *p = find_slug_placeholder(path, &slug_len);
 

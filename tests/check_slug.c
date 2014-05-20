@@ -69,14 +69,14 @@ START_TEST (test_inside_slug)
 }
 END_TEST
 
-START_TEST (test_count_slug)
+START_TEST (test_slug_count)
 {
     int slug_len = 0;
     char * pattern = "/user/{name:\\s+}/to/{id}";
-    ck_assert_int_eq( count_slug(pattern, strlen(pattern) ), 2 );
+    ck_assert_int_eq( slug_count(pattern, strlen(pattern) ), 2 );
 
     char * pattern2 = "/user/{name:\\d{3}}/to/{id}";
-    ck_assert_int_eq( count_slug(pattern2, strlen(pattern) ), 2 );
+    ck_assert_int_eq( slug_count(pattern2, strlen(pattern) ), 2 );
 }
 END_TEST
 
@@ -97,7 +97,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_slug_pattern);
         tcase_add_test(tcase, test_find_slug_placeholder);
         tcase_add_test(tcase, test_find_slug_placeholder_with_broken_slug);
-        tcase_add_test(tcase, test_count_slug);
+        tcase_add_test(tcase, test_slug_count);
         tcase_add_test(tcase, test_compile_slug);
 
         suite_add_tcase(suite, tcase);
