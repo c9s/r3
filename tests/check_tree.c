@@ -31,7 +31,7 @@ START_TEST (test_r3_node_find_edge)
 
     node * child = r3_tree_create(3);
 
-    fail_if( r3_node_add_child(n, strdup("/add") , child) == FALSE );
+    fail_if( r3_node_add_child(n, zstrdup("/add") , child) == FALSE );
 
     fail_if( r3_node_find_edge(n, "/add") == NULL );
     fail_if( r3_node_find_edge(n, "/bar") != NULL );
@@ -218,16 +218,16 @@ START_TEST (test_str_array)
     str_array * l = str_array_create(3);
     fail_if( l == NULL );
 
-    fail_if( FALSE == str_array_append(l, strdup("abc") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("abc") ) );
     fail_if( l->len != 1 );
 
-    fail_if( FALSE == str_array_append(l, strdup("foo") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("foo") ) );
     fail_if( l->len != 2 );
 
-    fail_if( FALSE == str_array_append(l, strdup("bar") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("bar") ) );
     fail_if( l->len != 3 );
 
-    fail_if( FALSE == str_array_append(l, strdup("zoo") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("zoo") ) );
     fail_if( l->len != 4 );
 
     fail_if( FALSE == str_array_resize(l, l->cap * 2) );
@@ -707,7 +707,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
     r3_tree_compile(n);
     // r3_tree_dump(n, 0);
-    // match_entry *entry = calloc( sizeof(entry) , 1 );
+    // match_entry *entry = zcalloc( 1 );
 
     node *m;
     m = r3_tree_match(n , "/qux/bar/corge", NULL);
