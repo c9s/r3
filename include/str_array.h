@@ -8,8 +8,6 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "r3_define.h"
-
 typedef struct _str_array {
   char **tokens;
   int    len;
