@@ -27,7 +27,7 @@
 node * r3_tree_create(int cap) {
     node * n = (node*) malloc( sizeof(node) );
 
-    n->edges = (edge**) malloc( sizeof(edge*) * 10 );
+    n->edges = (edge**) malloc( sizeof(edge*) * cap );
     n->edge_len = 0;
     n->edge_cap = cap;
     n->endpoint = 0;
@@ -45,7 +45,10 @@ void r3_tree_free(node * tree) {
             r3_edge_free(tree->edges[ i ]);
         }
     }
-
+    if (tree->edges)
+        free(tree->edges);
+    if (tree->routes)
+        free(tree->routes);
     if (tree->combined_pattern)
         free(tree->combined_pattern);
     if (tree->pcre_pattern)
@@ -54,10 +57,6 @@ void r3_tree_free(node * tree) {
         free(tree->pcre_extra);
     if (tree->ov) 
         free(tree->ov);
-    if (tree->edges)
-        free(tree->edges);
-    if (tree->routes)
-        free(tree->routes);
     free(tree);
     tree = NULL;
 }
@@ -576,13 +575,13 @@ int r3_route_cmp(route *r1, match_entry *r2) {
  * 
  */
 void r3_node_append_route(node * n, route * r) {
-    if (!n->routes) {
+    if (n->routes == NULL) {
         n->route_cap = 3;
-        n->routes = malloc(sizeof(r) * n->route_cap);
+        n->routes = malloc(sizeof(route) * n->route_cap);
     }
     if (n->route_len >= n->route_cap) {
         n->route_cap *= 2;
-        n->routes = realloc(n->routes, sizeof(r) * n->route_cap);
+        n->routes = realloc(n->routes, sizeof(route) * n->route_cap);
     }
     n->routes[ n->route_len++ ] = r;
 }
