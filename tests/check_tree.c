@@ -122,7 +122,7 @@ END_TEST
 
 
 /**
- * Test for \d{3}-\d{4}
+ * Test for \d{2}/\d{2}
  */
 START_TEST (test_pcre_patterns_insert_2)
 {
@@ -138,7 +138,7 @@ START_TEST (test_pcre_patterns_insert_2)
 END_TEST
 
 /**
- * Test for \d{2}-\d{2}
+ * Test for (\d{2})/([^/]+)
  */
 START_TEST (test_pcre_patterns_insert_3)
 {
