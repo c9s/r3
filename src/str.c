@@ -183,6 +183,8 @@ char * compile_slug(char * str, int len)
     }
     s1 += s1_len;
     strncat(o, s1, strlen(s1));
+
+    printf("compiled slug: %s\n", out);
     return out;
 }
 

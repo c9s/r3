@@ -422,14 +422,17 @@ node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route
     if ( prefix_len == 0 ) {
         // there are two more slugs, we should break them into several parts
         if ( count_slug(path, path_len) > 1 ) {
-            char *p = find_slug_placeholder(path, NULL);
+            int   slug_len;
+            char *p = find_slug_placeholder(path, &slug_len);
 
 #ifdef DEBUG
             assert(p);
 #endif
 
             // find the next one
-            p = find_slug_placeholder(p + 1, NULL);
+            if(p) {
+                p = find_slug_placeholder(p + slug_len + 1, NULL);
+            }
 #ifdef DEBUG
             assert(p);
 #endif
