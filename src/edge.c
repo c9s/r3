@@ -19,9 +19,8 @@
 // #include <Judy.h>
 #include <config.h>
 
-#include "r3_define.h"
-#include "r3_str.h"
 #include "r3.h"
+#include "r3_str.h"
 #include "str_array.h"
 
 edge * r3_edge_create(char * pattern, int pattern_len, node * child) {

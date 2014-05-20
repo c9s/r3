@@ -14,7 +14,35 @@
 #include <assert.h>
 #include <pcre.h>
 
+
+#ifndef bool
+typedef unsigned char bool;
+#endif
+#ifndef FALSE
+#    define FALSE 0
+#endif
+#ifndef TRUE
+#    define TRUE 1
+#endif
+
+// #define DEBUG 1
+#ifdef DEBUG
+
+#define info(fmt, ...) \
+            do { fprintf(stderr, fmt, __VA_ARGS__); } while (0)
+
+#define debug(fmt, ...) \
+        do { fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
+                                __LINE__, __func__, __VA_ARGS__); } while (0)
+
+#else
+#define info(...);
+#define debug(...);
+#endif
+
 #include "str_array.h"
+
+
 
 #define node_edge_pattern(node,i) node->edges[i]->pattern
 #define node_edge_pattern_len(node,i) node->edges[i]->pattern_len

@@ -13,9 +13,8 @@
 // Judy array
 // #include <Judy.h>
 
-#include "r3_define.h"
-#include "r3_str.h"
 #include "r3.h"
+#include "r3_str.h"
 #include "str_array.h"
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
