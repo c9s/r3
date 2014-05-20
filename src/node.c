@@ -18,8 +18,27 @@
 #include "r3.h"
 #include "str_array.h"
 
-
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
+
+
+static int strndiff(char * d1, char * d2, unsigned int n) {
+    char * o = d1;
+    while ( *d1 == *d2 && n-- > 0 ) { 
+        d1++;
+        d2++;
+    }
+    return d1 - o;
+}
+
+static int strdiff(char * d1, char * d2) {
+    char * o = d1;
+    while( *d1 == *d2 ) { 
+        d1++;
+        d2++;
+    }
+    return d1 - o;
+}
+
 
 /**
  * Create a node object

@@ -10,10 +10,6 @@
 #include "r3_define.h"
 #include "config.h"
 
-int strndiff(char * d1, char * d2, unsigned int n);
-
-int strdiff(char * d1, char * d2);
-
 int slug_count(char * p, int len);
 
 char * compile_slug(char * str, int len);

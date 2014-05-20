@@ -12,26 +12,6 @@
 #include "str_array.h"
 #include "r3_define.h"
 
-int strndiff(char * d1, char * d2, unsigned int n) {
-    char * o = d1;
-    while ( *d1 == *d2 && n-- > 0 ) { 
-        d1++;
-        d2++;
-    }
-    return d1 - o;
-}
-
-
-int strdiff(char * d1, char * d2) {
-    char * o = d1;
-    while( *d1 == *d2 ) { 
-        d1++;
-        d2++;
-    }
-    return d1 - o;
-}
-
-
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
