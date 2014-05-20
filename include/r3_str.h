@@ -24,8 +24,6 @@ char * inside_slug(char * needle, int needle_len, char *offset);
 
 char * ltrim_slash(char* str);
 
-char** str_split(char* a_str, const char a_delim);
-
 void str_repeat(char *s, char *c, int len);
 
 void print_indent(int level);
