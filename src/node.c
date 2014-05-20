@@ -307,8 +307,8 @@ node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) 
                     // append captured token to entry
                     str_array_append(entry->vars , strndup(substring_start, substring_length));
                 }
-                if (restlen == 0) {
-                    return e->child;
+                if (restlen == 0 ) {
+                    return e->child && e->child->endpoint ? e->child : NULL;
                 }
                 // get the length of orginal string: $0
                 return r3_tree_matchl( e->child, path + (n->ov[1] - n->ov[0]), restlen, entry);
@@ -320,10 +320,10 @@ node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) 
 
     if ( (e = r3_node_find_edge_str(n, path, path_len)) != NULL ) {
         int restlen = path_len - e->pattern_len;
-        if(restlen > 0) {
-            return r3_tree_matchl(e->child, path + e->pattern_len, restlen, entry);
+        if (restlen == 0) {
+            return e->child && e->child->endpoint ? e->child : NULL;
         }
-        return e->child;
+        return r3_tree_matchl(e->child, path + e->pattern_len, restlen, entry);
     }
     return NULL;
 }

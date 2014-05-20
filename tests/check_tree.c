@@ -114,8 +114,7 @@ START_TEST (test_pcre_patterns_insert)
 
     // incomplete string shouldn't match
     matched = r3_tree_matchl(n, "/post/111-", strlen("/post/111-"), NULL);
-    ck_assert(matched);
-    ck_assert_int_eq(matched->endpoint, 0);
+    ck_assert(! matched);
 
     r3_tree_free(n);
 }
@@ -128,26 +127,32 @@ END_TEST
 START_TEST (test_pcre_patterns_insert_2)
 {
     node * n = r3_tree_create(10);
-
-    // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
-    // r3_tree_dump(n, 0);
     r3_tree_insert_path(n, "/post/{idx:\\d{2}}/{idy:\\d{2}}", NULL);
     r3_tree_compile(n);
     r3_tree_dump(n, 0);
-
     node *matched;
     matched = r3_tree_match(n, "/post/11/22", NULL);
     ck_assert(matched);
     ck_assert(matched->endpoint > 0);
-
-    /*
-    matched = r3_tree_match(n, "/post/11", NULL);
-    ck_assert(matched);
-    ck_assert_int_eq(matched->endpoint, 0);
-    r3_tree_free(n);
-    */
 }
 END_TEST
+
+/**
+ * Test for \d{3}-\d{4}
+ */
+START_TEST (test_pcre_patterns_insert_3)
+{
+    node * n = r3_tree_create(10);
+    r3_tree_insert_path(n, "/post/{idx:\\d{2}}/{idy:\\d{2}}", NULL);
+    r3_tree_compile(n);
+    r3_tree_dump(n, 0);
+    node *matched;
+    matched = r3_tree_match(n, "/post/11/22", NULL);
+    ck_assert(matched);
+    ck_assert(matched->endpoint > 0);
+}
+END_TEST
+
 
 
 
