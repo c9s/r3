@@ -308,7 +308,7 @@ node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) 
                     str_array_append(entry->vars , strndup(substring_start, substring_length));
                 }
                 if (restlen == 0 ) {
-                    return e->child && e->child->endpoint ? e->child : NULL;
+                    return e->child && e->child->endpoint > 0 ? e->child : NULL;
                 }
                 // get the length of orginal string: $0
                 return r3_tree_matchl( e->child, path + (n->ov[1] - n->ov[0]), restlen, entry);
@@ -321,7 +321,7 @@ node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry) 
     if ( (e = r3_node_find_edge_str(n, path, path_len)) != NULL ) {
         int restlen = path_len - e->pattern_len;
         if (restlen == 0) {
-            return e->child && e->child->endpoint ? e->child : NULL;
+            return e->child && e->child->endpoint > 0 ? e->child : NULL;
         }
         return r3_tree_matchl(e->child, path + e->pattern_len, restlen, entry);
     }
@@ -459,6 +459,7 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
             // insert the first one edge, and break at "p"
             node * child = r3_tree_create(3);
             r3_node_add_child(n, strndup(path, (int)(p - path)), child);
+            child->endpoint = 0;
 
             // and insert the rest part to the child
             return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data);
@@ -487,7 +488,7 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
             // there are no more path to insert
 
             // see if there is an endpoint already
-            if (e->child->endpoint) {
+            if (e->child->endpoint > 0) {
                 // XXX: return an error code instead of NULL
                 return NULL;
             }
@@ -501,9 +502,6 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
         }
 
     } else if ( prefix_len < e->pattern_len ) {
-        // printf("branch the edge prefix_len: %d\n", prefix_len);
-
-
         /* it's partially matched with the pattern,
          * we should split the end point and make a branch here...
          */
@@ -534,6 +532,9 @@ bool r3_node_has_slug_edges(node *n) {
 
 void r3_tree_dump(node * n, int level) {
     print_indent(level);
+
+    printf("(o)");
+
     if ( n->combined_pattern ) {
         printf(" regexp:%s", n->combined_pattern);
     }

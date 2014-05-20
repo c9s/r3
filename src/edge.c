@@ -55,7 +55,6 @@ node * r3_edge_branch(edge *e, int dl) {
     new_child = r3_tree_create(3);
     s1_len = e->pattern_len - dl;
     e1 = r3_edge_create(strndup(s1, s1_len), s1_len, new_child);
-    // printf("edge left: %s\n", e1->pattern);
 
     // Migrate the child edges to the new edge we just created.
     for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
@@ -63,12 +62,10 @@ node * r3_edge_branch(edge *e, int dl) {
         e->child->edges[i] = NULL;
     }
     e->child->edge_len = 0;
-    e->child->endpoint--;
-
-    // info("branched pattern: %s\n", e1->pattern);
+    new_child->endpoint = e->child->endpoint;
+    e->child->endpoint = 0; // reset endpoint
 
     r3_node_append_edge(e->child, e1);
-    new_child->endpoint++;
     new_child->data = e->child->data; // copy data pointer
     e->child->data = NULL;
 
