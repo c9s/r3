@@ -7,7 +7,7 @@
 #ifndef STR_H
 #define STR_H
 
-#include "r3_define.h"
+#include "r3.h"
 #include "config.h"
 
 int slug_count(char * p, int len);

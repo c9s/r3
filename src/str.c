@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
-#include "r3_define.h"
 
 /**
  * provide a quick way to count slugs, simply search for '{'
