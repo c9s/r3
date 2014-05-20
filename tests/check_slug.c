@@ -19,6 +19,12 @@ START_TEST (test_compile_slug)
 
     char * path2 = "/what/{id}-foo";
     ck_assert_str_eq( compile_slug(path2, strlen(path2) ) , "/what/([^/]+)-foo" );
+
+    char * path3 = "-{id}";
+    ck_assert_str_eq(compile_slug(path3, strlen(path3)), "-([^/]+)" );
+
+    char * path4 = "-{idx:\\d{3}}";
+    ck_assert_str_eq(compile_slug(path4, strlen(path4)), "-(\\d{3})" );
 }
 END_TEST
 
@@ -41,9 +47,14 @@ END_TEST
 START_TEST (test_find_slug_placeholder)
 {
     int slug_len = 0;
-    char * slug = find_slug_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
-    // printf("slug: '%s'\n", strndup(slug, slug_len) );
+    char * slug;
+    slug = find_slug_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
     ck_assert( strncmp(slug, "{name:\\s+}", slug_len) == 0 );
+
+
+    slug = find_slug_placeholder("/user/{idx:\\d{3}}/to/{idy:\\d{3}}", &slug_len);
+    ck_assert( slug_len == strlen("{idx:\\d{3}}") );
+    ck_assert( strncmp(slug, "{idx:\\d{3}}", slug_len) == 0 );
 }
 END_TEST
 
