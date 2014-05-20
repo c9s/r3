@@ -124,14 +124,14 @@ int r3_tree_render_file(node * tree, char * format, char * filename);
 
 int r3_tree_render_dot(node * tree);
 
-edge * r3_node_find_edge_str(node * n, char * str, int str_len);
+edge * r3_node_find_edge_str(const node * n, char * str, int str_len);
 
 
 void r3_tree_compile(node *n);
 
 void r3_tree_compile_patterns(node * n);
 
-node * r3_tree_matchl(node * n, char * path, int path_len, match_entry * entry);
+node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * entry);
 
 #define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
 
@@ -165,7 +165,7 @@ void r3_node_append_route(node * n, route * route);
 
 void r3_route_free(route * route);
 
-route * r3_tree_match_route(node *n, match_entry * entry);
+route * r3_tree_match_route(const node *n, match_entry * entry);
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
