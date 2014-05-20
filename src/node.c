@@ -83,7 +83,7 @@ edge * r3_node_add_child(node * n, char * pat , node *child) {
 
 
 void r3_node_append_edge(node *n, edge *e) {
-    if (!n->edges) {
+    if (n->edges == NULL) {
         n->edge_cap = 3;
         n->edges = malloc(sizeof(edge) * n->edge_cap);
     }
