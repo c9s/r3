@@ -112,7 +112,7 @@ START_TEST (test_compile)
     entry = match_entry_createl( "/some_id" , strlen("/some_id") );
     m = r3_tree_matchl( n , "/some_id", strlen("/some_id"), entry);
     fail_if( NULL == m );
-    ck_assert_int_gt( m->endpoint , 0 ); // should not be an endpoint
+    ck_assert( m->endpoint > 0 ); // should not be an endpoint
 }
 END_TEST
 
@@ -174,7 +174,7 @@ START_TEST (test_pcre_patterns_insert)
     node *matched;
     matched = r3_tree_matchl(n, "/post/111-222", strlen("/post/111-222"), NULL);
     ck_assert(matched);
-    ck_assert_int_gt(matched->endpoint, 0);
+    ck_assert(matched->endpoint > 0);
 
     // incomplete string shouldn't match
     matched = r3_tree_matchl(n, "/post/111-", strlen("/post/111-"), NULL);
@@ -280,7 +280,7 @@ START_TEST(test_pcre_pattern_simple)
     node *matched;
     matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
     fail_if(matched == NULL);
-    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
 }
 END_TEST
@@ -312,7 +312,7 @@ START_TEST(test_pcre_pattern_more)
 
     matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
     fail_if(matched == NULL);
-    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
 
     info("matched %p\n", matched->data);
@@ -321,13 +321,13 @@ START_TEST(test_pcre_pattern_more)
 
     matched = r3_tree_matchl(n, "/user2/123", strlen("/user2/123"), entry);
     fail_if(matched == NULL);
-    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     ck_assert_int_eq( *((int*)matched->data), var2);
 
     matched = r3_tree_matchl(n, "/user3/123", strlen("/user3/123"), entry);
     fail_if(matched == NULL);
-    ck_assert_int_gt(entry->vars->len, 0);
+    ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     ck_assert_int_eq( *((int*)matched->data), var3);
 }
