@@ -2,15 +2,15 @@
 
 API changes:
 
-1. Removed the `route` argument from `r3_tree_insert_pathl`:
+1. Removed the `route` argument from `r3_tree_insert_pathl_`:
 
-        node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
+        node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, void * data);
 
     This reduce the interface complexity, e.g.,
 
         r3_tree_insert_path(n, "/user2/{id:\\d+}", &var2);
 
-2. The original `r3_tree_insert_pathl` has been moved to `_r3_tree_insert_pathl` as a private API.
+2. The original `r3_tree_insert_pathl_` has been moved to `_r3_tree_insert_pathl_` as a private API.
 
 3. Moved `r3_tree_matchl` to `r3_tree_matchl` since it require the length of the path string.
 

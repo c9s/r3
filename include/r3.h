@@ -106,17 +106,17 @@ edge * r3_node_find_edge(node * n, char * pat);
 void r3_node_append_edge(node *n, edge *child);
 
 
-node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
+node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, void * data);
 
-#define r3_tree_insert_path(n,p,d) _r3_tree_insert_pathl(n,p,strlen(p), NULL, d)
+#define r3_tree_insert_path(n,p,d) _r3_tree_insert_pathl_(n,p,strlen(p), NULL, d)
 
 // node * r3_tree_insert_route(node *tree, route * route, void * data);
-#define r3_tree_insert_route(n,r,d) _r3_tree_insert_pathl(n, r->path, r->path_len, r, d)
+#define r3_tree_insert_route(n,r,d) _r3_tree_insert_pathl_(n, r->path, r->path_len, r, d)
 
 /**
  * The private API to insert a path
  */
-node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data);
+node * _r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data);
 
 void r3_tree_dump(node * n, int level);
 

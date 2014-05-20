@@ -44,12 +44,12 @@ int route_data = 3;
 // insert the route path into the router tree
 r3_tree_insert_path(n, "/bar", &route_data); // ignore the length of path
 
-r3_tree_insert_pathl(n, "/zoo", strlen("/zoo"), &route_data );
-r3_tree_insert_pathl(n, "/foo/bar", strlen("/foo/bar"), &route_data );
+r3_tree_insert_pathl_(n, "/zoo", strlen("/zoo"), &route_data );
+r3_tree_insert_pathl_(n, "/foo/bar", strlen("/foo/bar"), &route_data );
 
-r3_tree_insert_pathl(n ,"/post/{id}", strlen("/post/{id}") , &route_data );
+r3_tree_insert_pathl_(n ,"/post/{id}", strlen("/post/{id}") , &route_data );
 
-r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), &route_data );
+r3_tree_insert_pathl_(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), &route_data );
 
 // let's compile the tree!
 r3_tree_compile(n);

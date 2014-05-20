@@ -155,7 +155,7 @@ END_TEST
 
 
 
-START_TEST (test_r3_tree_insert_pathl)
+START_TEST (test_r3_tree_insert_pathl_)
 {
     node * n = r3_tree_create(10);
 
@@ -713,7 +713,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_str_array);
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_r3_node_find_edge);
-        tcase_add_test(tcase, test_r3_tree_insert_pathl);
+        tcase_add_test(tcase, test_r3_tree_insert_pathl_);
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
