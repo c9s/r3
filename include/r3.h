@@ -118,7 +118,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
  */
 node * _r3_tree_insert_pathl(node *tree, char *path, int path_len, route * route, void * data);
 
-void r3_tree_dump(node * n, int level);
+void r3_tree_dump(node * n, int level, char *out);
 
 int r3_tree_render_file(node * tree, char * format, char * filename);
 

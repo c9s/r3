@@ -32,7 +32,7 @@ char** str_split(char* a_str, const char a_delim);
 
 void str_repeat(char *s, char *c, int len);
 
-void print_indent(int level);
+void print_indent(int level, char *out);
 
 #ifndef HAVE_STRDUP
 char *strdup(const char *s);

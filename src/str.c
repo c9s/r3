@@ -248,10 +248,16 @@ void str_repeat(char *s, char *c, int len) {
     }
 }
 
-void print_indent(int level) {
+void print_indent(int level, char *out) {
     int len = level * 2;
-    while(len--) {
-        printf(" ");
+    if (out) {
+    	while(len--) {
+        	sprintf(out, " ");
+	}
+    }
+    else
+    {
+		printf(" ");
     }
 }
 
