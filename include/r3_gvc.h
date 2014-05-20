@@ -4,7 +4,6 @@
  *
  * Distributed under terms of the MIT license.
  */
-
 #ifndef R3_GVC_H
 #define R3_GVC_H
 

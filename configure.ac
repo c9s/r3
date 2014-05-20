@@ -45,6 +45,7 @@ AC_ARG_ENABLE(debug,
 
 AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
+AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes", "whether graphviz is enable")
 
 
 PKG_CHECK_MODULES(DEPS, [libpcre check])

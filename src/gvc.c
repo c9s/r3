@@ -12,7 +12,7 @@
 #include "r3_gvc.h"
 
 
-char * node_id_str(int id) {
+static char * node_id_str(int id) {
     char * name = malloc(sizeof(char) * 20);
     sprintf(name, "#%d", id);
     return name;
@@ -30,12 +30,10 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, i
         agn_child = agnode(g, node_id_str(node_cnt) , 1);
         agn_edge = agedge(g, ag_parent_node, agn_child, 0, 1);
         agsafeset(agn_edge, "label", e->pattern, "");
-
+        if (e->child && e->child->endpoint) {
+            agsafeset(agn_child, "shape", "doublecircle", "");
+        }
         r3_tree_build_ag_nodes(g, agn_child, e->child, node_cnt);
-
-        // agedgeattr(agn_edge, "label", e->pattern );
-        // agattr(gr, AGEDGE, "style","invis");
-        // agattr(agn_edge, AGEDGE, "label", "test");
     }
 }
 
