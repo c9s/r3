@@ -403,16 +403,16 @@ route * r3_route_createl(char * path, int path_len) {
     return info;
 }
 
-node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, void * data)
+node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data)
 {
-    return _r3_tree_insert_pathl_(tree, path, path_len, NULL , data);
+    return r3_tree_insert_pathl_(tree, path, path_len, NULL , data);
 }
 
 
 /**
  * Return the last inserted node.
  */
-node * _r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data)
+node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data)
 {
     node * n = tree;
     edge * e = NULL;
@@ -461,7 +461,7 @@ node * _r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * rout
             r3_node_add_child(n, strndup(path, (int)(p - path)), child);
 
             // and insert the rest part to the child
-            return _r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data);
+            return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data);
         } else {
             node * child = r3_tree_create(3);
             r3_node_add_child(n, strndup(path, path_len) , child);
@@ -482,7 +482,7 @@ node * _r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * rout
 
         // there are something more we can insert
         if ( subpath_len > 0 ) {
-            return _r3_tree_insert_pathl_(e->child, subpath, subpath_len, route, data);
+            return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route, data);
         } else {
             // there are no more path to insert
 
@@ -510,7 +510,7 @@ node * _r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * rout
         char * s2 = path + prefix_len;
         int   s2_len = path_len - prefix_len;
         r3_edge_branch(e, prefix_len);
-        return _r3_tree_insert_pathl_(e->child, s2 , s2_len, route , data);
+        return r3_tree_insert_pathl_(e->child, s2 , s2_len, route , data);
     } else {
         printf("unexpected route.");
         return NULL;

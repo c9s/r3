@@ -10,7 +10,7 @@ API changes:
 
         r3_tree_insert_path(n, "/user2/{id:\\d+}", &var2);
 
-2. The original `r3_tree_insert_pathl_` has been moved to `_r3_tree_insert_pathl_` as a private API.
+2. The original `r3_tree_insert_pathl_` has been moved to `r3_tree_insert_pathl_` as a private API.
 
 3. Moved `r3_tree_matchl` to `r3_tree_matchl` since it require the length of the path string.
 
