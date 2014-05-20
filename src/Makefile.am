@@ -7,7 +7,7 @@ libr3_la_LIBADD=$(DEPS_LIBS)
 AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall
 
 if ENABLE_DEBUG
-AM_CFLAGS += -g -fprofile-arcs -ftest-coverage
+AM_CFLAGS += -ggdb -fprofile-arcs -ftest-coverage
 endif
 
 if ENABLE_GRAPHVIZ
