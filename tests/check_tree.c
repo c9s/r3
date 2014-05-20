@@ -70,19 +70,6 @@ START_TEST (test_compile)
 #ifdef DEBUG
     r3_tree_dump(n, 0);
 #endif
-    /*
-    fail_if(n->edges[0]->child->combined_pattern == NULL);
-
-    e = r3_node_find_edge_str(n, "/", strlen("/") );
-    fail_if( NULL == e );
-    */
-    /*
-    printf( "%s\n", e->pattern );
-    printf( "%s\n", e->child->combined_pattern );
-    printf( "%s\n", n->edges[0]->child->combined_pattern);
-    printf( "%s\n", n->combined_pattern );
-    */
-
     match_entry * entry;
 
     entry = match_entry_createl( "foo" , strlen("/foo") );
@@ -112,60 +99,14 @@ START_TEST (test_compile)
 }
 END_TEST
 
-START_TEST (test_compile_slug)
-{
-    /*
-    char * pattern;
-    pattern = compile_slug("{id}", strlen("{id}"));
-    ck_assert_str_eq( pattern, "([^/]+)" );
-    free(pattern);
-
-    pattern = compile_slug("/{id}", strlen("/{id}"));
-    ck_assert_str_eq( pattern, "/([^/]+)" );
-    free(pattern);
-
-    pattern = compile_slug("-{id}", strlen("-{id}"));
-    ck_assert_str_eq( pattern, "-([^-]+)" );
-    free(pattern);
-
-    pattern = compile_slug("{id}-{title}", strlen("{id}-{title}"));
-    ck_assert_str_eq( pattern, "([^/]+)-([^-]+)" );
-    free(pattern);
-
-
-    pattern = compile_slug("{id:[a-z]+}", strlen("{id:[a-z]+}") );
-    ck_assert_str_eq( pattern, "([a-z]+)" );
-    free(pattern);
-
-
-    pattern = compile_slug("/path/{id:[a-z]+}", strlen("/path/{id:[a-z]+}") );
-    ck_assert_str_eq( pattern, "/path/([a-z]+)" );
-    free(pattern);
-    */
-
-    /*
-    char * p = malloc(sizeof(char) * 10);
-    strncat(p, "foo", 3);
-    free(p);
-    */
-
-
-
-
-
-}
-END_TEST
-
-
 START_TEST (test_pcre_patterns_insert)
 {
     node * n = r3_tree_create(10);
 
     // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
-    // r3_tree_dump(n, 0);
     r3_tree_insert_path(n, "/post/{handle:\\d+}-{id:\\d+}", NULL);
     r3_tree_compile(n);
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
 
     node *matched;
     matched = r3_tree_matchl(n, "/post/111-222", strlen("/post/111-222"), NULL);
@@ -180,6 +121,36 @@ START_TEST (test_pcre_patterns_insert)
     r3_tree_free(n);
 }
 END_TEST
+
+
+/**
+ * Test for \d{3}-\d{4}
+ */
+START_TEST (test_pcre_patterns_insert_2)
+{
+    node * n = r3_tree_create(10);
+
+    // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
+    // r3_tree_dump(n, 0);
+    r3_tree_insert_path(n, "/post/{idx:\\d{2}}/{idy:\\d{2}}", NULL);
+    r3_tree_compile(n);
+    r3_tree_dump(n, 0);
+
+    node *matched;
+    matched = r3_tree_match(n, "/post/11/22", NULL);
+    ck_assert(matched);
+    ck_assert(matched->endpoint > 0);
+
+    /*
+    matched = r3_tree_match(n, "/post/11", NULL);
+    ck_assert(matched);
+    ck_assert_int_eq(matched->endpoint, 0);
+    r3_tree_free(n);
+    */
+}
+END_TEST
+
+
 
 
 
@@ -743,13 +714,13 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_r3_node_find_edge);
         tcase_add_test(tcase, test_r3_tree_insert_pathl);
-        tcase_add_test(tcase, test_compile_slug);
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
         tcase_add_test(tcase, test_pcre_pattern_simple);
         tcase_add_test(tcase, test_pcre_pattern_more);
         tcase_add_test(tcase, test_pcre_patterns_insert);
+        tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, benchmark_str);
 
         suite_add_tcase(suite, tcase);
