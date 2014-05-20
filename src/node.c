@@ -30,6 +30,11 @@ node * r3_tree_create(int cap) {
     n->edges = (edge**) malloc( sizeof(edge*) * cap );
     n->edge_len = 0;
     n->edge_cap = cap;
+
+    n->routes = NULL;
+    n->route_len = 0;
+    n->route_cap = 0;
+
     n->endpoint = 0;
     n->combined_pattern = NULL;
     n->pcre_pattern = NULL;
