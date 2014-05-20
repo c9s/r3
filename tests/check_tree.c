@@ -138,18 +138,23 @@ START_TEST (test_pcre_patterns_insert_2)
 END_TEST
 
 /**
- * Test for \d{3}-\d{4}
+ * Test for \d{2}-\d{2}
  */
 START_TEST (test_pcre_patterns_insert_3)
 {
     node * n = r3_tree_create(10);
-    r3_tree_insert_path(n, "/post/{idx:\\d{2}}/{idy:\\d{2}}", NULL);
+    r3_tree_insert_path(n, "/post/{idx:\\d{2}}/{idy}", NULL);
     r3_tree_compile(n);
     r3_tree_dump(n, 0);
     node *matched;
-    matched = r3_tree_match(n, "/post/11/22", NULL);
-    ck_assert(matched);
-    ck_assert(matched->endpoint > 0);
+    matched = r3_tree_match(n, "/post/11", NULL);
+    ck_assert(!matched);
+
+    matched = r3_tree_match(n, "/post/11/", NULL);
+    ck_assert(!matched);
+
+    matched = r3_tree_match(n, "/post/113", NULL);
+    ck_assert(!matched);
 }
 END_TEST
 
@@ -725,6 +730,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_pattern_more);
         tcase_add_test(tcase, test_pcre_patterns_insert);
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
+        tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, benchmark_str);
 
         suite_add_tcase(suite, tcase);
