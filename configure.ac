@@ -16,7 +16,6 @@ AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
