@@ -122,7 +122,7 @@ char * find_slug_pattern(char *s1, int *len) {
 /**
  * @param char * sep separator
  */
-char * compile_slug(char * str, int len)
+char * slug_compile(char * str, int len)
 {
     char *s1 = NULL, *o = NULL;
     char *pat = NULL;

@@ -12,7 +12,7 @@
 
 int slug_count(char * p, int len);
 
-char * compile_slug(char * str, int len);
+char * slug_compile(char * str, int len);
 
 bool contains_slug(char * str);
 

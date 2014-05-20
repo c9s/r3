@@ -12,19 +12,19 @@
 #include "r3_str.h"
 #include "str_array.h"
 
-START_TEST (test_compile_slug)
+START_TEST (test_slug_compile)
 {
     char * path = "/user/{id}";
-    ck_assert_str_eq( compile_slug(path, strlen(path) ) , "/user/([^/]+)" );
+    ck_assert_str_eq( slug_compile(path, strlen(path) ) , "/user/([^/]+)" );
 
     char * path2 = "/what/{id}-foo";
-    ck_assert_str_eq( compile_slug(path2, strlen(path2) ) , "/what/([^/]+)-foo" );
+    ck_assert_str_eq( slug_compile(path2, strlen(path2) ) , "/what/([^/]+)-foo" );
 
     char * path3 = "-{id}";
-    ck_assert_str_eq(compile_slug(path3, strlen(path3)), "-([^/]+)" );
+    ck_assert_str_eq(slug_compile(path3, strlen(path3)), "-([^/]+)" );
 
     char * path4 = "-{idx:\\d{3}}";
-    ck_assert_str_eq(compile_slug(path4, strlen(path4)), "-(\\d{3})" );
+    ck_assert_str_eq(slug_compile(path4, strlen(path4)), "-(\\d{3})" );
 }
 END_TEST
 
@@ -98,7 +98,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_slug_placeholder);
         tcase_add_test(tcase, test_find_slug_placeholder_with_broken_slug);
         tcase_add_test(tcase, test_slug_count);
-        tcase_add_test(tcase, test_compile_slug);
+        tcase_add_test(tcase, test_slug_compile);
 
         suite_add_tcase(suite, tcase);
         return suite;

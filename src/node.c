@@ -170,7 +170,7 @@ void r3_tree_compile_patterns(node * n) {
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         if ( e->has_slug ) {
-            char * slug_pat = compile_slug(e->pattern, e->pattern_len);
+            char * slug_pat = slug_compile(e->pattern, e->pattern_len);
             strcat(p, slug_pat);
         } else {
             strncat(p++,"(", 1);
