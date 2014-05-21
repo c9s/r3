@@ -22,9 +22,10 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "zmalloc.h"
 
 edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
-    edge * e = (edge*) malloc( sizeof(edge) );
+    edge * e = (edge*) zmalloc( sizeof(edge) );
     e->pattern = pattern;
     e->pattern_len = pattern_len;
     e->child = child;
@@ -54,7 +55,7 @@ node * r3_edge_branch(edge *e, int dl) {
     // the suffix edge of the leaf
     new_child = r3_tree_create(3);
     s1_len = e->pattern_len - dl;
-    e1 = r3_edge_create(strndup(s1, s1_len), s1_len, new_child);
+    e1 = r3_edge_create(zstrndup(s1, s1_len), s1_len, new_child);
 
     // Migrate the child edges to the new edge we just created.
     for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
@@ -69,17 +70,17 @@ node * r3_edge_branch(edge *e, int dl) {
     new_child->data = e->child->data; // copy data pointer
     e->child->data = NULL;
 
-    // truncate the original edge pattern 
+    // truncate the original edge pattern
     char *op = e->pattern;
-    e->pattern = strndup(e->pattern, dl);
+    e->pattern = zstrndup(e->pattern, dl);
     e->pattern_len = dl;
-    free(op);
+
     return new_child;
 }
 
 void r3_edge_free(edge * e) {
     if (e->pattern) {
-        free(e->pattern);
+        zfree(e->pattern);
     }
     if ( e->child ) {
         r3_tree_free(e->child);
