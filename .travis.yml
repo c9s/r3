@@ -18,6 +18,9 @@ install:
   - if [ "x$COVERALLS" == xyes ]; then sudo pip install cpp-coveralls; fi
   - if [ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
 
+before_script:
+  - echo "/usr/local/lib/" >> /etc/ld.so.conf
+  - ldconfig
 script:
   - ./autogen.sh
   - ./configure $CONFIGURE_OPTION
