@@ -20,9 +20,9 @@ END_TEST
 START_TEST (test_r3_node_construct_and_free)
 {
     node * n = r3_tree_create(10);
-    node * child = r3_tree_create(3);
+    node * another_tree = r3_tree_create(3);
     r3_tree_free(n);
-    r3_tree_free(child);
+    r3_tree_free(another_tree);
 }
 END_TEST
 

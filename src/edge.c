@@ -85,5 +85,7 @@ void r3_edge_free(edge * e) {
     if ( e->child ) {
         r3_tree_free(e->child);
     }
+    // free itself
+    zfree(e);
 }
 
