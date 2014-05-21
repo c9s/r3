@@ -79,11 +79,12 @@ void r3_tree_free(node * tree) {
     if (tree->pcre_pattern) {
         pcre_free(tree->pcre_pattern);
     }
-    /*
+#ifdef PCRE_STUDY_JIT_COMPILE
     if (tree->pcre_extra) {
         pcre_free_study(tree->pcre_extra);
     }
-    */
+#endif
+
     if (tree->combined_pattern)
         zfree(tree->combined_pattern);
     if (tree->ov)
@@ -210,11 +211,6 @@ void r3_tree_compile_patterns(node * n) {
     if (n->pcre_pattern) {
         pcre_free(n->pcre_pattern);
     }
-    /*
-    if (n->pcre_extra) {
-        pcre_free_study(n->pcre_extra);
-    }
-    */
     n->pcre_pattern = pcre_compile(
             n->combined_pattern,              /* the pattern */
             option_bits,                                /* default options */
@@ -225,11 +221,16 @@ void r3_tree_compile_patterns(node * n) {
         printf("PCRE compilation failed at offset %d: %s, pattern: %s\n", erroffset, error, n->combined_pattern);
         return;
     }
+#ifdef PCRE_STUDY_JIT_COMPILE
+    if (n->pcre_extra) {
+        pcre_free_study(n->pcre_extra);
+    }
     n->pcre_extra = pcre_study(n->pcre_pattern, 0, &error);
     if (n->pcre_extra == NULL) {
         printf("PCRE study failed at offset %s\n", error);
         return;
     }
+#endif
 }
 
 
