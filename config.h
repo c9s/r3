@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* "whether graphviz is enable" */
-#define ENABLE_GRAPHVIZ test "x$enable_graphviz" = "xyes"
+#define ENABLE_GRAPHVIZ test "x$enable_graphviz" == "xyes"
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
@@ -12,6 +12,9 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <jemalloc/jemalloc.h> header file. */
+#define HAVE_JEMALLOC_JEMALLOC_H 1
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
@@ -90,6 +93,9 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
+
+/* "use jemalloc" */
+#define USE_JEMALLOC test "x$found_jemalloc" = "xyes" 
 
 /* Version number of package */
 #define VERSION "1.0.0"
