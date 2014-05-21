@@ -41,15 +41,15 @@ char * inside_slug(char * needle, int needle_len, char *offset) {
     char * s1 = offset;
     char * s2 = offset;
 
-    while( s1 >= needle ) {
+    while( s1 >= needle && (s1 - needle < needle_len) ) {
         if ( *s1 == '{' ) {
             break;
         }
         s1--;
     }
 
-    char *end = needle+ needle_len;
-    while( s2 < end ) {
+    char * end = needle + needle_len;
+    while( (s2 + 1) < end ) {
         if ( *s2 == '}' ) {
             break;
         }
