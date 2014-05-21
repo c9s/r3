@@ -215,6 +215,22 @@ char *zstrdup(const char *s) {
     return p;
 }
 
+char * zstrndup (const char *s, size_t n)
+{
+  char *result;
+  size_t len = strlen (s);
+
+  if (n < len)
+    len = n;
+
+  result = (char *) zmalloc (len + 1);
+  if (!result)
+    return 0;
+
+  result[len] = '\0';
+  return (char *) memcpy (result, s, len);
+}
+
 size_t zmalloc_used_memory(void) {
     size_t um;
 

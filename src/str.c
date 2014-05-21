@@ -204,7 +204,7 @@ char *zstrdup(const char *s) {
 #endif
 
 #ifndef HAVE_STRNDUP
-char *strndup(const char *s, int n) {
+char *zstrndup(const char *s, int n) {
     char *out;
     int count = 0;
     while( count < n && s[count] )

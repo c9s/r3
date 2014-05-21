@@ -306,7 +306,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 
                 if (entry && e->has_slug) {
                     // append captured token to entry
-                    str_array_append(entry->vars , strndup(substring_start, substring_length));
+                    str_array_append(entry->vars , zstrndup(substring_start, substring_length));
                 }
                 if (restlen == 0 ) {
                     return e->child && e->child->endpoint > 0 ? e->child : NULL;
@@ -459,14 +459,14 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
 
             // insert the first one edge, and break at "p"
             node * child = r3_tree_create(3);
-            r3_node_add_child(n, strndup(path, (int)(p - path)), child);
+            r3_node_add_child(n, zstrndup(path, (int)(p - path)), child);
             child->endpoint = 0;
 
             // and insert the rest part to the child
             return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data);
         } else {
             node * child = r3_tree_create(3);
-            r3_node_add_child(n, strndup(path, path_len) , child);
+            r3_node_add_child(n, zstrndup(path, path_len) , child);
             // info("edge not found, insert one: %s\n", path);
             child->data = data;
             child->endpoint++;
