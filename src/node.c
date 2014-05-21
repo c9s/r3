@@ -205,8 +205,8 @@ void r3_tree_compile_patterns(node * n) {
     int erroffset;
     unsigned int option_bits = 0;
 
-    if (tree->pcre_pattern) {
-        pcre_free(tree->pcre_pattern);
+    if (n->pcre_pattern) {
+        pcre_free(n->pcre_pattern);
     }
     if (n->pcre_extra) {
         pcre_free_study(n->pcre_extra);
