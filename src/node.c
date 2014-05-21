@@ -280,11 +280,11 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
         if (rc < 0) {
             switch(rc)
             {
-                case PCRE_ERROR_NOMATCH: printf("No match\n"); break;
+                case PCRE_ERROR_NOMATCH: printf("pcre: no match\n"); break;
                 /*
                 Handle other special cases if you like
                 */
-                default: printf("Matching error %d\n", rc); break;
+                default: printf("pcre matching error '%d' on pattern '%s'\n", rc, n->combined_pattern); break;
             }
             // does not match all edges, return NULL;
             return NULL;
