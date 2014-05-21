@@ -22,7 +22,7 @@ script:
   - ./autogen.sh
   - ./configure $CONFIGURE_OPTION
   - make
-  - if [x$VALGRIND == xyes ]; make check 2>&1 > /dev/null; else; make check; fi
+  - if [x$VALGRIND == xyes ]; make check 2>&1 > /dev/null; else make check; fi
   - if [x$VALGRIND == xyes ]; then valgrind ./tests/.libs/* -v --trace-children=yes --show-leak-kinds=full --leak-check=full; fi
 
 after_success:
