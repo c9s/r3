@@ -16,7 +16,7 @@ install:
   - sudo apt-get install -qq check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1
   - sudo apt-get install -qq graphviz-dev graphviz 
   - if [ "x$COVERALLS" == xyes ]; then sudo pip install cpp-coveralls; fi
-  - if[ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
+  - if [ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
 
 script:
   - ./autogen.sh
