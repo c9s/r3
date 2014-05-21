@@ -8,7 +8,7 @@ matrix:
     - compiler: gcc
       env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=no
     - compiler: gcc
-      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=yes
+      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 
 install:
   - sudo apt-get update -qq
@@ -19,7 +19,6 @@ install:
   - if [ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
 
 before_script:
-  - sudo echo "/usr/local/lib/" >> /etc/ld.so.conf
   - sudo ldconfig
 script:
   - ./autogen.sh
