@@ -72,27 +72,27 @@ START_TEST (test_compile)
 
     entry = match_entry_createl( "foo" , strlen("/foo") );
     m = r3_tree_matchl( n , "/foo", strlen("/foo"), entry);
-    ck_assert( m );
+    ck_assert( (int)m );
 
     entry = match_entry_createl( "/zoo" , strlen("/zoo") );
     m = r3_tree_matchl( n , "/zoo", strlen("/zoo"), entry);
-    ck_assert( m );
+    ck_assert( (int)m );
 
     entry = match_entry_createl( "/bar" , strlen("/bar") );
     m = r3_tree_matchl( n , "/bar", strlen("/bar"), entry);
-    ck_assert( m );
+    ck_assert( (int)m );
 
     entry = match_entry_createl( "/xxx" , strlen("/xxx") );
     m = r3_tree_matchl( n , "/xxx", strlen("/xxx"), entry);
-    ck_assert( m );
+    ck_assert( (int)m );
 
     entry = match_entry_createl( "/foo/xxx" , strlen("/foo/xxx") );
     m = r3_tree_matchl( n , "/foo/xxx", strlen("/foo/xxx"), entry);
-    ck_assert( m );
+    ck_assert( (int)m );
 
     entry = match_entry_createl( "/some_id" , strlen("/some_id") );
     m = r3_tree_matchl( n , "/some_id", strlen("/some_id"), entry);
-    ck_assert( m );
+    ck_assert( (int)m );
 }
 END_TEST
 
@@ -107,7 +107,7 @@ START_TEST (test_pcre_patterns_insert)
 
     node *matched;
     matched = r3_tree_matchl(n, "/post/111-222", strlen("/post/111-222"), NULL);
-    ck_assert(matched);
+    ck_assert((int)matched);
     ck_assert(matched->endpoint > 0);
 
     // incomplete string shouldn't match
@@ -133,7 +133,7 @@ START_TEST (test_pcre_patterns_insert_2)
     r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_match(n, "/post/11/22", NULL);
-    ck_assert(matched);
+    ck_assert((int)matched);
     ck_assert(matched->endpoint > 0);
 }
 END_TEST
@@ -160,7 +160,7 @@ START_TEST (test_pcre_patterns_insert_3)
 
 
     matched = r3_tree_match(n, "/post/11/22", NULL);
-    ck_assert(matched);
+    ck_assert((int)matched);
 
     matched = r3_tree_match(n, "/post/11", NULL);
     ck_assert(!matched);

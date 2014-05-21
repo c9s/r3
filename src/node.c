@@ -158,7 +158,7 @@ void r3_tree_compile_patterns(node * n) {
     char * cpat;
     char * p;
 
-    cpat = zcalloc(128);
+    cpat = zcalloc(sizeof(char) * 128);
     if (cpat==NULL)
         return;
 
@@ -190,7 +190,7 @@ void r3_tree_compile_patterns(node * n) {
     info("pattern: %s\n",cpat);
 
     n->ov_cnt = (1 + n->edge_len) * 3;
-    n->ov = (int*) zcalloc(n->ov_cnt);
+    n->ov = (int*) zcalloc(sizeof(int) * n->ov_cnt);
 
 
     n->combined_pattern = cpat;
