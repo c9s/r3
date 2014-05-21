@@ -22,6 +22,7 @@ script:
   - ./autogen.sh
   - ./configure $CONFIGURE_OPTION
   - make
+  - sudo make install
   - if [ "x$VALGRIND" == xyes ]; then make check > /dev/null 2>&1; else make check; fi
   - if [ "x$VALGRIND" == xyes ]; then valgrind ./tests/.libs/* -v --trace-children=yes --show-leak-kinds=full --leak-check=full; fi
 
