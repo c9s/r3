@@ -79,9 +79,11 @@ void r3_tree_free(node * tree) {
     if (tree->pcre_pattern) {
         pcre_free(tree->pcre_pattern);
     }
+    /*
     if (tree->pcre_extra) {
         pcre_free_study(tree->pcre_extra);
     }
+    */
     if (tree->combined_pattern)
         zfree(tree->combined_pattern);
     if (tree->ov)
@@ -208,9 +210,11 @@ void r3_tree_compile_patterns(node * n) {
     if (n->pcre_pattern) {
         pcre_free(n->pcre_pattern);
     }
+    /*
     if (n->pcre_extra) {
         pcre_free_study(n->pcre_extra);
     }
+    */
     n->pcre_pattern = pcre_compile(
             n->combined_pattern,              /* the pattern */
             option_bits,                                /* default options */
