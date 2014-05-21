@@ -9,6 +9,8 @@ matrix:
       env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=no
     - compiler: gcc
       env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+    - compiler: clang
+      env: ASAN_OPTIONS=symbolize=1 ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.4 CFLAGS='-fsanitize=address -g -O1'
 
 install:
   - sudo apt-get update -qq
