@@ -14,7 +14,7 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the <jemalloc/jemalloc.h> header file. */
-#define HAVE_JEMALLOC_JEMALLOC_H 1
+/* #undef HAVE_JEMALLOC_JEMALLOC_H */
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
