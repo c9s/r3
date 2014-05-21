@@ -72,7 +72,7 @@ node * r3_edge_branch(edge *e, int dl) {
 
     // truncate the original edge pattern
     char *op = e->pattern;
-    e->pattern = strndup(e->pattern, dl);
+    e->pattern = zstrndup(e->pattern, dl);
     e->pattern_len = dl;
 
     return new_child;
