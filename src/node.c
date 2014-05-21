@@ -75,12 +75,14 @@ void r3_tree_free(node * tree) {
             zfree(tree->edges);
         if (tree->routes)
             zfree(tree->routes);
-        if (tree->combined_pattern)
-            zfree(tree->combined_pattern);
+        /*
         if (tree->pcre_pattern)
             zfree(tree->pcre_pattern);
         if (tree->pcre_extra)
             zfree(tree->pcre_extra);
+        */
+        if (tree->combined_pattern)
+            zfree(tree->combined_pattern);
         if (tree->ov)
             zfree(tree->ov);
         zfree(tree);
@@ -203,10 +205,12 @@ void r3_tree_compile_patterns(node * n) {
     int erroffset;
     unsigned int option_bits = 0;
 
+    /*
     if (n->pcre_pattern)
         zfree(n->pcre_pattern);
     if (n->pcre_extra)
         zfree(n->pcre_extra);
+    */
 
     // n->pcre_pattern;
     n->pcre_pattern = pcre_compile(
