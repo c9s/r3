@@ -19,8 +19,8 @@ install:
   - if [ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
 
 before_script:
-  - echo "/usr/local/lib/" >> /etc/ld.so.conf
-  - ldconfig
+  - sudo echo "/usr/local/lib/" >> /etc/ld.so.conf
+  - sudo ldconfig
 script:
   - ./autogen.sh
   - ./configure $CONFIGURE_OPTION
