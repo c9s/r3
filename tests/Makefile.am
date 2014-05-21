@@ -8,6 +8,7 @@ TESTS                       = check_tree
 AM_CFLAGS = -ggdb $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include  @CHECK_CFLAGS@
 AM_LDFLAGS = $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
 
+
 noinst_HEADERS = \
 	bench.h \
 	$(NULL)
@@ -15,6 +16,10 @@ noinst_HEADERS = \
 dist_noinst_DATA = \
 	bench_str.csv \
 	$(NULL)
+
+if USE_JEMALLOC
+AM_CFLAGS += -ljemalloc
+endif
 
 if ENABLE_GRAPHVIZ
 TESTS += check_gvc
