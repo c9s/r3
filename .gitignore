@@ -40,6 +40,7 @@ m4/
 missing
 test-driver
 test-suite.log
+config.h
 
 tests/*.log
 tests/*.trs
