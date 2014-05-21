@@ -6,20 +6,24 @@ compiler:
 matrix:
   include:
     - compiler: gcc
-      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes
+      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=no
+    - compiler: gcc
+      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=yes
 
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq automake pkg-config build-essential libtool automake autoconf m4 gnulib
   - sudo apt-get install -qq check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1
   - sudo apt-get install -qq graphviz-dev graphviz 
-  - if [ x$COVERALLS == xyes ]; then sudo pip install cpp-coveralls --use-mirror; fi
+  - if [ x$COVERALLS == xyes ]; then sudo pip install cpp-coveralls; fi
+  - if [x$VALGRIND == xyes ]; then sudo apt-get install valgrind; fi
 
 script:
   - ./autogen.sh
   - ./configure $CONFIGURE_OPTION
   - make
-  - make check
+  - if [x$VALGRIND == xyes ]; make check 2>&1 > /dev/null; else; make check; fi
+  - if [x$VALGRIND == xyes ]; then valgrind ./tests/.libs/* -v --trace-children=yes --show-leak-kinds=full --leak-check=full; fi
 
 after_success:
   - if [ x$COVERALLS == xyes ]; then coveralls ; fi
