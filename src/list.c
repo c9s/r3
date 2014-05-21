@@ -25,22 +25,23 @@ void
 list_free(l)
   list *l;
 {
-  list_item *li, *tmp;
+  if (l) {
+    list_item *li, *tmp;
 
-  pthread_mutex_lock(&(l->mutex));
+    pthread_mutex_lock(&(l->mutex));
 
-  if (l != NULL) {
-    li = l->head;
-    while (li != NULL) {
-      tmp = li->next;
-      zfree(li);
-      li = tmp;
+    if (l != NULL) {
+      li = l->head;
+      while (li != NULL) {
+        tmp = li->next;
+        li = tmp;
+      }
     }
-  }
 
-  pthread_mutex_unlock(&(l->mutex));
-  pthread_mutex_destroy(&(l->mutex));
-  zfree(l);
+    pthread_mutex_unlock(&(l->mutex));
+    pthread_mutex_destroy(&(l->mutex));
+    zfree(l);
+  }
 }
 
 list_item *
