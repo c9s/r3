@@ -46,9 +46,19 @@ AC_ARG_ENABLE(debug,
                              [enable debug]),
               , enable_debug=unset)
 
-AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
-AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
-AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes", "whether graphviz is enable")
+AC_ARG_WITH([malloc],
+    AS_HELP_STRING([--without-malloc], [Use the default malloc]))
+
+AS_IF([test "x$with_malloc" != "xno"],
+    [AC_CHECK_HEADERS([jemalloc/jemalloc.h], [
+        found_jemalloc=yes; break
+     ])])
+AM_CONDITIONAL(USE_JEMALLOC, test "x$found_jemalloc" = "xyes")
+AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
+
+AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" == "xyes")
+AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" == "xyes")
+AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" == "xyes", "whether graphviz is enable")
 
 
 PKG_CHECK_MODULES(DEPS, [libpcre check])
