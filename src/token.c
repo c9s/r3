@@ -21,15 +21,13 @@ str_array * str_array_create(int cap) {
 }
 
 void str_array_free(str_array *l) {
-    if (l) {
-        for ( int i = 0; i < l->len ; i++ ) {
-            char * t = l->tokens[ i ];
-            if (t) {
-                zfree(t);
-            }
+    for ( int i = 0; i < l->len ; i++ ) {
+        char * t = l->tokens[ i ];
+        if (t) {
+            zfree(t);
         }
-        zfree(l);
     }
+    zfree(l);
 }
 
 bool str_array_is_full(str_array * l) {
