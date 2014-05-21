@@ -49,7 +49,7 @@ AC_ARG_ENABLE(debug,
 AC_ARG_WITH([malloc],
     AS_HELP_STRING([--without-malloc], [Use the default malloc]))
 
-AS_IF([test "x$with_malloc" != "xno"],
+AS_IF([test "x$with_malloc" == "xjemalloc"],
     [AC_CHECK_HEADERS([jemalloc/jemalloc.h], [
         found_jemalloc=yes; break
      ])])
