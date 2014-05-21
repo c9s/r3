@@ -8,9 +8,12 @@ AC_PROG_CC
 AC_PROG_CC_STDC
 
 # AM_PATH_CHECK()
-AM_PATH_CHECK(,[have_check="yes"],
+PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
+  ifdef([AM_PATH_CHECK],
+  [AM_PATH_CHECK(,[have_check="yes"])],
   AC_MSG_WARN([Check not found; cannot run unit tests!])
-  [have_check="no"])
+  [have_check="no"])]
+])
 AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
 
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
