@@ -41,8 +41,12 @@ char * inside_slug(char * needle, int needle_len, char *offset) {
     char * s1 = offset;
     char * s2 = offset;
 
+    short found_s1 = 0;
+    short found_s2 = 0;
+
     while( s1 >= needle && (s1 - needle < needle_len) ) {
         if ( *s1 == '{' ) {
+            found_s1 = 1;
             break;
         }
         s1--;
@@ -51,12 +55,12 @@ char * inside_slug(char * needle, int needle_len, char *offset) {
     char * end = needle + needle_len;
     while( (s2 + 1) < end ) {
         if ( *s2 == '}' ) {
+            found_s2 = 1;
             break;
         }
         s2++;
     }
-
-    if ( *s1 == '{' && *s2 == '}' ) {
+    if (found_s1 && found_s2) {
         return s1;
     }
     return NULL;
