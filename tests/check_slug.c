@@ -11,6 +11,7 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "zmalloc.h"
 
 START_TEST (test_slug_compile)
 {
