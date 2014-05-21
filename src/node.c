@@ -65,25 +65,27 @@ node * r3_tree_create(int cap) {
 }
 
 void r3_tree_free(node * tree) {
-    for (int i = 0 ; i < tree->edge_len ; i++ ) {
-        if (tree->edges[i]) {
-            r3_edge_free(tree->edges[ i ]);
+    if (tree) {
+        for (int i = 0 ; i < tree->edge_len ; i++ ) {
+            if (tree->edges[i]) {
+                r3_edge_free(tree->edges[ i ]);
+            }
         }
+        if (tree->edges)
+            zfree(tree->edges);
+        if (tree->routes)
+            zfree(tree->routes);
+        if (tree->combined_pattern)
+            zfree(tree->combined_pattern);
+        if (tree->pcre_pattern)
+            zfree(tree->pcre_pattern);
+        if (tree->pcre_extra)
+            zfree(tree->pcre_extra);
+        if (tree->ov)
+            zfree(tree->ov);
+        zfree(tree);
+        tree = NULL;
     }
-    if (tree->edges)
-        zfree(tree->edges);
-    if (tree->routes)
-        zfree(tree->routes);
-    if (tree->combined_pattern)
-        zfree(tree->combined_pattern);
-    if (tree->pcre_pattern)
-        zfree(tree->pcre_pattern);
-    if (tree->pcre_extra)
-        zfree(tree->pcre_extra);
-    if (tree->ov)
-        zfree(tree->ov);
-    zfree(tree);
-    tree = NULL;
 }
 
 
@@ -237,8 +239,10 @@ match_entry * match_entry_createl(char * path, int path_len) {
 }
 
 void match_entry_free(match_entry * entry) {
-    str_array_free(entry->vars);
-    zfree(entry);
+    if (entry) {
+        str_array_free(entry->vars);
+        zfree(entry);
+    }
 }
 
 
@@ -385,7 +389,9 @@ route * r3_route_create(char * path) {
 }
 
 void r3_route_free(route * route) {
-    zfree(route);
+    if (route) {
+        zfree(route);
+    }
 }
 
 route * r3_route_createl(char * path, int path_len) {
