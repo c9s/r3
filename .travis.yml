@@ -6,9 +6,9 @@ compiler:
 matrix:
   include:
     - compiler: gcc
-      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=no
+      env: CONFIGURE_OPTION='--enable-debug --with-malloc=jemalloc' COVERALLS=yes VALGRIND=no
     - compiler: gcc
-      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+      env: CONFIGURE_OPTION='--enable-debug --with-malloc=jemalloc' COVERALLS=yes VALGRIND=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 
 install:
   - sudo apt-get update -qq
