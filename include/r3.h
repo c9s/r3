@@ -16,6 +16,7 @@
 
 #include "r3_define.h"
 #include "str_array.h"
+#include "config.h"
 
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
@@ -38,11 +39,11 @@ typedef struct _route route;
 struct _node {
     edge  ** edges;
     route ** routes;
-    int      edge_len;
-    int      edge_cap;
-    int      route_len;
-    int      route_cap;
-    int      endpoint;
+    uint32_t      edge_len;
+    uint32_t      edge_cap;
+    uint32_t      route_len;
+    uint32_t      route_cap;
+    int           endpoint;
 
     /** compile-time variables here.... **/
 
