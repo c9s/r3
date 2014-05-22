@@ -23,7 +23,7 @@ typedef struct {
     double end;
 } bench;
 
-long unixtime();
+unsigned long unixtime();
 
 double microtime();
 
@@ -36,6 +36,8 @@ double bench_iteration_speed(bench *b);
 void bench_print_summary(bench *b);
 
 double bench_duration(bench *b);
+
+void bench_append_csv(char *filename, int countOfB, ...);
 
 #define BENCHMARK(B) \
         bench B; B.N = 5000000; B.R = 3; \
@@ -54,5 +56,6 @@ double bench_duration(bench *b);
     FILE *fp = fopen(filename, "a+"); \
     fprintf(fp, "%ld,%.2f\n", unixtime(), (B.N * B.R) / (B.end - B.start)); \
     fclose(fp);
+
 
 #endif /* !BENCH_H */

@@ -9,8 +9,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
-long unixtime() {
+unsigned long unixtime() {
     struct timeval tp;
     long sec = 0L;
     if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
@@ -35,7 +36,6 @@ double microtime() {
     return 0;
 }
 
-
 void bench_start(bench *b) {
     b->start = microtime();
 }
@@ -58,3 +58,30 @@ void bench_print_summary(bench *b) {
     printf("finished in %lf seconds\n", bench_duration(b) );
     printf("%.2f i/sec\n", bench_iteration_speed(b) );
 }
+
+void bench_append_csv(char *filename, int countOfB, ...) {
+    FILE *fp = fopen(filename, "a+");
+    if(!fp) {
+        return;
+    }
+
+    unsigned long ts = unixtime();
+    fprintf(fp, "%ld", ts);
+
+
+    int i;
+    bench * b;
+    va_list vl;
+    va_start(vl,countOfB);
+    for (i=0 ; i < countOfB ; i++) {
+        b = va_arg(vl, bench*);
+        fprintf(fp, ",%.2f", bench_iteration_speed(b) );
+    }
+    va_end(vl);
+
+    fprintf(fp, "\n");
+    fclose(fp);
+}
+
+
+
