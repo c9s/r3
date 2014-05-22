@@ -29,6 +29,7 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
     e->pattern = pattern;
     e->pattern_len = pattern_len;
     e->child = child;
+    e->parent = NULL;
 
     // update childs parent edge
     child->parent_edge = e;
@@ -61,8 +62,10 @@ node * r3_edge_branch(edge *e, int dl) {
 
     // the suffix edge of the leaf
     new_child = r3_tree_create(3);
-    s1_len = e->pattern_len - dl;
-    e1 = r3_edge_create(zstrndup(s1, s1_len), s1_len, new_child);
+    s1_len    = e->pattern_len - dl;
+
+    /* create the parent edge of new child */
+    e1        = r3_edge_create(zstrndup(s1, s1_len), s1_len, new_child);
 
     // Migrate the child edges to the new edge we just created.
     for ( int i = 0 ; i < tmp_edge_len ; i++ ) {

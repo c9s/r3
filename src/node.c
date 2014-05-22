@@ -129,6 +129,8 @@ void r3_node_append_edge(node *n, edge *e) {
             n->edges = p;
         }
     }
+    // when append new edge, we update the parent node of the edge.
+    e->parent = n;
     n->edges[ n->edge_len++ ] = e;
 }
 
@@ -555,6 +557,10 @@ void r3_tree_dump(node * n, int level) {
 
     if ( n->combined_pattern ) {
         printf(" regexp:%s", n->combined_pattern);
+    }
+
+    if ( n->parent_edge ) {
+        printf(" belongs to edge:%p", n->parent_edge);
     }
 
     printf(" endpoint:%d", n->endpoint);

@@ -66,7 +66,11 @@ struct _node {
 struct _edge {
     char * pattern;
     int    pattern_len;
+
+    /* the child node */
     node * child;
+    /* the parent node */
+    node * parent;
     uint64_t         hits;
     float            score;
     bool             has_slug:1;
