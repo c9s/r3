@@ -181,6 +181,8 @@ void r3_route_free(route * route);
 
 route * r3_tree_match_route(const node *n, match_entry * entry);
 
+void r3_tree_feedback(node *tree, node *end);
+
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
 #define METHOD_PUT 2<<1

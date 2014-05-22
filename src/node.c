@@ -115,7 +115,12 @@ edge * r3_node_add_child(node * n, char * pat , node *child) {
     return e;
 }
 
+void r3_tree_feedback(node *tree, node *end) {
+    edge * e;
+    while( (e = end->parent_edge) != NULL ) {
 
+    }
+}
 
 void r3_node_append_edge(node *n, edge *e) {
     if (n->edges == NULL) {

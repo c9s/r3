@@ -729,6 +729,23 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 }
 END_TEST
 
+START_TEST(test_feedback)
+{
+    node * t = r3_tree_create(1);
+    r3_tree_insert_path(t, "/foo/bar/baz",  NULL);
+    r3_tree_insert_path(t, "/foo/grault/bar",  NULL);
+    r3_tree_insert_path(t, "/garply/corge/grault",  NULL);
+    r3_tree_compile(t);
+
+    node * m = r3_tree_match(t, "/foo/grault/bar", NULL);
+    ck_assert(m != NULL);
+
+    r3_tree_feedback(t, m);
+
+    r3_tree_free(t);
+}
+END_TEST
+
 
 Suite* r3_suite (void) {
         Suite *suite = suite_create("blah");
