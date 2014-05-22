@@ -39,6 +39,7 @@ typedef struct _route route;
 struct _node {
     edge       ** edges;
     route      ** routes;
+    edge        * parent_edge;
     uint32_t      edge_len;
     uint32_t      edge_cap;
     uint32_t      route_len;
@@ -60,7 +61,6 @@ struct _node {
     void * data;
 
     uint8_t       endpoint;
-
 };
 
 struct _edge {

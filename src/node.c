@@ -51,6 +51,8 @@ node * r3_tree_create(int cap) {
     n->edge_len = 0;
     n->edge_cap = cap;
 
+    n->parent_edge = NULL;
+
     n->routes = NULL;
     n->route_len = 0;
     n->route_cap = 0;
@@ -379,6 +381,8 @@ node * r3_node_create() {
     n->edges = NULL;
     n->edge_len = 0;
     n->edge_cap = 0;
+
+    n->parent_edge = NULL;
 
     n->routes = NULL;
     n->route_len = 0;

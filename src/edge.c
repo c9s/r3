@@ -30,6 +30,9 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
     e->pattern_len = pattern_len;
     e->child = child;
 
+    // update childs parent edge
+    child->parent_edge = e;
+
     // default stats
     e->hits = 0;
     e->score = 0;
