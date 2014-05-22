@@ -16,7 +16,13 @@
 
 #include "r3_define.h"
 #include "str_array.h"
+
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#else
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+#endif
 
 #define node_edge_pattern(node,i) node->edges[i]->pattern
 #define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
