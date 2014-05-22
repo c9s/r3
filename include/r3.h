@@ -16,7 +16,7 @@
 
 #include "r3_define.h"
 #include "str_array.h"
-
+#include <stdint.h>
 
 #define node_edge_pattern(node,i) node->edges[i]->pattern
 #define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
@@ -36,7 +36,7 @@ struct _node {
     int      edge_cap;
     int      route_len;
     int      route_cap;
-    int endpoint;
+    int      endpoint;
 
     /** compile-time variables here.... **/
 
@@ -44,7 +44,7 @@ struct _node {
     char * combined_pattern;
     int    combined_pattern_len;
     int    ov_cnt;
-    int *  ov;
+    int  * ov;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
 
