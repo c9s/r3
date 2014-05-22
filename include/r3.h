@@ -37,8 +37,8 @@ typedef struct _node node;
 typedef struct _route route;
 
 struct _node {
-    edge  ** edges;
-    route ** routes;
+    edge       ** edges;
+    route      ** routes;
     uint32_t      edge_len;
     uint32_t      edge_cap;
     uint32_t      route_len;
@@ -60,13 +60,16 @@ struct _node {
     void * data;
 
     uint8_t       endpoint;
+
 };
 
 struct _edge {
     char * pattern;
     int    pattern_len;
-    bool   has_slug;
     node * child;
+    uint64_t         hits;
+    float            score;
+    bool             has_slug:1;
 };
 
 typedef struct {
