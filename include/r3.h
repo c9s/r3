@@ -168,7 +168,10 @@ route * r3_tree_match_route(const node *n, match_entry * entry);
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
-#define METHOD_PUT 2<<1
-#define METHOD_DELETE 2<<1
+#define METHOD_PUT 2<<2
+#define METHOD_DELETE 2<<3
+#define METHOD_PATCH 2<<4
+#define METHOD_HEAD 2<<5
+#define METHOD_OPTIONS 2<<6
 
 #endif /* !R3_NODE_H */
