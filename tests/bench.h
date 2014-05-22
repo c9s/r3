@@ -38,6 +38,14 @@ double bench_duration(bench *b);
 
 void bench_append_csv(char *filename, int countOfB, ...);
 
+#define MEASURE(B) \
+        bench B; B.N = 1; B.R = 1; \
+        printf("Measuring " #B "...\n"); \
+        bench_start(&B);
+
+#define END_MEASURE(B) \
+        bench_stop(&B);
+
 #define BENCHMARK(B) \
         bench B; B.N = 5000000; B.R = 3; \
         printf("Benchmarking " #B "...\n"); \
@@ -55,6 +63,6 @@ void bench_append_csv(char *filename, int countOfB, ...);
 #define BENCHMARK_RECORD_CSV(filename, countOfB, ...) \
     bench_append_csv(filename, countOfB, __VA_ARGS__)
 
-#define BR(b) &b;
+#define BR(b) &b
 
 #endif /* !BENCH_H */
