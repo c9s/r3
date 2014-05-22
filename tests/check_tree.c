@@ -723,7 +723,9 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     END_BENCHMARK(string_dispatch)
 
     BENCHMARK_SUMMARY(string_dispatch);
-    BENCHMARK_RECORD_CSV(string_dispatch, "bench_str.csv")
+    BENCHMARK_RECORD_CSV(string_dispatch, "bench_str.csv");
+
+    r3_tree_free(n);
 }
 END_TEST
 
