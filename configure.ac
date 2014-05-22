@@ -7,7 +7,7 @@ LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
 
-AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
+AC_CHECK_HEADERS([stdlib.h string.h sys/time.h stdint.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_INLINE
