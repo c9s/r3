@@ -53,12 +53,37 @@ AS_IF([test "x$with_malloc" == "xjemalloc"],
     [AC_CHECK_HEADERS([jemalloc/jemalloc.h], [
         found_jemalloc=yes; break
      ])])
-AM_CONDITIONAL(USE_JEMALLOC, test "x$found_jemalloc" = "xyes")
-AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
 
-AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" == "xyes")
-AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" == "xyes")
-AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" == "xyes", "whether graphviz is enable")
+if test "x$found_jemalloc" == "xyes" ; then
+
+AC_MSG_CHECKING([Checking jemalloc version])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <jemalloc/jemalloc.h>]],
+                                    [[   
+                                     #ifdef JEMALLOC_VERSION_MAJOR > 2
+                                     return 0;
+                                     #endif
+                                     return 1;
+                                     ]])],
+                   [
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([USE_JEMALLOC], 1, [Define to 1 if you have the PATH_MAX macro.])
+                      have_jemalloc=yes
+                    ],
+                    [
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([USE_JEMALLOC], 0, [Define to 1 if you have the PATH_MAX macro.])
+                      have_jemalloc=no
+                    ]
+                 )
+fi
+AM_CONDITIONAL(USE_JEMALLOC, test "x$have_jemalloc" = "xyes")
+
+# AM_CONDITIONAL(USE_JEMALLOC, test "x$found_jemalloc" = "xyes")
+# AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
+
+AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
+AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
+AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes", "whether graphviz is enable")
 
 
 PKG_CHECK_MODULES(DEPS, [libpcre check])
