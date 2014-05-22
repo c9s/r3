@@ -93,7 +93,7 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
-/* "use jemalloc" */
+/* Define to 1 if you have the PATH_MAX macro. */
 #undef USE_JEMALLOC
 
 /* Version number of package */
