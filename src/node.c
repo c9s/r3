@@ -17,13 +17,14 @@
 #include "r3_define.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "zmalloc.h"
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
 
 
 static int strndiff(char * d1, char * d2, unsigned int n) {
     char * o = d1;
-    while ( *d1 == *d2 && n-- > 0 ) { 
+    while ( *d1 == *d2 && n-- > 0 ) {
         d1++;
         d2++;
     }
@@ -32,7 +33,7 @@ static int strndiff(char * d1, char * d2, unsigned int n) {
 
 static int strdiff(char * d1, char * d2) {
     char * o = d1;
-    while( *d1 == *d2 ) { 
+    while( *d1 == *d2 ) {
         d1++;
         d2++;
     }
@@ -44,9 +45,9 @@ static int strdiff(char * d1, char * d2) {
  * Create a node object
  */
 node * r3_tree_create(int cap) {
-    node * n = (node*) malloc( sizeof(node) );
+    node * n = (node*) zmalloc( sizeof(node) );
 
-    n->edges = (edge**) malloc( sizeof(edge*) * cap );
+    n->edges = (edge**) zmalloc( sizeof(edge*) * cap );
     n->edge_len = 0;
     n->edge_cap = cap;
 
@@ -69,19 +70,26 @@ void r3_tree_free(node * tree) {
             r3_edge_free(tree->edges[ i ]);
         }
     }
-    if (tree->edges)
-        free(tree->edges);
-    if (tree->routes)
-        free(tree->routes);
+    if (tree->edges) {
+        zfree(tree->edges);
+    }
+    if (tree->routes) {
+        zfree(tree->routes);
+    }
+    if (tree->pcre_pattern) {
+        pcre_free(tree->pcre_pattern);
+    }
+#ifdef PCRE_STUDY_JIT_COMPILE
+    if (tree->pcre_extra) {
+        pcre_free_study(tree->pcre_extra);
+    }
+#endif
+
     if (tree->combined_pattern)
-        free(tree->combined_pattern);
-    if (tree->pcre_pattern)
-        free(tree->pcre_pattern);
-    if (tree->pcre_extra)
-        free(tree->pcre_extra);
-    if (tree->ov) 
-        free(tree->ov);
-    free(tree);
+        zfree(tree->combined_pattern);
+    if (tree->ov)
+        zfree(tree->ov);
+    zfree(tree);
     tree = NULL;
 }
 
@@ -110,11 +118,11 @@ edge * r3_node_add_child(node * n, char * pat , node *child) {
 void r3_node_append_edge(node *n, edge *e) {
     if (n->edges == NULL) {
         n->edge_cap = 3;
-        n->edges = malloc(sizeof(edge) * n->edge_cap);
+        n->edges = zmalloc(sizeof(edge) * n->edge_cap);
     }
     if (n->edge_len >= n->edge_cap) {
         n->edge_cap *= 2;
-        edge ** p = realloc(n->edges, sizeof(edge) * n->edge_cap);
+        edge ** p = zrealloc(n->edges, sizeof(edge) * n->edge_cap);
         if(p) {
             n->edges = p;
         }
@@ -157,7 +165,7 @@ void r3_tree_compile_patterns(node * n) {
     char * cpat;
     char * p;
 
-    cpat = calloc(sizeof(char),128);
+    cpat = zcalloc(sizeof(char) * 128);
     if (cpat==NULL)
         return;
 
@@ -189,7 +197,7 @@ void r3_tree_compile_patterns(node * n) {
     info("pattern: %s\n",cpat);
 
     n->ov_cnt = (1 + n->edge_len) * 3;
-    n->ov = (int*) calloc(sizeof(int), n->ov_cnt);
+    n->ov = (int*) zcalloc(sizeof(int) * n->ov_cnt);
 
 
     n->combined_pattern = cpat;
@@ -200,12 +208,9 @@ void r3_tree_compile_patterns(node * n) {
     int erroffset;
     unsigned int option_bits = 0;
 
-    if (n->pcre_pattern)
-        free(n->pcre_pattern);
-    if (n->pcre_extra)
-        free(n->pcre_extra);
-
-    // n->pcre_pattern;
+    if (n->pcre_pattern) {
+        pcre_free(n->pcre_pattern);
+    }
     n->pcre_pattern = pcre_compile(
             n->combined_pattern,              /* the pattern */
             option_bits,                                /* default options */
@@ -216,16 +221,21 @@ void r3_tree_compile_patterns(node * n) {
         printf("PCRE compilation failed at offset %d: %s, pattern: %s\n", erroffset, error, n->combined_pattern);
         return;
     }
+#ifdef PCRE_STUDY_JIT_COMPILE
+    if (n->pcre_extra) {
+        pcre_free_study(n->pcre_extra);
+    }
     n->pcre_extra = pcre_study(n->pcre_pattern, 0, &error);
     if (n->pcre_extra == NULL) {
         printf("PCRE study failed at offset %s\n", error);
         return;
     }
+#endif
 }
 
 
 match_entry * match_entry_createl(char * path, int path_len) {
-    match_entry * entry = malloc(sizeof(match_entry));
+    match_entry * entry = zmalloc(sizeof(match_entry));
     if(!entry)
         return NULL;
     entry->vars = str_array_create(3);
@@ -236,8 +246,10 @@ match_entry * match_entry_createl(char * path, int path_len) {
 }
 
 void match_entry_free(match_entry * entry) {
-    str_array_free(entry->vars);
-    free(entry);
+    if (entry) {
+        str_array_free(entry->vars);
+        zfree(entry);
+    }
 }
 
 
@@ -280,11 +292,11 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
         if (rc < 0) {
             switch(rc)
             {
-                case PCRE_ERROR_NOMATCH: printf("No match\n"); break;
+                case PCRE_ERROR_NOMATCH: printf("pcre: no match\n"); break;
                 /*
                 Handle other special cases if you like
                 */
-                default: printf("Matching error %d\n", rc); break;
+                default: printf("pcre matching error '%d' on pattern '%s'\n", rc, n->combined_pattern); break;
             }
             // does not match all edges, return NULL;
             return NULL;
@@ -305,7 +317,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 
                 if (entry && e->has_slug) {
                     // append captured token to entry
-                    str_array_append(entry->vars , strndup(substring_start, substring_length));
+                    str_array_append(entry->vars , zstrndup(substring_start, substring_length));
                 }
                 if (restlen == 0 ) {
                     return e->child && e->child->endpoint > 0 ? e->child : NULL;
@@ -363,7 +375,7 @@ inline edge * r3_node_find_edge_str(const node * n, char * str, int str_len) {
 
 
 node * r3_node_create() {
-    node * n = (node*) malloc( sizeof(node) );
+    node * n = (node*) zmalloc( sizeof(node) );
     n->edges = NULL;
     n->edge_len = 0;
     n->edge_cap = 0;
@@ -384,11 +396,13 @@ route * r3_route_create(char * path) {
 }
 
 void r3_route_free(route * route) {
-    free(route);
+    if (route) {
+        zfree(route);
+    }
 }
 
 route * r3_route_createl(char * path, int path_len) {
-    route * info = malloc(sizeof(route));
+    route * info = zmalloc(sizeof(route));
     info->path = path;
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
@@ -458,14 +472,14 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
 
             // insert the first one edge, and break at "p"
             node * child = r3_tree_create(3);
-            r3_node_add_child(n, strndup(path, (int)(p - path)), child);
+            r3_node_add_child(n, zstrndup(path, (int)(p - path)), child);
             child->endpoint = 0;
 
             // and insert the rest part to the child
             return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data);
         } else {
             node * child = r3_tree_create(3);
-            r3_node_add_child(n, strndup(path, path_len) , child);
+            r3_node_add_child(n, zstrndup(path, path_len) , child);
             // info("edge not found, insert one: %s\n", path);
             child->data = data;
             child->endpoint++;
@@ -522,7 +536,7 @@ bool r3_node_has_slug_edges(node *n) {
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         e->has_slug = contains_slug(e->pattern);
-        if (e->has_slug) 
+        if (e->has_slug)
             found = TRUE;
     }
     return found;
@@ -600,16 +614,16 @@ int r3_route_cmp(route *r1, match_entry *r2) {
 
 
 /**
- * 
+ *
  */
 void r3_node_append_route(node * n, route * r) {
     if (n->routes == NULL) {
         n->route_cap = 3;
-        n->routes = malloc(sizeof(route) * n->route_cap);
+        n->routes = zmalloc(sizeof(route) * n->route_cap);
     }
     if (n->route_len >= n->route_cap) {
         n->route_cap *= 2;
-        n->routes = realloc(n->routes, sizeof(route) * n->route_cap);
+        n->routes = zrealloc(n->routes, sizeof(route) * n->route_cap);
     }
     n->routes[ n->route_len++ ] = r;
 }

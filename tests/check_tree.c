@@ -5,6 +5,7 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "zmalloc.h"
 #include "bench.h"
 
 
@@ -19,9 +20,9 @@ END_TEST
 START_TEST (test_r3_node_construct_and_free)
 {
     node * n = r3_tree_create(10);
-    node * child = r3_tree_create(3);
+    node * another_tree = r3_tree_create(3);
     r3_tree_free(n);
-    r3_tree_free(child);
+    r3_tree_free(another_tree);
 }
 END_TEST
 
@@ -31,7 +32,7 @@ START_TEST (test_r3_node_find_edge)
 
     node * child = r3_tree_create(3);
 
-    fail_if( r3_node_add_child(n, strdup("/add") , child) == FALSE );
+    fail_if( r3_node_add_child(n, zstrdup("/add") , child) == FALSE );
 
     fail_if( r3_node_find_edge(n, "/add") == NULL );
     fail_if( r3_node_find_edge(n, "/bar") != NULL );
@@ -132,7 +133,7 @@ START_TEST (test_pcre_patterns_insert_2)
     r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_match(n, "/post/11/22", NULL);
-    ck_assert(matched);
+    ck_assert((int)matched);
     ck_assert(matched->endpoint > 0);
 }
 END_TEST
@@ -159,7 +160,7 @@ START_TEST (test_pcre_patterns_insert_3)
 
 
     matched = r3_tree_match(n, "/post/11/22", NULL);
-    ck_assert(matched);
+    ck_assert((int)matched);
 
     matched = r3_tree_match(n, "/post/11", NULL);
     ck_assert(!matched);
@@ -218,16 +219,16 @@ START_TEST (test_str_array)
     str_array * l = str_array_create(3);
     fail_if( l == NULL );
 
-    fail_if( FALSE == str_array_append(l, strdup("abc") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("abc") ) );
     fail_if( l->len != 1 );
 
-    fail_if( FALSE == str_array_append(l, strdup("foo") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("foo") ) );
     fail_if( l->len != 2 );
 
-    fail_if( FALSE == str_array_append(l, strdup("bar") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("bar") ) );
     fail_if( l->len != 3 );
 
-    fail_if( FALSE == str_array_append(l, strdup("zoo") ) );
+    fail_if( FALSE == str_array_append(l, zstrdup("zoo") ) );
     fail_if( l->len != 4 );
 
     fail_if( FALSE == str_array_resize(l, l->cap * 2) );
@@ -272,7 +273,7 @@ START_TEST(test_pcre_pattern_simple)
     // r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
-    fail_if(matched == NULL);
+    ck_assert(matched);
     ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     r3_tree_free(n);
@@ -305,7 +306,7 @@ START_TEST(test_pcre_pattern_more)
     node *matched;
 
     matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
-    fail_if(matched == NULL);
+    ck_assert(matched);
     ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
 
@@ -314,13 +315,13 @@ START_TEST(test_pcre_pattern_more)
     ck_assert_int_eq( *((int*) matched->data), var1);
 
     matched = r3_tree_matchl(n, "/user2/123", strlen("/user2/123"), entry);
-    fail_if(matched == NULL);
+    ck_assert(matched);
     ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     ck_assert_int_eq( *((int*)matched->data), var2);
 
     matched = r3_tree_matchl(n, "/user3/123", strlen("/user3/123"), entry);
-    fail_if(matched == NULL);
+    ck_assert(matched);
     ck_assert(entry->vars->len > 0);
     ck_assert_str_eq(entry->vars->tokens[0],"123");
     ck_assert_int_eq( *((int*)matched->data), var3);
@@ -707,7 +708,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
     r3_tree_compile(n);
     // r3_tree_dump(n, 0);
-    // match_entry *entry = calloc( sizeof(entry) , 1 );
+    // match_entry *entry = zcalloc( 1 );
 
     node *m;
     m = r3_tree_match(n , "/qux/bar/corge", NULL);

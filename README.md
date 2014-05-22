@@ -206,10 +206,13 @@ Install
     make check # run tests
     sudo make install
 
-### Enable Graphviz
+#### Enable Graphviz
 
     ./configure --enable-graphviz
 
+#### With jemalloc
+
+    ./configure --with-malloc=jemalloc
 
 
 License

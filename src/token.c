@@ -10,22 +10,24 @@
 #include <assert.h>
 #include "str_array.h"
 #include "r3_str.h"
-
+#include "zmalloc.h"
 
 str_array * str_array_create(int cap) {
-    str_array * list = (str_array*) malloc( sizeof(str_array) );
+    str_array * list = (str_array*) zmalloc( sizeof(str_array) );
     list->len = 0;
     list->cap = cap;
-    list->tokens = (char**) malloc( sizeof(char*) * cap);
+    list->tokens = (char**) zmalloc( sizeof(char*) * cap);
     return list;
 }
 
 void str_array_free(str_array *l) {
     for ( int i = 0; i < l->len ; i++ ) {
         char * t = l->tokens[ i ];
-        free(t);
+        if (t) {
+            zfree(t);
+        }
     }
-    free(l);
+    zfree(l);
 }
 
 bool str_array_is_full(str_array * l) {
@@ -33,7 +35,7 @@ bool str_array_is_full(str_array * l) {
 }
 
 bool str_array_resize(str_array *l, int new_cap) {
-    l->tokens = realloc(l->tokens, sizeof(char**) * new_cap);
+    l->tokens = zrealloc(l->tokens, sizeof(char**) * new_cap);
     l->cap = new_cap;
     return l->tokens != NULL;
 }

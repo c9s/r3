@@ -11,6 +11,7 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "zmalloc.h"
 
 /**
  * provide a quick way to count slugs, simply search for '{'
@@ -40,22 +41,26 @@ char * inside_slug(char * needle, int needle_len, char *offset) {
     char * s1 = offset;
     char * s2 = offset;
 
-    while( s1 >= needle ) {
+    short found_s1 = 0;
+    short found_s2 = 0;
+
+    while( s1 >= needle && (s1 - needle < needle_len) ) {
         if ( *s1 == '{' ) {
+            found_s1 = 1;
             break;
         }
         s1--;
     }
 
-    char *end = needle+ needle_len;
-    while( s2 < end ) {
+    char * end = needle + needle_len;
+    while( (s2 + 1) < end ) {
         if ( *s2 == '}' ) {
+            found_s2 = 1;
             break;
         }
         s2++;
     }
-
-    if ( *s1 == '{' && *s2 == '}' ) {
+    if (found_s1 && found_s2) {
         return s1;
     }
     return NULL;
@@ -134,11 +139,11 @@ char * slug_compile(char * str, int len)
     s1 = find_slug_placeholder(str, &s1_len);
 
     if ( s1 == NULL ) {
-        return strdup(str);
+        return zstrdup(str);
     }
 
     char * out = NULL;
-    if ((out = calloc(sizeof(char),200)) == NULL) {
+    if ((out = zcalloc(200)) == NULL) {
         return (NULL);
     }
 
@@ -171,7 +176,7 @@ char * ltrim_slash(char* str)
 {
     char * p = str;
     while (*p == '/') p++;
-    return strdup(p);
+    return zstrdup(p);
 }
 
 void str_repeat(char *s, char *c, int len) {
@@ -188,13 +193,13 @@ void print_indent(int level) {
 }
 
 #ifndef HAVE_STRDUP
-char *strdup(const char *s) {
+char *zstrdup(const char *s) {
     char *out;
     int count = 0;
     while( s[count] )
         ++count;
     ++count;
-    out = malloc(sizeof(char) * count);
+    out = zmalloc(sizeof(char) * count);
     out[--count] = 0;
     while( --count >= 0 )
         out[count] = s[count];
@@ -203,13 +208,13 @@ char *strdup(const char *s) {
 #endif
 
 #ifndef HAVE_STRNDUP
-char *strndup(const char *s, int n) {
+char *zstrndup(const char *s, int n) {
     char *out;
     int count = 0;
     while( count < n && s[count] )
         ++count;
     ++count;
-    out = malloc(sizeof(char) * count);
+    out = zmalloc(sizeof(char) * count);
     out[--count] = 0;
     while( --count >= 0 )
         out[count] = s[count];

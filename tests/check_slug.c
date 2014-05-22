@@ -11,20 +11,26 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "zmalloc.h"
 
 START_TEST (test_slug_compile)
 {
     char * path = "/user/{id}";
-    ck_assert_str_eq( slug_compile(path, strlen(path) ) , "/user/([^/]+)" );
+    char * c = NULL;
+    ck_assert_str_eq( c = slug_compile(path, strlen(path) ) , "/user/([^/]+)" );
+    zfree(c);
 
     char * path2 = "/what/{id}-foo";
-    ck_assert_str_eq( slug_compile(path2, strlen(path2) ) , "/what/([^/]+)-foo" );
+    ck_assert_str_eq( c = slug_compile(path2, strlen(path2) ) , "/what/([^/]+)-foo" );
+    zfree(c);
 
     char * path3 = "-{id}";
-    ck_assert_str_eq(slug_compile(path3, strlen(path3)), "-([^/]+)" );
+    ck_assert_str_eq( c = slug_compile(path3, strlen(path3)), "-([^/]+)" );
+    zfree(c);
 
     char * path4 = "-{idx:\\d{3}}";
-    ck_assert_str_eq(slug_compile(path4, strlen(path4)), "-(\\d{3})" );
+    ck_assert_str_eq( c = slug_compile(path4, strlen(path4)), "-(\\d{3})" );
+    zfree(c);
 }
 END_TEST
 
@@ -63,7 +69,7 @@ START_TEST (test_inside_slug)
     int slug_len = 0;
     char * pattern = "/user/{name:\\s+}/to/{id}";
     char * offset = strchr(pattern, '{') + 2;
-    ck_assert( inside_slug(pattern, strlen(pattern), offset) );
+    ck_assert( (int)inside_slug(pattern, strlen(pattern), offset) );
     ck_assert( *(inside_slug(pattern, strlen(pattern), offset)) == '{' );
     ck_assert( ! inside_slug(pattern, strlen(pattern), pattern) );
 }

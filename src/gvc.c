@@ -10,10 +10,11 @@
 #include <stdlib.h>
 #include "r3.h"
 #include "r3_gvc.h"
+#include "zmalloc.h"
 
 
 static char * node_id_str(int id) {
-    char * name = malloc(sizeof(char) * 20);
+    char * name = zmalloc(sizeof(char) * 20);
     sprintf(name, "#%d", id);
     return name;
 }
@@ -41,7 +42,7 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, i
 
 
 /**
- * Render a tree to tree graph image via graphviz (dot) 
+ * Render a tree to tree graph image via graphviz (dot)
  */
 int r3_tree_render_dot(node * tree)
 {
@@ -69,7 +70,7 @@ int r3_tree_render_dot(node * tree)
 
 
 /**
- * Render a tree to tree graph image via graphviz (dot) 
+ * Render a tree to tree graph image via graphviz (dot)
  */
 int r3_tree_render_file(node * tree, char * format, char * filename)
 {

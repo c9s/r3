@@ -9,6 +9,14 @@ AC_PROG_CC_STDC
 
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h stdint.h])
 
+PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
+  ifdef([AM_PATH_CHECK],
+  [AM_PATH_CHECK(,[have_check="yes"])],
+  AC_MSG_WARN([Check not found; cannot run unit tests!])
+  [have_check="no"])]
+])
+AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_INLINE
 AC_TYPE_SIZE_T
@@ -57,13 +65,9 @@ fi
 AM_CONDITIONAL(USE_JEMALLOC, test "x$have_jemalloc" = "xyes")
 AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
 
-
-
 AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [enable debug]), [],[enable_debug=unset])
 AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 
-AC_ARG_ENABLE(stats, AS_HELP_STRING([--enable-stats], [enable statistics]), [] ,[enable_stats=unset])
-AC_DEFINE(ENABLE_STATS,    test "x$enable_stats" = "xyes", "whether statistics is enable")
 
 AC_ARG_ENABLE(graphviz,
               AS_HELP_STRING([--enable-graphviz],
@@ -74,10 +78,15 @@ if test "x$enable_graphviz" != "xunset" ; then
    AC_SUBST(GVC_DEPS_CFLAGS)
    AC_SUBST(GVC_DEPS_LIBS)
 fi
-# include flags
+AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
 AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes", "whether graphviz is enable")
 
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+
+AC_ARG_ENABLE(stats, AS_HELP_STRING([--enable-stats], [enable statistics]), [] ,[enable_stats=unset])
+AC_DEFINE(ENABLE_STATS,    test "x$enable_stats" = "xyes", "whether statistics is enable")
+
+
+
 
 PKG_CHECK_MODULES(DEPS, [libpcre])
 AC_SUBST(DEPS_CFLAGS)
