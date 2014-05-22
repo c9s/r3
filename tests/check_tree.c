@@ -362,9 +362,7 @@ END_TEST
 
 START_TEST(benchmark_str)
 {
-    match_entry * entry = match_entry_createl("/blog/post", strlen("/blog/post") );
     node * n = r3_tree_create(1);
-
 
     int route_data = 999;
 
@@ -705,15 +703,11 @@ r3_tree_insert_path(n, "/garply/grault/qux",  NULL);
 r3_tree_insert_path(n, "/garply/grault/quux",  NULL);
 r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
-
     r3_tree_compile(n);
-    // r3_tree_dump(n, 0);
-    // match_entry *entry = zcalloc( 1 );
 
     node *m;
     m = r3_tree_match(n , "/qux/bar/corge", NULL);
-    fail_if( m == NULL );
-    // r3_tree_dump( m, 0 );
+    ck_assert(m != NULL);
     ck_assert_int_eq( *((int*) m->data), 999 );
 
 
@@ -722,7 +716,18 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     END_BENCHMARK(string_dispatch)
     BENCHMARK_SUMMARY(string_dispatch);
 
-    BENCHMARK_RECORD_CSV("bench_str.csv", 1, &string_dispatch);
+
+    node * tree2 = r3_tree_create(1);
+    r3_tree_insert_path(tree2, "/post/{year}/{month}",  NULL);
+    r3_tree_compile(tree2);
+
+    BENCHMARK(pcre_dispatch)
+    r3_tree_matchl(tree2, "/post/2014/12", strlen("/post/2014/12"), NULL);
+    END_BENCHMARK(pcre_dispatch)
+    BENCHMARK_SUMMARY(pcre_dispatch);
+
+
+    BENCHMARK_RECORD_CSV("bench_str.csv", 2, &string_dispatch, &pcre_dispatch);
 }
 END_TEST
 
@@ -745,6 +750,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, benchmark_str);
+        tcase_set_timeout(tcase, 30);
 
         suite_add_tcase(suite, tcase);
 
