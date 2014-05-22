@@ -17,6 +17,11 @@ dist_noinst_DATA = \
 	bench_str.csv \
 	$(NULL)
 
+if USE_JEMALLOC
+AM_CFLAGS += -ljemalloc
+endif
+AM_CFLAGS += -ljemalloc
+
 if ENABLE_GRAPHVIZ
 TESTS += check_gvc
 check_gvc_SOURCES = check_gvc.c bench.c
