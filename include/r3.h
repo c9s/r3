@@ -71,8 +71,7 @@ struct _edge {
     node * child;
     /* the parent node */
     node * parent;
-    uint64_t         hits;
-    float            score;
+    float   score;
     bool             has_slug:1;
 };
 

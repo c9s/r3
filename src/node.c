@@ -116,9 +116,22 @@ edge * r3_node_add_child(node * n, char * pat , node *child) {
 }
 
 void r3_tree_feedback(node *tree, node *end) {
-    edge * e;
-    while( (e = end->parent_edge) != NULL ) {
+    edge * e = end->parent_edge;
+    node * p = e->parent;
+    while( p && e ) {
+        e->score += 0.1;
 
+
+        if (e->score > 100) {
+            for (int i = 0 ; i < p->edge_len ; i++ ) {
+                if ( p->edges[i]->score > 0 ) {
+                    p->edges[i]->score /= 100;
+                }
+            }
+        }
+
+        e = p->parent_edge;
+        p = e ? e->parent : NULL;
     }
 }
 
@@ -564,10 +577,6 @@ void r3_tree_dump(node * n, int level) {
         printf(" regexp:%s", n->combined_pattern);
     }
 
-    if ( n->parent_edge ) {
-        printf(" belongs to edge:%p", n->parent_edge);
-    }
-
     printf(" endpoint:%d", n->endpoint);
 
     if (n->data) {
@@ -579,6 +588,9 @@ void r3_tree_dump(node * n, int level) {
         edge * e = n->edges[i];
         print_indent(level + 1);
         printf("|-\"%s\"", e->pattern);
+
+        // printf(" hits:%lld score:%.1f ", e->hits, e->score);
+        printf(" score:%.1f ", e->score);
 
         if ( e->child ) {
             printf("\n");

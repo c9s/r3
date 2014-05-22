@@ -737,10 +737,20 @@ START_TEST(test_feedback)
     r3_tree_insert_path(t, "/garply/corge/grault",  NULL);
     r3_tree_compile(t);
 
-    node * m = r3_tree_match(t, "/foo/grault/bar", NULL);
-    ck_assert(m != NULL);
+    node * m1 = r3_tree_match(t, "/foo/grault/bar", NULL);
+    node * m2 = r3_tree_match(t, "/garply/corge/grault", NULL);
+    ck_assert(m1 != NULL);
+    ck_assert(m2 != NULL);
 
-    r3_tree_feedback(t, m);
+    for ( int i = 0 ; i < 120 ; i++ ) {
+        r3_tree_feedback(t, m1);
+    }
+
+    for ( int i = 0 ; i < 200 ; i++ ) {
+        r3_tree_feedback(t, m2);
+    }
+
+    r3_tree_dump(t, 0);
 
     r3_tree_free(t);
 }
@@ -764,6 +774,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert);
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
+        tcase_add_test(tcase, test_feedback);
         tcase_add_test(tcase, benchmark_str);
 
         suite_add_tcase(suite, tcase);
