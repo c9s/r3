@@ -70,9 +70,42 @@
             },
 
             tooltip: {
+                // headerFormat: '<span style="font-size: 10px">{point.key}: </span><br/>',
+                formatter: function() {
+                    var s = '';
+
+                    var comment = this.points[1].point.comment;
+                    // new Date(this.x) + ':';
+                    if (comment) {
+                        s += '<span style="font-size: 10px;">';
+                        s += comment;
+                        s += '</span><br/>';
+                    }
+
+                    $.each(this.points, function(i, point) {
+                        s += '<span style="color:' + point.series.color + '">\u25CF</span> ' + point.series.name  + ': <b>' + point.y + '</b><br/>';
+                    });
+                    return s;
+                },
                 shared: true,
                 crosshairs: true
             },
+
+            /*
+            tooltip: {
+                formatter: function() {
+                    var s = '';
+                    $.each(this.points, function(i, point) {
+                        s += point.series.name +': '+ point.y + '<br/>';
+                    });
+                    if (this.points[1] && this.points[1].comment) {
+                        s  += '<b>'+ this.points[1].comment +'</b>';
+                    }
+                    return s;
+                },
+                shared: true
+            },
+            */
 
             plotOptions: {
                 /*
@@ -137,16 +170,24 @@
 
         var lines = data.split(/\n/);
         $(lines).each(function(i,line) {
+
+            /*
+            { marker: {
+              fillColor: '#FF0000',
+              lineWidth: 3,
+              lineColor: "#FF0000" // inherit from series
+            }
+            */
             var columns = line.split(/,/);
-            var a;
-            a = parseInt(columns[1]);
-            options.series[0].data.push(a || 0);
 
-            a = parseInt(columns[2]);
-            options.series[1].data.push(a || 0);
-
-            a = parseInt(columns[3]);
-            options.series[2].data.push(a || 0);
+            var commentText = columns[4];
+            for (var i = 1; i < 4; i++ ) {
+                var a = parseInt(columns[i]);
+                var args =  a ? 
+                    (commentText ? { y: a, comment: commentText } : a) 
+                    : 0;
+                options.series[i-1].data.push(args);
+            }
         });
 
         $('#chart').highcharts(options);
