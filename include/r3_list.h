@@ -5,8 +5,8 @@
  * Distributed under terms of the MIT license.
  */
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef R3_LIST_H
+#define R3_LIST_H
 
 #include <pthread.h>
  
@@ -32,4 +32,4 @@ void list_each_element(list *l, int (*func)(list_item *));
  
 
 
-#endif /* !LIST_H */
+#endif /* !R3_LIST_H */

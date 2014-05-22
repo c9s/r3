@@ -3,9 +3,12 @@
 
 /* "whether graphviz is enable" */
 #define ENABLE_GRAPHVIZ test "x$enable_graphviz" = "xyes"
+<<<<<<< HEAD
 
 /* "whether statistics is enable" */
 #define ENABLE_STATS test "x$enable_stats" = "xyes"
+=======
+>>>>>>> master
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
