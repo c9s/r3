@@ -139,15 +139,14 @@
         $(lines).each(function(i,line) {
             var columns = line.split(/,/);
             var a;
-            if (a = parseInt(columns[1])) {
-                options.series[0].data.push(a || 0);
-            }
-            if (a = parseInt(columns[2])) {
-                options.series[1].data.push(a || 0);
-            }
-            if (a = parseInt(columns[3])) {
-                options.series[2].data.push(a || 0);
-            }
+            a = parseInt(columns[1]);
+            options.series[0].data.push(a || 0);
+
+            a = parseInt(columns[2]);
+            options.series[1].data.push(a || 0);
+
+            a = parseInt(columns[3]);
+            options.series[2].data.push(a || 0);
         });
 
         $('#chart').highcharts(options);
