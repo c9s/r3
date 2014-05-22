@@ -39,7 +39,8 @@ typedef struct _route route;
 typedef struct _root root;
 
 struct _root { 
-}
+
+};
 
 struct _node {
     edge       ** edges;
