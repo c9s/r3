@@ -62,7 +62,8 @@
             legend: {
                 align: 'left',
                 verticalAlign: 'top',
-                y: 20,
+                y: 50,
+                x: 100,
                 floating: true,
                 borderWidth: 0
             },
@@ -73,6 +74,7 @@
             },
 
             plotOptions: {
+                /*
                 area: {
                     fillColor: {
                         linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
@@ -92,28 +94,42 @@
                     },
                     threshold: null
                 }
+                */
             },
 
-            series: [{
-                type: 'area',
-                name: 'Speed',
-                pointInterval: 1000,
-                lineWidth: 2,
-                marker: {
-                    radius: 3
+            series: [
+                {
+                    type: 'area',
+                    name: '/qux/bar/corge',
+                    pointInterval: 1000,
+                    lineWidth: 2,
+                    marker: {
+                        radius: 3
+                    },
+                    pointStart: Date.UTC(2014, 5, 16),
+                    data: []
                 },
-                pointStart: Date.UTC(2014, 5, 16),
-                data: []
-            }]
+                {
+                    type: 'area',
+                    name: '/post/{year}/{month}',
+                    pointInterval: 1000,
+                    lineWidth: 2,
+                    marker: {
+                        radius: 3
+                    },
+                    pointStart: Date.UTC(2014, 5, 16),
+                    data: []
+                }
+            ]
         };
 
         var lines = data.split(/\n/);
         $(lines).each(function(i,line) {
             var columns = line.split(/,/);
-            var i = parseInt(columns[1]);
-            if(i) {
-                options.series[0].data.push(i);
-            }
+            var str_i = parseInt(columns[1]);
+            var pcre_i = parseInt(columns[2]);
+            options.series[0].data.push(str_i || 0);
+            options.series[1].data.push(pcre_i || 0);
         });
 
         $('#chart').highcharts(options);
