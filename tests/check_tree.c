@@ -720,14 +720,10 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     printf("Benchmarking...\n");
     BENCHMARK(string_dispatch)
     r3_tree_matchl(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
-    END_BENCHMARK()
+    END_BENCHMARK(string_dispatch)
 
-    bench_print_summary(&B);
-
-    FILE *fp = fopen("bench_str.csv", "a+");
-    fprintf(fp, "%ld,%.2f\n", unixtime(), (B.N * B.R) / (B.end - B.start));
-    fclose(fp);
-
+    BENCHMARK_SUMMARY(string_dispatch);
+    BENCHMARK_RECORD_CSV(string_dispatch, "bench_str.csv")
 }
 END_TEST
 
