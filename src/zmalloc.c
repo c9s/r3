@@ -60,7 +60,7 @@ void zlibc_free(void *ptr) {
 #define calloc(count,size) tc_calloc(count,size)
 #define realloc(ptr,size) tc_realloc(ptr,size)
 #define free(ptr) tc_free(ptr)
-#elif defined(USE_JEMALLOC)
+#elif defined(USE_JEMALLOC) && (JEMALLOC_VERSION_MAJOR > 2)
 #include <jemalloc/jemalloc.h>
 #define malloc(size) je_malloc(size)
 #define calloc(count,size) je_calloc(count,size)

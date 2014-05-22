@@ -45,7 +45,7 @@
 #error "Newer version of tcmalloc required"
 #endif
 
-#elif defined(USE_JEMALLOC)
+#elif defined(USE_JEMALLOC) && (JEMALLOC_VERSION_MAJOR > 2)
 #define ZMALLOC_LIB ("jemalloc-" __xstr(JEMALLOC_VERSION_MAJOR) "." __xstr(JEMALLOC_VERSION_MINOR) "." __xstr(JEMALLOC_VERSION_BUGFIX))
 #include <jemalloc/jemalloc.h>
 #if (JEMALLOC_VERSION_MAJOR == 2 && JEMALLOC_VERSION_MINOR >= 1) || (JEMALLOC_VERSION_MAJOR > 2)
