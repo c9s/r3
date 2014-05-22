@@ -4,9 +4,8 @@
  *
  * Distributed under terms of the MIT license.
  */
-
-#ifndef NODE_H
-#define NODE_H
+#ifndef R3_NODE_H
+#define R3_NODE_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -172,4 +171,4 @@ route * r3_tree_match_route(const node *n, match_entry * entry);
 #define METHOD_PUT 2<<1
 #define METHOD_DELETE 2<<1
 
-#endif /* !NODE_H */
+#endif /* !R3_NODE_H */
