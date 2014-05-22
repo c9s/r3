@@ -703,7 +703,9 @@ r3_tree_insert_path(n, "/garply/grault/qux",  NULL);
 r3_tree_insert_path(n, "/garply/grault/quux",  NULL);
 r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
+    BENCHMARK(tree_compile)
     r3_tree_compile(n);
+    END_BENCHMARK(tree_compile)
 
     node *m;
     m = r3_tree_match(n , "/qux/bar/corge", NULL);
@@ -727,7 +729,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     BENCHMARK_SUMMARY(pcre_dispatch);
 
 
-    BENCHMARK_RECORD_CSV("bench_str.csv", 2, &string_dispatch, &pcre_dispatch);
+    BENCHMARK_RECORD_CSV("bench_str.csv", 2, BR(string_dispatch), BR(pcre_dispatch), BR(tree_compile) );
 }
 END_TEST
 

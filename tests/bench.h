@@ -55,5 +55,6 @@ void bench_append_csv(char *filename, int countOfB, ...);
 #define BENCHMARK_RECORD_CSV(filename, countOfB, ...) \
     bench_append_csv(filename, countOfB, __VA_ARGS__)
 
+#define BR(b) &b;
 
 #endif /* !BENCH_H */
