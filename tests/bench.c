@@ -59,6 +59,11 @@ void bench_print_summary(bench *b) {
     printf("%.2f i/sec\n", bench_iteration_speed(b) );
 }
 
+/**
+ * Combine multiple benchmark result into one measure entry.
+ *
+ * bench_append_csv("benchmark.csv", 3, &b1, &b2)
+ */
 void bench_append_csv(char *filename, int countOfB, ...) {
     FILE *fp = fopen(filename, "a+");
     if(!fp) {

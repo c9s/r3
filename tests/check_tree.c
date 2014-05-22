@@ -717,13 +717,12 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     ck_assert_int_eq( *((int*) m->data), 999 );
 
 
-    printf("Benchmarking...\n");
     BENCHMARK(string_dispatch)
     r3_tree_matchl(n , "/qux/bar/corge", strlen("/qux/bar/corge"), NULL);
     END_BENCHMARK(string_dispatch)
-
     BENCHMARK_SUMMARY(string_dispatch);
-    BENCHMARK_RECORD_CSV(string_dispatch, "bench_str.csv")
+
+    BENCHMARK_RECORD_CSV("bench_str.csv", 1, &string_dispatch);
 }
 END_TEST
 
