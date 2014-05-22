@@ -29,12 +29,17 @@ typedef unsigned __int32 uint32_t;
 #define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
 
 
+struct _root;
 struct _edge;
 struct _node;
 struct _route;
 typedef struct _edge edge;
 typedef struct _node node;
 typedef struct _route route;
+typedef struct _root root;
+
+struct _root { 
+}
 
 struct _node {
     edge       ** edges;
