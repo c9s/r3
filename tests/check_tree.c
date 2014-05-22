@@ -736,6 +736,7 @@ Suite* r3_suite (void) {
         Suite *suite = suite_create("blah");
 
         TCase *tcase = tcase_create("testcase");
+        tcase_set_timeout(tcase, 30);
         tcase_add_test(tcase, test_r3_node_construct_and_free);
         tcase_add_test(tcase, test_str_array);
         tcase_add_test(tcase, test_ltrim_slash);

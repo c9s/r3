@@ -97,6 +97,7 @@ END_TEST
 Suite* r3_suite (void) {
         Suite *suite = suite_create("slug test");
         TCase *tcase = tcase_create("test_slug");
+        tcase_set_timeout(tcase, 30);
         tcase_add_test(tcase, test_contains_slug);
         tcase_add_test(tcase, test_inside_slug);
         tcase_add_test(tcase, test_find_slug_pattern);
