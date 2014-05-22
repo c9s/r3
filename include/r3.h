@@ -43,7 +43,6 @@ struct _node {
     uint32_t      edge_cap;
     uint32_t      route_len;
     uint32_t      route_cap;
-    int           endpoint;
 
     /** compile-time variables here.... **/
 
@@ -60,6 +59,7 @@ struct _node {
      */
     void * data;
 
+    uint8_t       endpoint;
 };
 
 struct _edge {
