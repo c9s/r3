@@ -35,6 +35,8 @@ double bench_iteration_speed(bench *b);
 
 void bench_print_summary(bench *b);
 
+double bench_duration(bench *b);
+
 #define BENCHMARK(B) \
         bench B; B.N = 5000000; B.R = 3; \
         bench_start(&B); \
