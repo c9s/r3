@@ -246,10 +246,8 @@ match_entry * match_entry_createl(char * path, int path_len) {
 }
 
 void match_entry_free(match_entry * entry) {
-    if (entry) {
-        str_array_free(entry->vars);
-        zfree(entry);
-    }
+    str_array_free(entry->vars);
+    zfree(entry);
 }
 
 
@@ -396,9 +394,7 @@ route * r3_route_create(char * path) {
 }
 
 void r3_route_free(route * route) {
-    if (route) {
-        zfree(route);
-    }
+    zfree(route);
 }
 
 route * r3_route_createl(char * path, int path_len) {
