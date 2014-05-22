@@ -9,7 +9,6 @@ AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall -std=
 if USE_JEMALLOC
 AM_CFLAGS += -ljemalloc
 endif
-AM_CFLAGS += -ljemalloc
 
 if ENABLE_DEBUG
 AM_CFLAGS += -ggdb -fprofile-arcs -ftest-coverage

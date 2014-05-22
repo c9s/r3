@@ -20,7 +20,6 @@ dist_noinst_DATA = \
 if USE_JEMALLOC
 AM_CFLAGS += -ljemalloc
 endif
-AM_CFLAGS += -ljemalloc
 
 if ENABLE_GRAPHVIZ
 TESTS += check_gvc
