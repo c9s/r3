@@ -313,8 +313,10 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
                 ov,           /* output vector for substring information */
                 ov_cnt);      /* number of elements in the output vector */
 
-        // info("rc: %d\n", rc );
+        // does not match all edges, return NULL;
         if (rc < 0) {
+#ifdef DEBUG
+            printf("pcre rc: %d\n", rc );
             switch(rc)
             {
                 case PCRE_ERROR_NOMATCH:
@@ -326,7 +328,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
                     printf("pcre matching error '%d' '%s' on pattern '%s'\n", rc, path, n->combined_pattern);
                     break;
             }
-            // does not match all edges, return NULL;
+#endif
             return NULL;
         }
 
