@@ -165,7 +165,6 @@ START_TEST (test_pcre_patterns_insert_3)
     matched = r3_tree_match(n, "/post/11", NULL);
     ck_assert(!matched);
 
-
     matched = r3_tree_match(n, "/post/11/", NULL);
     ck_assert(!matched);
 
