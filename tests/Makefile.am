@@ -43,6 +43,9 @@ check_tree_SOURCES = check_tree.c
 TESTS += check_slug
 check_slug_SOURCES = check_slug.c
 
+TESTS += check_worker
+check_worker_SOURCES = check_worker.c
+
 
 check_PROGRAMS = $(TESTS)
 
