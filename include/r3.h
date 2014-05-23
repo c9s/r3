@@ -176,6 +176,6 @@ route * r3_tree_match_route(const node *n, match_entry * entry);
 
 int r3_pattern_to_opcode(char * pattern, int pattern_len);
 
-enum { OP_EXPECT_DIGITS = 1, OP_EXPECT_WORDS, OP_EXPECT_NOSLASH };
+enum { OP_EXPECT_DIGITS = 1, OP_EXPECT_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH };
 
 #endif /* !R3_NODE_H */

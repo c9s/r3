@@ -23,6 +23,9 @@ int r3_pattern_to_opcode(char * pattern, int pattern_len) {
     if ( strncmp(pattern, "[^/]+", pattern_len) == 0 ) {
         return OP_EXPECT_NOSLASH;
     }
+    if ( strncmp(pattern, "[^-]+", pattern_len) == 0 ) {
+        return OP_EXPECT_NODASH;
+    }
     return 0;
 }
 

@@ -18,6 +18,7 @@ START_TEST (test_pattern_to_opcode)
     ck_assert( r3_pattern_to_opcode("\\w+", sizeof("\\w+") - 1) == OP_EXPECT_WORDS );
     ck_assert( r3_pattern_to_opcode("\\d+", sizeof("\\d+") - 1) == OP_EXPECT_DIGITS );
     ck_assert( r3_pattern_to_opcode("[^/]+", sizeof("[^/]+") - 1) == OP_EXPECT_NOSLASH );
+    ck_assert( r3_pattern_to_opcode("[^-]+", sizeof("[^-]+") - 1) == OP_EXPECT_NODASH );
 }
 END_TEST
 
