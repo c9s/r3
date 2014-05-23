@@ -40,9 +40,8 @@ struct _node {
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
+    int    compare_type;
     char * combined_pattern;
-    int    ov_cnt;
-    int *  ov;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
 
@@ -174,7 +173,11 @@ route * r3_tree_match_route(const node *n, match_entry * entry);
 #define METHOD_HEAD 2<<5
 #define METHOD_OPTIONS 2<<6
 
-int r3_pattern_to_opcode(char * pattern, int pattern_len);
+
+
+int r3_pattern_to_opcode(char * pattern);
+
+enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
 enum { OP_EXPECT_DIGITS = 1, OP_EXPECT_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH };
 

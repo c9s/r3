@@ -58,8 +58,6 @@ node * r3_tree_create(int cap) {
     n->combined_pattern = NULL;
     n->pcre_pattern = NULL;
     n->pcre_extra = NULL;
-    n->ov_cnt = 0;
-    n->ov = NULL;
     return n;
 }
 
@@ -81,7 +79,6 @@ void r3_tree_free(node * tree) {
     }
 #endif
     zfree(tree->combined_pattern);
-    zfree(tree->ov);
     zfree(tree);
     tree = NULL;
 }
@@ -168,10 +165,19 @@ void r3_tree_compile_patterns(node * n) {
     p++;
 
     edge *e = NULL;
+    int opcode_cnt = 0;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
         if ( e->has_slug ) {
+            // compile "foo/{slug}" to "foo/[^/]+"
             char * slug_pat = slug_compile(e->pattern, e->pattern_len);
+
+            // if found available opcode
+            e->opcode = r3_pattern_to_opcode(slug_pat);
+            if (e->opcode) {
+                opcode_cnt++;
+            }
+
             strcat(p, slug_pat);
         } else {
             strncat(p++,"(", 1);
@@ -189,9 +195,11 @@ void r3_tree_compile_patterns(node * n) {
 
     info("pattern: %s\n",cpat);
 
-    n->ov_cnt = (1 + n->edge_len) * 3;
-    n->ov = (int*) zcalloc(sizeof(int) * n->ov_cnt);
-
+    // if all edges use opcode, we should skip the combined_pattern.
+    if ( opcode_cnt == n->edge_len ) {
+        zfree(cpat);
+        return;
+    }
 
     n->combined_pattern = cpat;
 

@@ -13,17 +13,17 @@
 #include "str_array.h"
 #include "zmalloc.h"
 
-int r3_pattern_to_opcode(char * pattern, int pattern_len) {
-    if ( strncmp(pattern, "\\w+", pattern_len) == 0 ) {
+int r3_pattern_to_opcode(char * pattern) {
+    if ( strcmp(pattern, "\\w+") == 0 ) {
         return OP_EXPECT_WORDS;
     }
-    if ( strncmp(pattern, "\\d+", pattern_len) == 0 ) {
+    if ( strcmp(pattern, "\\d+") == 0 ) {
         return OP_EXPECT_DIGITS;
     }
-    if ( strncmp(pattern, "[^/]+", pattern_len) == 0 ) {
+    if ( strcmp(pattern, "[^/]+") == 0 ) {
         return OP_EXPECT_NOSLASH;
     }
-    if ( strncmp(pattern, "[^-]+", pattern_len) == 0 ) {
+    if ( strcmp(pattern, "[^-]+") == 0 ) {
         return OP_EXPECT_NODASH;
     }
     return 0;
