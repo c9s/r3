@@ -14,7 +14,6 @@ noinst_HEADERS = \
 	$(NULL)
 
 dist_noinst_DATA = \
-	bench_str.csv \
 	$(NULL)
 
 if USE_JEMALLOC

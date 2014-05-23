@@ -260,11 +260,14 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
     edge *e;
     int rc;
     int i;
+    int ov_cnt;
 
     // if the pcre_pattern is found, and the pointer is not NULL, then it's
     // pcre pattern node, we use pcre_exec to match the nodes
     if (n->pcre_pattern) {
         info("pcre matching %s on %s\n", n->combined_pattern, path);
+        ov_cnt = (1 + n->edge_len) * 3;
+        int ov[ ov_cnt ];
 
         rc = pcre_exec(
                 n->pcre_pattern,   /* the compiled pattern */
@@ -273,8 +276,8 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
                 path_len,        /* the length of the subject */
                 0,               /* start at offset 0 in the subject */
                 0,               /* default options */
-                n->ov,           /* output vector for substring information */
-                n->ov_cnt);      /* number of elements in the output vector */
+                ov,           /* output vector for substring information */
+                ov_cnt);      /* number of elements in the output vector */
 
         // info("rc: %d\n", rc );
         if (rc < 0) {
@@ -293,12 +296,12 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 
         for (i = 1; i < rc; i++)
         {
-            char *substring_start = path + n->ov[2*i];
-            int   substring_length = n->ov[2*i+1] - n->ov[2*i];
+            char *substring_start = path + ov[2*i];
+            int   substring_length = ov[2*i+1] - ov[2*i];
             // info("%2d: %.*s\n", i, substring_length, substring_start);
 
             if ( substring_length > 0) {
-                int restlen = path_len - n->ov[1]; // fully match to the end
+                int restlen = path_len - ov[1]; // fully match to the end
                 // info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
 
                 e = n->edges[i - 1];
@@ -311,7 +314,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
                     return e->child && e->child->endpoint > 0 ? e->child : NULL;
                 }
                 // get the length of orginal string: $0
-                return r3_tree_matchl( e->child, path + (n->ov[1] - n->ov[0]), restlen, entry);
+                return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
             }
         }
         // does not match
