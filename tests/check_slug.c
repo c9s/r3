@@ -13,6 +13,14 @@
 #include "str_array.h"
 #include "zmalloc.h"
 
+START_TEST (test_pattern_to_opcode)
+{
+    ck_assert( r3_pattern_to_opcode("\\w+", sizeof("\\w+") - 1) == OP_EXPECT_WORDS );
+    ck_assert( r3_pattern_to_opcode("\\d+", sizeof("\\d+") - 1) == OP_EXPECT_DIGITS );
+    ck_assert( r3_pattern_to_opcode("[^/]+", sizeof("[^/]+") - 1) == OP_EXPECT_NOSLASH );
+}
+END_TEST
+
 START_TEST (test_slug_compile)
 {
     char * path = "/user/{id}";
@@ -106,6 +114,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_slug_placeholder_with_broken_slug);
         tcase_add_test(tcase, test_slug_count);
         tcase_add_test(tcase, test_slug_compile);
+        tcase_add_test(tcase, test_pattern_to_opcode);
 
         suite_add_tcase(suite, tcase);
         return suite;

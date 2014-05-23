@@ -13,6 +13,20 @@
 #include "str_array.h"
 #include "zmalloc.h"
 
+int r3_pattern_to_opcode(char * pattern, int pattern_len) {
+    if ( strncmp(pattern, "\\w+", pattern_len) == 0 ) {
+        return OP_EXPECT_WORDS;
+    }
+    if ( strncmp(pattern, "\\d+", pattern_len) == 0 ) {
+        return OP_EXPECT_DIGITS;
+    }
+    if ( strncmp(pattern, "[^/]+", pattern_len) == 0 ) {
+        return OP_EXPECT_NOSLASH;
+    }
+    return 0;
+}
+
+
 
 /**
  * provide a quick way to count slugs, simply search for '{'
