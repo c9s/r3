@@ -131,6 +131,17 @@
                     },
                     pointStart: Date.UTC(2014, 5, 16),
                     data: []
+                },
+                {
+                    type: 'area',
+                    name: 'match_entry with str',
+                    pointInterval: 1000,
+                    lineWidth: 1,
+                    marker: {
+                        radius: 3
+                    },
+                    pointStart: Date.UTC(2014, 5, 16),
+                    data: []
                 }
             ]
         };
@@ -147,6 +158,9 @@
 
             a = parseInt(columns[3]);
             options.series[2].data.push(a || 0);
+
+            a = parseInt(columns[4]);
+            options.series[3].data.push(a || 0);
         });
 
         $('#chart').highcharts(options);
