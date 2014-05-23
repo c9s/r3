@@ -13,6 +13,15 @@
 #include "str_array.h"
 #include "zmalloc.h"
 
+START_TEST (test_pattern_to_opcode)
+{
+    ck_assert( r3_pattern_to_opcode("\\w+", strlen("\\w+")) == OP_EXPECT_MORE_WORDS );
+    ck_assert( r3_pattern_to_opcode("\\d+", strlen("\\d+")) == OP_EXPECT_MORE_DIGITS );
+    ck_assert( r3_pattern_to_opcode("[^/]+",strlen("[^/]+")) == OP_EXPECT_NOSLASH );
+    ck_assert( r3_pattern_to_opcode("[^-]+",strlen("[^-]+")) == OP_EXPECT_NODASH );
+}
+END_TEST
+
 START_TEST (test_slug_compile)
 {
     char * path = "/user/{id}";
@@ -41,24 +50,24 @@ START_TEST (test_contains_slug)
 }
 END_TEST
 
-START_TEST (test_find_slug_pattern)
+START_TEST (test_slug_find_pattern)
 {
     int len;
-    char * namerex = find_slug_pattern("{name:\\s+}", &len);
+    char * namerex = slug_find_pattern("{name:\\s+}", &len);
     ck_assert( strncmp(namerex, "\\s+", len) == 0 );
 }
 END_TEST
 
 
-START_TEST (test_find_slug_placeholder)
+START_TEST (test_slug_find_placeholder)
 {
     int slug_len = 0;
     char * slug;
-    slug = find_slug_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
+    slug = slug_find_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
     ck_assert( strncmp(slug, "{name:\\s+}", slug_len) == 0 );
 
 
-    slug = find_slug_placeholder("/user/{idx:\\d{3}}/to/{idy:\\d{3}}", &slug_len);
+    slug = slug_find_placeholder("/user/{idx:\\d{3}}/to/{idy:\\d{3}}", &slug_len);
     ck_assert( slug_len == strlen("{idx:\\d{3}}") );
     ck_assert( strncmp(slug, "{idx:\\d{3}}", slug_len) == 0 );
 }
@@ -86,10 +95,10 @@ START_TEST (test_slug_count)
 }
 END_TEST
 
-START_TEST (test_find_slug_placeholder_with_broken_slug)
+START_TEST (test_slug_find_placeholder_with_broken_slug)
 {
     int slug_len = 0;
-    char * slug = find_slug_placeholder("/user/{name:\\s+/to/{id", &slug_len);
+    char * slug = slug_find_placeholder("/user/{name:\\s+/to/{id", &slug_len);
     ck_assert(! slug);
 }
 END_TEST
@@ -101,11 +110,12 @@ Suite* r3_suite (void) {
         tcase_set_timeout(tcase, 30);
         tcase_add_test(tcase, test_contains_slug);
         tcase_add_test(tcase, test_inside_slug);
-        tcase_add_test(tcase, test_find_slug_pattern);
-        tcase_add_test(tcase, test_find_slug_placeholder);
-        tcase_add_test(tcase, test_find_slug_placeholder_with_broken_slug);
+        tcase_add_test(tcase, test_slug_find_pattern);
+        tcase_add_test(tcase, test_slug_find_placeholder);
+        tcase_add_test(tcase, test_slug_find_placeholder_with_broken_slug);
         tcase_add_test(tcase, test_slug_count);
         tcase_add_test(tcase, test_slug_compile);
+        tcase_add_test(tcase, test_pattern_to_opcode);
 
         suite_add_tcase(suite, tcase);
         return suite;

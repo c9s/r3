@@ -9,7 +9,7 @@
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
         <script>
-        $.get('tests/bench_str.csv', function(data) {
+        $.get('bench_str.csv', function(data) {
 
         var options = {
             chart: {
@@ -145,7 +145,7 @@
                 },
                 {
                     type: 'area',
-                    name: '/post/{year}/{month}',
+                    name: 'simple pattern matching',
                     pointInterval: 1000,
                     lineWidth: 1,
                     marker: {
@@ -157,6 +157,17 @@
                 {
                     type: 'area',
                     name: 'tree_compile',
+                    pointInterval: 1000,
+                    lineWidth: 1,
+                    marker: {
+                        radius: 3
+                    },
+                    pointStart: Date.UTC(2014, 5, 16),
+                    data: []
+                },
+                {
+                    type: 'area',
+                    name: 'match_entry with str',
                     pointInterval: 1000,
                     lineWidth: 1,
                     marker: {
@@ -179,9 +190,8 @@
             }
             */
             var columns = line.split(/,/);
-
-            var commentText = columns[4];
-            for (var i = 1; i < 4; i++ ) {
+            var commentText = columns[5];
+            for (var i = 1; i < 5; i++ ) {
                 var a = parseInt(columns[i]);
                 var args =  a ? 
                     (commentText ? { y: a, comment: commentText } : a) 

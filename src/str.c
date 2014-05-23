@@ -13,6 +13,33 @@
 #include "str_array.h"
 #include "zmalloc.h"
 
+int r3_pattern_to_opcode(char * pattern, int len) {
+    if ( strncmp(pattern, "\\w+",len) == 0 ) {
+        return OP_EXPECT_MORE_WORDS;
+    }
+    if ( strncmp(pattern, "[0-9a-z]+",len) == 0 ||  strncmp(pattern, "[a-z0-9]+",len) == 0  ) {
+        return OP_EXPECT_MORE_WORDS;
+    }
+    if ( strncmp(pattern, "[a-z]+",len) == 0 ) {
+        return OP_EXPECT_MORE_ALPHA;
+    }
+    if ( strncmp(pattern, "\\d+", len) == 0 ) {
+        return OP_EXPECT_MORE_DIGITS;
+    }
+    if ( strncmp(pattern, "[0-9]+", len) == 0 ) {
+        return OP_EXPECT_MORE_DIGITS;
+    }
+    if ( strncmp(pattern, "[^/]+", len) == 0 ) {
+        return OP_EXPECT_NOSLASH;
+    }
+    if ( strncmp(pattern, "[^-]+", len) == 0 ) {
+        return OP_EXPECT_NODASH;
+    }
+    return 0;
+}
+
+
+
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
@@ -66,7 +93,7 @@ char * inside_slug(char * needle, int needle_len, char *offset) {
     return NULL;
 }
 
-char * find_slug_placeholder(char *s1, int *len) {
+char * slug_find_placeholder(char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 0;
@@ -98,7 +125,7 @@ char * find_slug_placeholder(char *s1, int *len) {
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * find_slug_pattern(char *s1, int *len) {
+char * slug_find_pattern(char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 1;
@@ -136,7 +163,7 @@ char * slug_compile(char * str, int len)
 
     // append prefix
     int s1_len;
-    s1 = find_slug_placeholder(str, &s1_len);
+    s1 = slug_find_placeholder(str, &s1_len);
 
     if ( s1 == NULL ) {
         return zstrdup(str);
@@ -153,7 +180,7 @@ char * slug_compile(char * str, int len)
 
 
     int pat_len;
-    pat = find_slug_pattern(s1, &pat_len);
+    pat = slug_find_pattern(s1, &pat_len);
 
     if (pat) {
         *o = '(';

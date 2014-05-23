@@ -120,9 +120,35 @@ r3_route_free(r1);
 r3_tree_free(n);
 ```
 
+Slug
+-----------------------
+A slug is a placeholder, which captures the string from the URL as a variable.
+Slugs will be compiled into regular expression patterns.
+
+Slugs without specified pattern (like `/user/{userId}`) will be compiled with the `[^/]+` pattern.
+
+To specify the pattern of a slug, you may write a colon to separate the slug name and the pattern:
+
+    "/user/{userId:\\d+}"
+
+The above route will use `\d+` as its pattern.
 
 
-Benchmark
+Optimization
+-----------------------
+Simple regular expressions are optimized through a regexp pattern to opcode
+compiler, which translates simple patterns into small & fast scanners.
+
+By using this method, r3 reduces the matching overhead of pcre library.
+
+Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+` or `[^-]+`
+
+slugs without specified regular expression will be compiled with a `[^/]+` pattern. therefore, it's optimized too.
+
+Complex regular expressions will still use libpcre to match URL (partially).
+
+
+Performance
 -----------------------
 The routing benchmark from stevegraham/rails' PR <https://github.com/stevegraham/rails/pull/1>:
 
@@ -151,6 +177,19 @@ paths.each do |path|
 end
 ```
 
+Function prefix mapping
+-----------------------
+
+|Function Prefix   |Description                                                                         |
+|------------------|------------------------------------------------------------------------------------|
+|`r3_tree_*`       |Tree related operations, which require a node to operate a whole tree               |
+|`r3_node_*`       |Single node related operations, which do not go through its own children or parent. |
+|`r3_edge_*`       |Edge related operations                                                             |
+|`r3_route_*`      |Route related operations, which are needed only when the tree is defined by routes  |
+|`match_entry_*`   |Match entry related operations, a `match_entry` is just like the request parameters |
+
+
+
 
 Rendering routes with graphviz
 -------------------------------
@@ -176,6 +215,7 @@ digraph g {
 
 Use case in PHP
 -----------------------
+**not implemented yet**
 
 ```php
 // Here is the paths data structure

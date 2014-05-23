@@ -65,23 +65,4 @@ void bench_append_csv(char *filename, int countOfB, ...);
 
 #define BR(b) &b
 
-
-#define BENCHMARK(B) \
-        bench B; B.N = 5000000; B.R = 3; \
-        bench_start(&B); \
-        for (int _r = 0; _r < B.R ; _r++ ) { \
-            for (int _i = 0; _i < B.N ; _i++ ) {
-
-#define END_BENCHMARK(B) \
-            } \
-        } \
-        bench_stop(&B);
-
-#define BENCHMARK_SUMMARY(B) bench_print_summary(&B);
-
-#define BENCHMARK_RECORD_CSV(B,filename) \
-    FILE *fp = fopen(filename, "a+"); \
-    fprintf(fp, "%ld,%.2f\n", unixtime(), (B.N * B.R) / (B.end - B.start)); \
-    fclose(fp);
-
 #endif /* !BENCH_H */

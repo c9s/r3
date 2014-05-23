@@ -28,6 +28,7 @@ edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
     edge * e = (edge*) zmalloc( sizeof(edge) );
     e->pattern = pattern;
     e->pattern_len = pattern_len;
+    e->opcode = 0;
     e->child = child;
     e->parent = NULL;
 
@@ -81,17 +82,16 @@ node * r3_edge_branch(edge *e, int dl) {
     e->child->data = NULL;
 
     // truncate the original edge pattern
-    char *op = e->pattern;
+    char *oldpattern = e->pattern;
     e->pattern = zstrndup(e->pattern, dl);
     e->pattern_len = dl;
+    zfree(oldpattern);
 
     return new_child;
 }
 
 void r3_edge_free(edge * e) {
-    if (e->pattern) {
-        zfree(e->pattern);
-    }
+    zfree(e->pattern);
     if ( e->child ) {
         r3_tree_free(e->child);
     }

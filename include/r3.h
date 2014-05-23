@@ -53,10 +53,8 @@ struct _node {
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
+    int    compare_type;
     char * combined_pattern;
-    int    combined_pattern_len;
-    int    ov_cnt;
-    int  * ov;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
 
@@ -76,9 +74,9 @@ struct _edge {
 
     char * pattern;
     int    pattern_len;
-
-    float   score;
-    bool             has_slug:1;
+    int    opcode;
+    float  score;
+    bool   has_slug:1;
 };
 
 typedef struct {
@@ -120,7 +118,9 @@ void r3_tree_free(node * tree);
 
 void r3_edge_free(edge * edge);
 
-edge * r3_node_add_child(node * n, char * pat , node *child);
+edge * r3_node_connectl(node * n, char * pat, int len, int strdup, node *child);
+
+#define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
 
 edge * r3_node_find_edge(node * n, char * pat);
 
@@ -190,7 +190,18 @@ void r3_tree_feedback(node *tree, node *end);
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
-#define METHOD_PUT 2<<1
-#define METHOD_DELETE 2<<1
+#define METHOD_PUT 2<<2
+#define METHOD_DELETE 2<<3
+#define METHOD_PATCH 2<<4
+#define METHOD_HEAD 2<<5
+#define METHOD_OPTIONS 2<<6
+
+
+
+int r3_pattern_to_opcode(char * pattern, int pattern_len);
+
+enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
+
+enum { OP_EXPECT_MORE_DIGITS = 1, OP_EXPECT_MORE_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH, OP_EXPECT_MORE_ALPHA };
 
 #endif /* !R3_NODE_H */
