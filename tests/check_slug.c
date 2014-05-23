@@ -15,8 +15,8 @@
 
 START_TEST (test_pattern_to_opcode)
 {
-    ck_assert( r3_pattern_to_opcode("\\w+", strlen("\\w+")) == OP_EXPECT_WORDS );
-    ck_assert( r3_pattern_to_opcode("\\d+", strlen("\\d+")) == OP_EXPECT_DIGITS );
+    ck_assert( r3_pattern_to_opcode("\\w+", strlen("\\w+")) == OP_EXPECT_MORE_WORDS );
+    ck_assert( r3_pattern_to_opcode("\\d+", strlen("\\d+")) == OP_EXPECT_MORE_DIGITS );
     ck_assert( r3_pattern_to_opcode("[^/]+",strlen("[^/]+")) == OP_EXPECT_NOSLASH );
     ck_assert( r3_pattern_to_opcode("[^-]+",strlen("[^-]+")) == OP_EXPECT_NODASH );
 }

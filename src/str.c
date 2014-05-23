@@ -15,10 +15,19 @@
 
 int r3_pattern_to_opcode(char * pattern, int len) {
     if ( strncmp(pattern, "\\w+",len) == 0 ) {
-        return OP_EXPECT_WORDS;
+        return OP_EXPECT_MORE_WORDS;
+    }
+    if ( strncmp(pattern, "[0-9a-z]+",len) == 0 ||  strncmp(pattern, "[a-z0-9]+",len) == 0  ) {
+        return OP_EXPECT_MORE_WORDS;
+    }
+    if ( strncmp(pattern, "[a-z]+",len) == 0 ) {
+        return OP_EXPECT_MORE_ALPHA;
     }
     if ( strncmp(pattern, "\\d+", len) == 0 ) {
-        return OP_EXPECT_DIGITS;
+        return OP_EXPECT_MORE_DIGITS;
+    }
+    if ( strncmp(pattern, "[0-9]+", len) == 0 ) {
+        return OP_EXPECT_MORE_DIGITS;
     }
     if ( strncmp(pattern, "[^/]+", len) == 0 ) {
         return OP_EXPECT_NOSLASH;

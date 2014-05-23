@@ -8,9 +8,6 @@
 // PCRE
 #include <pcre.h>
 
-// Judy array
-// #include <Judy.h>
-
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
@@ -270,24 +267,19 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
             e = n->edges[i];
             switch(e->opcode) {
                 case OP_EXPECT_NOSLASH:
-                    while (*pp != '/' && pp < pp_end) {
-                        pp++;
-                    }
+                    while (*pp != '/' && pp < pp_end) pp++;
                     break;
-                case OP_EXPECT_DIGITS:
-                    while ( isdigit(*pp) && pp < pp_end) {
-                        pp++;
-                    }
+                case OP_EXPECT_MORE_ALPHA:
+                    while ( isalpha(*pp) && pp < pp_end) pp++;
                     break;
-                case OP_EXPECT_WORDS:
-                    while ( (isdigit(*pp) || isalpha(*pp)) && pp < pp_end) {
-                        pp++;
-                    }
+                case OP_EXPECT_MORE_DIGITS:
+                    while ( isdigit(*pp) && pp < pp_end) pp++;
+                    break;
+                case OP_EXPECT_MORE_WORDS:
+                    while ( (isdigit(*pp) || isalpha(*pp)) && pp < pp_end) pp++;
                     break;
                 case OP_EXPECT_NODASH:
-                    while (*pp != '-' && pp < pp_end) {
-                        pp++;
-                    }
+                    while (*pp != '-' && pp < pp_end) pp++;
                     break;
             }
             // check match
