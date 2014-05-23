@@ -261,11 +261,12 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
     int i;
     int ov_cnt;
     int restlen;
+    char *pp;
+    char *pp_end = path + path_len;
 
-    if (n->compare_type == NODE_COMPARE_OPCODE ) {
+    if (n->compare_type == NODE_COMPARE_OPCODE) {
         for (i = 0; i < n->edge_len ; i++ ) {
-            char *pp     = path;
-            char *pp_end = path + path_len;
+            pp = path;
             e = n->edges[i];
             switch(e->opcode) {
                 case OP_EXPECT_NOSLASH:
@@ -289,6 +290,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
                     }
                     break;
             }
+            // check match
             if ( (pp - path) > 0) {
                 restlen = pp_end - pp;
                 if (entry) {
@@ -337,10 +339,12 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
         }
 
 
+        char *substring_start;
+        int   substring_length;
         for (i = 1; i < rc; i++)
         {
-            char *substring_start = path + ov[2*i];
-            int   substring_length = ov[2*i+1] - ov[2*i];
+            substring_start = path + ov[2*i];
+            substring_length = ov[2*i+1] - ov[2*i];
             // info("%2d: %.*s\n", i, substring_length, substring_start);
 
             if ( substring_length > 0) {
