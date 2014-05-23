@@ -70,12 +70,9 @@ void r3_tree_free(node * tree) {
             r3_edge_free(tree->edges[ i ]);
         }
     }
-    if (tree->edges) {
-        zfree(tree->edges);
-    }
-    if (tree->routes) {
-        zfree(tree->routes);
-    }
+    zfree(tree->edges);
+    zfree(tree->routes);
+
     if (tree->pcre_pattern) {
         pcre_free(tree->pcre_pattern);
     }
@@ -84,11 +81,8 @@ void r3_tree_free(node * tree) {
         pcre_free_study(tree->pcre_extra);
     }
 #endif
-
-    if (tree->combined_pattern)
-        zfree(tree->combined_pattern);
-    if (tree->ov)
-        zfree(tree->ov);
+    zfree(tree->combined_pattern);
+    zfree(tree->ov);
     zfree(tree);
     tree = NULL;
 }

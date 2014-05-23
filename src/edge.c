@@ -80,9 +80,7 @@ node * r3_edge_branch(edge *e, int dl) {
 }
 
 void r3_edge_free(edge * e) {
-    if (e->pattern) {
-        zfree(e->pattern);
-    }
+    zfree(e->pattern);
     if ( e->child ) {
         r3_tree_free(e->child);
     }
