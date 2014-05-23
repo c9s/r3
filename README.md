@@ -121,8 +121,19 @@ r3_tree_free(n);
 ```
 
 
+Function prefix mapping
+-----------------------
 
-Benchmark
+|Function Prefix   |Description                                                                         |
+|------------------|------------------------------------------------------------------------------------|
+|`r3_tree_*`       |Tree related operations, which require a node to operate a whole tree               |
+|`r3_node_*`       |Single node related operations, which do not go through its own children or parent. |
+|`r3_edge_*`       |Edge related operations                                                             |
+|`r3_route_*`      |Route related operations, which are needed only when the tree is defined by routes  |
+|`match_entry_*`   |Match entry related operations, a `match_entry` is just like the request parameters |
+
+
+Performance
 -----------------------
 The routing benchmark from stevegraham/rails' PR <https://github.com/stevegraham/rails/pull/1>:
 
@@ -176,6 +187,7 @@ digraph g {
 
 Use case in PHP
 -----------------------
+**not implemented yet**
 
 ```php
 // Here is the paths data structure
