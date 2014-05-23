@@ -174,4 +174,6 @@ route * r3_tree_match_route(const node *n, match_entry * entry);
 #define METHOD_HEAD 2<<5
 #define METHOD_OPTIONS 2<<6
 
+enum { OP_EXPECT_DIGITS, OP_EXPECT_WORDS, OP_EXPECT_NOSLASH };
+
 #endif /* !R3_NODE_H */
