@@ -1,3 +1,9 @@
+### 1.2    - Fri May 23 23:30:11 2014
+
+- Added simple pattern optimization.
+- Clean up.
+- Bug fixes.
+
 ### 0.9999 - Mon May 19 10:03:41 2014
 
 API changes:
