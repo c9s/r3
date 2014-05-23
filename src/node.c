@@ -268,13 +268,11 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 
         rc = pcre_exec(
                 n->pcre_pattern,   /* the compiled pattern */
-
-                // PCRE Study makes this slow
-                NULL, // n->pcre_extra,     /* no extra data - we didn't study the pattern */
-                path,              /* the subject string */
-                path_len,          /* the length of the subject */
-                0,                 /* start at offset 0 in the subject */
-                0,                 /* default options */
+                n->pcre_extra,
+                path,            /* the subject string */
+                path_len,        /* the length of the subject */
+                0,               /* start at offset 0 in the subject */
+                0,               /* default options */
                 n->ov,           /* output vector for substring information */
                 n->ov_cnt);      /* number of elements in the output vector */
 
