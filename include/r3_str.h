@@ -16,9 +16,9 @@ char * slug_compile(char * str, int len);
 
 bool contains_slug(char * str);
 
-char * find_slug_pattern(char *s1, int *len);
+char * slug_find_pattern(char *s1, int *len);
 
-char * find_slug_placeholder(char *s1, int *len);
+char * slug_find_placeholder(char *s1, int *len);
 
 char * inside_slug(char * needle, int needle_len, char *offset);
 

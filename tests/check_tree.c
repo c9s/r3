@@ -32,7 +32,7 @@ START_TEST (test_r3_node_find_edge)
 
     node * child = r3_tree_create(3);
 
-    fail_if( r3_node_add_child(n, zstrdup("/add") , child) == FALSE );
+    fail_if( r3_node_connect(n, zstrdup("/add") , child) == FALSE );
 
     fail_if( r3_node_find_edge(n, "/add") == NULL );
     fail_if( r3_node_find_edge(n, "/bar") != NULL );

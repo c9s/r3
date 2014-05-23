@@ -99,7 +99,9 @@ void r3_tree_free(node * tree);
 
 void r3_edge_free(edge * edge);
 
-edge * r3_node_add_child(node * n, char * pat , node *child);
+edge * r3_node_connectl(node * n, char * pat, int len, int strdup, node *child);
+
+#define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
 
 edge * r3_node_find_edge(node * n, char * pat);
 
@@ -175,7 +177,7 @@ route * r3_tree_match_route(const node *n, match_entry * entry);
 
 
 
-int r3_pattern_to_opcode(char * pattern);
+int r3_pattern_to_opcode(char * pattern, int pattern_len);
 
 enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
