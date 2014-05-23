@@ -136,9 +136,8 @@ The above route will use `\d+` as its pattern.
 
 Optimization
 -----------------------
-Simple regular expressions are optimized, through a regexp pattern to opcode
-compiler, which compiles the simple pattern into a small & fast finite state
-machine. 
+Simple regular expressions are optimized through a regexp pattern to opcode
+compiler, which translates simple patterns into small & fast scanners.
 
 By using this method, r3 reduces the matching overhead of pcre library.
 
@@ -146,6 +145,7 @@ Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+` or `[^-]+`
 
 slugs without specified regular expression will be compiled with a `[^/]+` pattern. therefore, it's optimized too.
 
+Complex regular expressions will still use libpcre to match URL (partially).
 
 
 Performance
