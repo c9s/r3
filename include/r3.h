@@ -56,6 +56,7 @@ struct _node {
 struct _edge {
     char * pattern;
     int    pattern_len;
+    int    opcode;
     bool   has_slug;
     node * child;
 };
