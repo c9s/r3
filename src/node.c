@@ -194,7 +194,6 @@ void r3_tree_compile_patterns(node * n) {
 
 
     n->combined_pattern = cpat;
-    n->combined_pattern_len = p - cpat;
 
 
     const char *error;

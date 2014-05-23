@@ -41,7 +41,6 @@ struct _node {
 
     /* the combined regexp pattern string from pattern_tokens */
     char * combined_pattern;
-    int    combined_pattern_len;
     int    ov_cnt;
     int *  ov;
     pcre * pcre_pattern;
