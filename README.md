@@ -122,10 +122,10 @@ r3_tree_free(n);
 
 Slug
 -----------------------
-A slug is placeholder, which capture the string from URL as a variable. slugs
-will be compiled into regular expression patterns.
+A slug is a placeholder, which captures the string from the URL as a variable.
+Slugs will be compiled into regular expression patterns.
 
-A slug without pattern like `/user/{userId}` will be compiled into a `[^/]+` pattern.
+Slugs without specified pattern (like `/user/{userId}`) will be compiled with the `[^/]+` pattern.
 
 To specify the pattern of a slug, you may write a colon to separate the slug name and the pattern:
 
