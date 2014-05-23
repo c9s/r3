@@ -120,17 +120,32 @@ r3_route_free(r1);
 r3_tree_free(n);
 ```
 
-
-Function prefix mapping
+Slug
 -----------------------
+A slug is placeholder, which capture the string from URL as a variable. slugs
+will be compiled into regular expression patterns.
 
-|Function Prefix   |Description                                                                         |
-|------------------|------------------------------------------------------------------------------------|
-|`r3_tree_*`       |Tree related operations, which require a node to operate a whole tree               |
-|`r3_node_*`       |Single node related operations, which do not go through its own children or parent. |
-|`r3_edge_*`       |Edge related operations                                                             |
-|`r3_route_*`      |Route related operations, which are needed only when the tree is defined by routes  |
-|`match_entry_*`   |Match entry related operations, a `match_entry` is just like the request parameters |
+A slug without pattern like `/user/{userId}` will be compiled into a `[^/]+` pattern.
+
+To specify the pattern of a slug, you may write a colon to separate the slug name and the pattern:
+
+    "/user/{userId:\\d+}"
+
+The above route will use `\d+` as its pattern.
+
+
+Optimization
+-----------------------
+Simple regular expressions are optimized, through a regexp pattern to opcode
+compiler, which compiles the simple pattern into a small & fast finite state
+machine. 
+
+By using this method, r3 reduces the matching overhead of pcre library.
+
+Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+` or `[^-]+`
+
+slugs without specified regular expression will be compiled with a `[^/]+` pattern. therefore, it's optimized too.
+
 
 
 Performance
@@ -161,6 +176,19 @@ paths.each do |path|
     puts "r3_tree_insert_path(n, \"#{path}\", NULL);"
 end
 ```
+
+Function prefix mapping
+-----------------------
+
+|Function Prefix   |Description                                                                         |
+|------------------|------------------------------------------------------------------------------------|
+|`r3_tree_*`       |Tree related operations, which require a node to operate a whole tree               |
+|`r3_node_*`       |Single node related operations, which do not go through its own children or parent. |
+|`r3_edge_*`       |Edge related operations                                                             |
+|`r3_route_*`      |Route related operations, which are needed only when the tree is defined by routes  |
+|`match_entry_*`   |Match entry related operations, a `match_entry` is just like the request parameters |
+
+
 
 
 Rendering routes with graphviz
