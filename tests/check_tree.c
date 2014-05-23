@@ -42,22 +42,25 @@ START_TEST (test_r3_node_find_edge)
 END_TEST
 
 
-START_TEST (test_compile)
-{
-    str_array *t;
+static node * create_simple_str_tree() {
     node * n;
     n = r3_tree_create(10);
-
-
-    node *m;
-    edge *e ;
-
     r3_tree_insert_path(n, "/zoo", NULL);
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
     r3_tree_compile(n);
-    fail_if( n->combined_pattern );
-    fail_if( NULL == r3_node_find_edge_str(n, "/", strlen("/") ) );
+    return n;
+}
+
+
+
+START_TEST (test_compile)
+{
+    str_array *t;
+    node * n = create_simple_str_tree();
+
+    node *m;
+    edge *e ;
 
 #ifdef DEBUG
     r3_tree_dump(n, 0);
