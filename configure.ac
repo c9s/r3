@@ -7,7 +7,7 @@ LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
 
-AC_CHECK_HEADERS([stdlib.h string.h sys/time.h stdint.h])
+AC_CHECK_HEADERS([stdlib.h string.h sys/time.h stdint.h pthread.h])
 
 PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
   ifdef([AM_PATH_CHECK],
