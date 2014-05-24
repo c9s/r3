@@ -35,13 +35,12 @@ struct _node {
     // almost less than 255
     unsigned char      edge_len;
     unsigned char      edge_cap;
-
     unsigned char    compare_type;
     unsigned char    endpoint;
+    unsigned char    ov_cnt;
 
-    // almost less than 255
-    unsigned char      route_len;
-    unsigned char      route_cap;
+    // <-- here comes a char[3] struct padding for alignment since we have 5 char above.
+
 
     /** compile-time variables here.... **/
 
@@ -50,6 +49,10 @@ struct _node {
     pcre_extra * pcre_extra;
 
     char * combined_pattern;
+
+    // almost less than 255
+    unsigned char      route_len;
+    unsigned char      route_cap;
 
     /**
      * the pointer of route data
@@ -60,9 +63,9 @@ struct _node {
 struct _edge {
     char * pattern;
     node * child;
-    unsigned char  opcode;
-    unsigned short pattern_len;
-    bool     has_slug:1;
+    unsigned short pattern_len; // 2 byte
+    unsigned char  opcode; // 1 byte
+    unsigned char  has_slug; // 1 bit
 };
 
 typedef struct {

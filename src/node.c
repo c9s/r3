@@ -196,6 +196,8 @@ void r3_tree_compile_patterns(node * n) {
     int erroffset;
     unsigned int option_bits = 0;
 
+    n->ov_cnt = (1 + n->edge_len) * 3;
+
     if (n->pcre_pattern) {
         pcre_free(n->pcre_pattern);
     }
@@ -254,17 +256,12 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
     info("try matching: %s\n", path);
 
     edge *e;
-    char rc;
     unsigned short i;
-    unsigned short ov_cnt;
     unsigned short restlen;
-    char *pp;
-    char *pp_end = path + path_len;
-
-    char *substring_start = NULL;
-    int   substring_length = 0;
 
     if (n->compare_type == NODE_COMPARE_OPCODE) {
+        char *pp;
+        char *pp_end = path + path_len;
         for (i = 0; i < n->edge_len ; i++ ) {
             pp = path;
             e = n->edges[i];
@@ -302,9 +299,12 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
     // if the pcre_pattern is found, and the pointer is not NULL, then it's
     // pcre pattern node, we use pcre_exec to match the nodes
     if (n->pcre_pattern) {
+        char *substring_start = NULL;
+        int   substring_length = 0;
+        int   ov[ n->ov_cnt ];
+        char rc;
+
         info("pcre matching %s on %s\n", n->combined_pattern, path);
-        ov_cnt = (1 + n->edge_len) * 3;
-        int ov[ ov_cnt ];
 
         rc = pcre_exec(
                 n->pcre_pattern, /* the compiled pattern */
@@ -314,7 +314,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
                 0,            /* start at offset 0 in the subject */
                 0,            /* default options */
                 ov,           /* output vector for substring information */
-                ov_cnt);      /* number of elements in the output vector */
+                n->ov_cnt);      /* number of elements in the output vector */
 
         // does not match all edges, return NULL;
         if (rc < 0) {
