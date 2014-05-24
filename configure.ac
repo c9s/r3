@@ -7,14 +7,6 @@ LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
 
-# AM_PATH_CHECK()
-PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
-  ifdef([AM_PATH_CHECK],
-  [AM_PATH_CHECK(,[have_check="yes"])],
-  AC_MSG_WARN([Check not found; cannot run unit tests!])
-  [have_check="no"])]
-])
-AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
 
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
 
@@ -85,10 +77,26 @@ AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
 AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes", "whether graphviz is enable")
 
-
 PKG_CHECK_MODULES(DEPS, [libpcre])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
+
+
+AC_ARG_ENABLE(check,
+              AS_HELP_STRING([--enable-check],
+                             [enable unit testing]),
+              , enable_check=unset)
+if test "x$enable_check" != "xunset" ; then
+AM_PATH_CHECK
+PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
+  ifdef([AM_PATH_CHECK],
+  [AM_PATH_CHECK(,[have_check="yes"])],
+  AC_MSG_WARN([Check not found; cannot run unit tests!])
+  [have_check="no"])]
+])
+fi
+AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
+
 AC_CONFIG_FILES([
   r3.pc
   Makefile
