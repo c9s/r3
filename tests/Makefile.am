@@ -30,8 +30,9 @@ AM_LDFLAGS += $(GVC_DEPS_LIBS)
 endif
 
 
-bin_PROGRAMS = benchmark
+benchmark_PROGRAMS = benchmark
 benchmark_SOURCES = bench.c
+benchmarkdir = tests
 
 
 
