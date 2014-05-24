@@ -13,16 +13,21 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct _queue;
+struct _queue_node;
+typedef struct _queue_node queue_node;
+typedef struct _queue queue;
+
 struct _queue_node {
 	void *data;
-	struct _queue_node * next;
+	queue * next;
 };
-typedef struct _queue_node queue_node;
+// typedef struct _queue_node queue_node;
   
-typedef struct {
+struct _queue {
 	queue_node * first;
 	queue_node * last;
-} queue;
+};
 
 // create and return the queue
 queue * queue_new(void);

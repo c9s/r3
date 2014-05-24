@@ -59,12 +59,12 @@ START_TEST (test_queue)
 {
     queue * q = queue_new();
 
-    for (short i = 0 ; i < 100 ; i++ ) {
+    for (int i = 0 ; i < 100 ; i++ ) {
         queue_push(q, (void*) i);
     }
 
-    for (short i = 0 ; i < 100 ; i++ ) {
-        short v = (short) queue_pop(q);
+    for (int i = 0 ; i < 100 ; i++ ) {
+        int v = (int) queue_pop(q);
         ck_assert_int_eq(i, v);
     }
     queue_free(q);
