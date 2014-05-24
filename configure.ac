@@ -82,7 +82,12 @@ AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
 
-AC_CHECK_HEADERS([check.h],[ enable_check=yes ],[ enable_check=unset ])
+# This does not work because configure does not look into /opt/local/include...
+# AC_CHECK_HEADERS([check.h],[ enable_check=yes ],[ enable_check=unset ])
+AC_ARG_ENABLE(check,
+              AS_HELP_STRING([--enable-check],
+                             [enable unit testing]),
+              , enable_check=unset)
 
 if test "x$enable_check" != "xunset" ; then
 # AM_PATH_CHECK
