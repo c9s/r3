@@ -82,10 +82,8 @@ AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
 
-AC_ARG_ENABLE(check,
-              AS_HELP_STRING([--enable-check],
-                             [enable unit testing]),
-              , enable_check=unset)
+AC_CHECK_HEADERS([check.h],[ enable_check=yes ],:)
+
 if test "x$enable_check" != "xunset" ; then
 # AM_PATH_CHECK
 PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
@@ -96,6 +94,7 @@ PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
 ])
 fi
 AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
+
 
 AC_CONFIG_FILES([
   r3.pc
