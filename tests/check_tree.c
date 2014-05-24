@@ -390,7 +390,7 @@ END_TEST
 
 
 Suite* r3_suite (void) {
-        Suite *suite = suite_create("blah");
+        Suite *suite = suite_create("route tests");
 
         TCase *tcase = tcase_create("testcase");
         tcase_set_timeout(tcase, 30);
