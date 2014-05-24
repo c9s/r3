@@ -36,19 +36,18 @@ struct _node {
     unsigned char      edge_len;
     unsigned char      edge_cap;
 
+    unsigned char    compare_type;
+    unsigned char    endpoint;
+
     // almost less than 255
     unsigned char      route_len;
     unsigned char      route_cap;
-
-    unsigned char    compare_type;
-    unsigned char    endpoint;
 
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
-
 
     char * combined_pattern;
 
@@ -61,7 +60,7 @@ struct _node {
 struct _edge {
     char * pattern;
     node * child;
-    unsigned char opcode;
+    unsigned char  opcode;
     unsigned short pattern_len;
     bool     has_slug:1;
 };
