@@ -8,19 +8,25 @@ R3
 R3 is an URL router library with high performance, thus, it's implemented in C.
 It compiles your route paths into a prefix trie.
 
-By using the constructed prefix trie in the start-up time, you can dispatch
-routes with efficiency.
+By using the prefix tree constructed in the start-up time, you can dispatch
+the path to the controller with high efficiency.
+
 
 
 Requirement
 -----------------------
 
+### Build Requirement
+
 * autoconf
 * automake
 * check
+* pkg-config
+
+### Runtime Requirement
+
 * pcre
 * graphviz version 2.38.0 (20140413.2041)
-* pkg-config
 
 Pattern Syntax
 -----------------------
@@ -125,7 +131,7 @@ Slug
 A slug is a placeholder, which captures the string from the URL as a variable.
 Slugs will be compiled into regular expression patterns.
 
-Slugs without specified pattern (like `/user/{userId}`) will be compiled with the `[^/]+` pattern.
+Slugs without patterns (like `/user/{userId}`) will be compiled into the `[^/]+` pattern.
 
 To specify the pattern of a slug, you may write a colon to separate the slug name and the pattern:
 
@@ -137,13 +143,13 @@ The above route will use `\d+` as its pattern.
 Optimization
 -----------------------
 Simple regular expressions are optimized through a regexp pattern to opcode
-compiler, which translates simple patterns into small & fast scanners.
+translator, which translates simple patterns into small & fast scanners.
 
 By using this method, r3 reduces the matching overhead of pcre library.
 
 Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+` or `[^-]+`
 
-slugs without specified regular expression will be compiled with a `[^/]+` pattern. therefore, it's optimized too.
+Slugs without specified regular expression will be compiled into the `[^/]+` pattern. therefore, it's optimized too.
 
 Complex regular expressions will still use libpcre to match URL (partially).
 
