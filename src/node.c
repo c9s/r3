@@ -101,13 +101,12 @@ void r3_tree_feedback(node *tree, node *end) {
     edge * e = end->parent_edge;
     node * p = e->parent;
     while( p && e ) {
-        e->score += 0.1;
+        e->score += 0.01;
 
-
-        if (e->score > 100) {
+        if (e->score > 10) {
             for (int i = 0 ; i < p->edge_len ; i++ ) {
                 if ( p->edges[i]->score > 0 ) {
-                    p->edges[i]->score /= 100.0;
+                    p->edges[i]->score /= 10.0;
                 }
             }
         }

@@ -18,6 +18,7 @@ START_TEST (test_feedback_worker)
 {
     node * n = r3_tree_create(1);
 
+
     r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
     r3_tree_insert_path(n, "/foo/bar/qux",  NULL);
     r3_tree_insert_path(n, "/foo/bar/quux",  NULL);
@@ -27,8 +28,13 @@ START_TEST (test_feedback_worker)
     r3_tree_insert_path(n, "/garply/grault/bar",  NULL);
     r3_tree_compile(n);
 
-    node *matched;
-    matched = r3_tree_matchl(n, "/garply/grault/foo", strlen("/garply/grault/foo"), NULL);
+    giant_lock *tl = r3_giant_lock_create(n);
+
+    node * matched;
+    matched = r3_tree_matchl_ts(n, "/garply/grault/foo", strlen("/garply/grault/foo"), NULL); // thread-safe
+
+
+    r3_feedback_worker_init();
 
     /*
     feedback_payload payload;

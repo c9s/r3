@@ -6,7 +6,7 @@
 # endif
 TESTS                       = check_tree
 AM_CFLAGS = -ggdb $(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include  @CHECK_CFLAGS@
-AM_LDFLAGS = $(DEPS_LIBS) -L$(top_builddir)/src -lr3 @CHECK_LIBS@
+AM_LDFLAGS = $(DEPS_LIBS) -L$(top_builddir)/src -lpthread -lr3 @CHECK_LIBS@
 
 
 noinst_HEADERS = \
