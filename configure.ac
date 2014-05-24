@@ -82,7 +82,7 @@ AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
 
-AC_CHECK_HEADERS([check.h],[ enable_check=yes ],:)
+AC_CHECK_HEADERS([check.h],[ enable_check=yes ],[ enable_check=unset ])
 
 if test "x$enable_check" != "xunset" ; then
 # AM_PATH_CHECK
