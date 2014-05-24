@@ -30,11 +30,9 @@ typedef struct _route route;
 
 struct _node {
     edge  ** edges;
-    route ** routes;
 
     // almost less than 255
-    unsigned char      edge_len;
-    unsigned char      edge_cap;
+    unsigned char    edge_len;
     unsigned char    compare_type;
     unsigned char    endpoint;
     unsigned char    ov_cnt;
@@ -48,9 +46,12 @@ struct _node {
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
 
+    route ** routes;
+
     char * combined_pattern;
 
     // almost less than 255
+    unsigned char      edge_cap;
     unsigned char      route_len;
     unsigned char      route_cap;
 
