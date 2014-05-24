@@ -31,16 +31,21 @@ typedef struct _route route;
 struct _node {
     edge  ** edges;
     route ** routes;
-    int      edge_len;
-    int      edge_cap;
-    int      route_len;
-    int      route_cap;
-    int endpoint;
+
+    // almost less than 255
+    unsigned char      edge_len;
+    unsigned char      edge_cap;
+
+    // almost less than 255
+    unsigned char      route_len;
+    unsigned char      route_cap;
+
+    unsigned char    compare_type;
+    unsigned char    endpoint;
 
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
-    int    compare_type;
     char * combined_pattern;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
@@ -49,15 +54,14 @@ struct _node {
      * the pointer of route data
      */
     void * data;
-
 };
 
 struct _edge {
     char * pattern;
-    int    pattern_len;
-    int    opcode;
-    bool   has_slug;
     node * child;
+    unsigned char opcode;
+    unsigned short pattern_len;
+    bool     has_slug:1;
 };
 
 typedef struct {

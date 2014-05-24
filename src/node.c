@@ -254,12 +254,15 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
     info("try matching: %s\n", path);
 
     edge *e;
-    int rc;
-    int i;
-    int ov_cnt;
-    int restlen;
+    char rc;
+    unsigned short i;
+    unsigned short ov_cnt;
+    unsigned short restlen;
     char *pp;
     char *pp_end = path + path_len;
+
+    char *substring_start = NULL;
+    int   substring_length = 0;
 
     if (n->compare_type == NODE_COMPARE_OPCODE) {
         for (i = 0; i < n->edge_len ; i++ ) {
@@ -333,8 +336,6 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
         }
 
 
-        char *substring_start;
-        int   substring_length;
         for (i = 1; i < rc; i++)
         {
             substring_start = path + ov[2*i];
@@ -372,6 +373,8 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
     return NULL;
 }
 
+
+
 route * r3_tree_match_route(const node *tree, match_entry * entry) {
     node *n;
     n = r3_tree_match_entry(tree, entry);
@@ -387,8 +390,7 @@ route * r3_tree_match_route(const node *tree, match_entry * entry) {
 }
 
 inline edge * r3_node_find_edge_str(const node * n, char * str, int str_len) {
-    int i = 0;
-    int matched_idx = -1;
+    unsigned short i = 0;
     char firstbyte = *str;
     for (; i < n->edge_len ; i++ ) {
         if ( firstbyte == *(n->edges[i]->pattern) ) {
