@@ -27,6 +27,17 @@ START_TEST (test_feedback_worker)
     r3_tree_insert_path(n, "/garply/grault/bar",  NULL);
     r3_tree_compile(n);
 
+    node *matched;
+    matched = r3_tree_matchl(n, "/garply/grault/foo", strlen("/garply/grault/foo"), NULL);
+
+    /*
+    feedback_payload payload;
+    payload.matched_node = matched;
+    r3_feedback_worker_init(&payload);
+    */
+
+
+
     r3_tree_free(n);
 }
 END_TEST

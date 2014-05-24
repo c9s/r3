@@ -46,6 +46,8 @@ check_slug_SOURCES = check_slug.c
 TESTS += check_worker
 check_worker_SOURCES = check_worker.c
 
+TESTS += check_queue
+check_queue_SOURCES = check_queue.c
 
 check_PROGRAMS = $(TESTS)
 
