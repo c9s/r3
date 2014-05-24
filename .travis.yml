@@ -24,7 +24,7 @@ before_script:
   - sudo ldconfig
 script:
   - ./autogen.sh
-  - ./configure $CONFIGURE_OPTION
+  - ./configure --enable-check $CONFIGURE_OPTION
   - make V=1
   - sudo make install
   - if [ "x$VALGRIND" == xyes ]; then make check > /dev/null 2>&1; else make check V=1; fi
