@@ -11,7 +11,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 /**
  * create and return a new queue
  **/
-queue * queue_factory()
+queue * queue_create()
 {
    queue * new_queue = malloc(sizeof(queue));
    if(new_queue == NULL) {
@@ -60,7 +60,7 @@ void queue_destroy(queue * que)
  * que is a queue pointer
  * data is a heap allocated memory pointer
  */
-int enque(queue * que, void * data)
+int queue_push(queue * que, void * data)
 {
     queue_node * new_node = malloc(sizeof(queue_node));
     if(new_node == NULL) {
@@ -85,9 +85,9 @@ int enque(queue * que, void * data)
     return 0;
 }
 
-void * deque(queue * que) 
+void * queue_pop(queue * que) 
 {
-    // print("Entered to deque\n");
+    // print("Entered to queue_pop\n");
     if (que == NULL) {
         // print("que is null exiting...\n");
         return NULL;
@@ -115,7 +115,7 @@ void * deque(queue * que)
     // print("Freeing _node@ %p", _node);
     free(_node);
     pthread_mutex_unlock(&mutex);
-    // print("Exiting deque\n");
+    // print("Exiting queue_pop\n");
     return data;
 }
 

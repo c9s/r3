@@ -25,19 +25,19 @@ typedef struct {
 } queue;
 
 // create and return the queue
-queue * queue_factory(void);
+queue * queue_create(void);
 
 // destory the queue (free all the memory associate with the que even the data)
 void queue_destroy(queue * que);
 
 
-// enque the data into queue
+// queue_push the data into queue
 // data is expected to a pointer to a heap allocated memory
-int enque(queue * que, void * data);
+int queue_push(queue * que, void * data);
 
 // return the data from the que (FIFO)
 // and free up all the internally allocated memory
 // but the user have to free the returning data pointer
-void * deque(queue * que);
+void * queue_pop(queue * que);
 
 #endif /* !R3_QUEUE_H */

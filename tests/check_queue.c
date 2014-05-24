@@ -22,7 +22,7 @@ struct _stru {
     queue * q;
 };
  
-void * func(void * arg)
+void * producer_thread(void * arg)
 {
     struct _stru * args = (struct _stru *) arg;
     int number = args->number;
@@ -34,19 +34,19 @@ void * func(void * arg)
     for(i = 0; i < number; i++) {
         char * message = malloc(16);
         snprintf(message, 15, "rand: %d", rand());
-        enque(q, (void *)message);
+        queue_push(q, (void *)message);
     }
 
     return NULL;
 }
 
 
-void * func_d(void * args)
+void * consumer_thread(void * args)
 {
     queue * q = (queue *) args;
 
     void * data;
-    while((data = deque(q)) != NULL) {
+    while((data = queue_pop(q)) != NULL) {
         char * string = (char *)data;
         free(data);
     }
@@ -55,16 +55,16 @@ void * func_d(void * args)
 
 START_TEST (test_queue)
 {
-    queue * q = queue_factory();
-    enque(q, (void*) 1);
-    int i = (int) deque(q);
+    queue * q = queue_create();
+    queue_push(q, (void*) 1);
+    int i = (int) queue_pop(q);
     ck_assert_int_eq(i, 1);
 }
 END_TEST
 
 START_TEST (test_queue_threads)
 {
-    queue * q = queue_factory();
+    queue * q = queue_create();
     pthread_t threads[number_of_threads];
     pthread_t thread_d[number_of_threads_d];
     
@@ -74,11 +74,11 @@ START_TEST (test_queue_threads)
         arg[i].number = number_of_iters;
         arg[i].thread_no = i;
         arg[i].q = q;
-        pthread_create(threads+i, NULL, func, (void *)&arg[i]); 
+        pthread_create(threads+i, NULL, producer_thread, (void *)&arg[i]); 
     }
 
     for(i = 0; i < number_of_threads_d; i++) {
-        pthread_create(thread_d+i, NULL, func_d, (void *)q);
+        pthread_create(thread_d+i, NULL, consumer_thread, (void *)q);
     }
 
     for(i = 0; i < number_of_threads; i++) {
