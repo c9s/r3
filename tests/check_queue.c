@@ -58,9 +58,16 @@ void * consumer_thread(void * args)
 START_TEST (test_queue)
 {
     queue * q = queue_new();
-    queue_push(q, (void*) 1);
-    int i = (int) queue_pop(q);
-    ck_assert_int_eq(i, 1);
+
+    for (short i = 0 ; i < 100 ; i++ ) {
+        queue_push(q, (void*) i);
+    }
+
+    for (short i = 0 ; i < 100 ; i++ ) {
+        short v = (short) queue_pop(q);
+        ck_assert_int_eq(i, v);
+    }
+    queue_free(q);
 }
 END_TEST
 
