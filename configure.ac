@@ -87,7 +87,7 @@ AC_ARG_ENABLE(check,
                              [enable unit testing]),
               , enable_check=unset)
 if test "x$enable_check" != "xunset" ; then
-AM_PATH_CHECK
+# AM_PATH_CHECK
 PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
   ifdef([AM_PATH_CHECK],
   [AM_PATH_CHECK(,[have_check="yes"])],
