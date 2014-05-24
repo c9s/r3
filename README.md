@@ -249,8 +249,12 @@ Install
     sudo apt-get install graphviz-dev graphviz  # if you want graphviz
     ./autogen.sh
     ./configure && make
-    make check # run tests
     sudo make install
+
+#### Run Unit Tests
+
+    ./configure --enable-check
+    make check
 
 #### Enable Graphviz
 
