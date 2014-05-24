@@ -25,10 +25,10 @@ typedef struct {
 } queue;
 
 // create and return the queue
-queue * queue_create(void);
+queue * queue_new(void);
 
 // destory the queue (free all the memory associate with the que even the data)
-void queue_destroy(queue * que);
+void queue_free(queue * que);
 
 
 // queue_push the data into queue

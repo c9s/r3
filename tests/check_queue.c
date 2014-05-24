@@ -11,6 +11,9 @@
 #include <pthread.h>
 #include <check.h>
 
+#include "r3.h"
+#include "zmalloc.h"
+
 
 #define number_of_threads	6 
 #define number_of_threads_d 5
@@ -32,7 +35,7 @@ void * producer_thread(void * arg)
     int i;
     srand(time(NULL));
     for(i = 0; i < number; i++) {
-        char * message = malloc(16);
+        char * message = zmalloc(16);
         snprintf(message, 15, "rand: %d", rand());
         queue_push(q, (void *)message);
     }
@@ -44,18 +47,17 @@ void * producer_thread(void * arg)
 void * consumer_thread(void * args)
 {
     queue * q = (queue *) args;
-
     void * data;
     while((data = queue_pop(q)) != NULL) {
         char * string = (char *)data;
-        free(data);
+        zfree(data);
     }
     return NULL;
 }
 
 START_TEST (test_queue)
 {
-    queue * q = queue_create();
+    queue * q = queue_new();
     queue_push(q, (void*) 1);
     int i = (int) queue_pop(q);
     ck_assert_int_eq(i, 1);
@@ -64,7 +66,7 @@ END_TEST
 
 START_TEST (test_queue_threads)
 {
-    queue * q = queue_create();
+    queue * q = queue_new();
     pthread_t threads[number_of_threads];
     pthread_t thread_d[number_of_threads_d];
     
@@ -88,7 +90,7 @@ START_TEST (test_queue_threads)
     for(i = 0; i < number_of_threads_d; i++) {
         pthread_join(*(thread_d+i), NULL);   
     }
-    queue_destroy(q);
+    queue_free(q);
 }
 END_TEST
 

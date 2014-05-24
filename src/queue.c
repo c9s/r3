@@ -4,26 +4,32 @@
  *
  * Distributed under terms of the MIT license.
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
 #include "r3_queue.h"
+#include "zmalloc.h"
+
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
- * create and return a new queue
+ * Create and return a new queue
  **/
-queue * queue_create()
+queue * queue_new()
 {
-   queue * new_queue = malloc(sizeof(queue));
-   if(new_queue == NULL) {
+   queue * q = zmalloc(sizeof(queue));
+   if(q == NULL) {
        fprintf(stderr, "Malloc failed creating the que\n");
        return NULL;
    }
-   new_queue->first = NULL;
-   new_queue->last = NULL;
-   return new_queue;
+   q->first = NULL;
+   q->last = NULL;
+   return q;
 }
 
-void queue_destroy(queue * que)
+void queue_free(queue * que)
 {
     if(que == NULL) {
         return;
@@ -32,26 +38,26 @@ void queue_destroy(queue * que)
     pthread_mutex_lock(&mutex);
     if(que->first == NULL) {
         // ("que->first == NULL .... \n");
-        free(que);
+        zfree(que);
         pthread_mutex_unlock(&mutex);
         return;
     }
 
     // ("que is there lets try to free it...\n");
 
-    queue_node * _node = que->first;
+    queue_node * qn = que->first;
 
-    while(_node != NULL) {
+    while(qn != NULL) {
         // freeing the data coz it's on the heap and no one to free it
         // except for this one
-        // ("freeing : %s\n", (char *)_node->data);
-        free(_node->data);
-        queue_node *tmp = _node->next;
-        free(_node);
-        _node = tmp;
+        // ("freeing : %s\n", (char *)qn->data);
+        zfree(qn->data);
+        queue_node *tmp = qn->next;
+        zfree(qn);
+        qn = tmp;
     }
 
-    free(que);
+    zfree(que);
 
     pthread_mutex_unlock(&mutex);
 }
@@ -62,8 +68,8 @@ void queue_destroy(queue * que)
  */
 int queue_push(queue * que, void * data)
 {
-    queue_node * new_node = malloc(sizeof(queue_node));
-    if(new_node == NULL) {
+    queue_node * new_node = zmalloc(sizeof(queue_node));
+    if (new_node == NULL) {
         fprintf(stderr, "Malloc failed creating a queue_node\n");
         return -1;
     }
@@ -81,7 +87,6 @@ int queue_push(queue * que, void * data)
         que->last = new_node;
     }
     pthread_mutex_unlock(&mutex);
-
     return 0;
 }
 
@@ -102,20 +107,22 @@ void * queue_pop(queue * que)
     }
 
     void * data;
-    queue_node * _node = que->first;
+    queue_node * qn = que->first;
     if (que->first == que->last) {
         que->first = NULL;
         que->last = NULL;
     } else {
-        que->first = _node->next;
+        que->first = qn->next;
     }
 
-    data = _node->data;
+    data = qn->data;
 
-    // print("Freeing _node@ %p", _node);
-    free(_node);
+    // print("Freeing qn@ %p", qn);
+    zfree(qn);
     pthread_mutex_unlock(&mutex);
     // print("Exiting queue_pop\n");
     return data;
 }
+
+
 
