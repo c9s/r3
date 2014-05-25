@@ -15,6 +15,7 @@
 
 #include "r3_define.h"
 #include "str_array.h"
+#include "sds.h"
 
 
 #define node_edge_pattern(node,i) node->edges[i]->pattern
@@ -77,7 +78,7 @@ typedef struct {
 
     void * data; // route ptr
 
-    char * host; // the request host 
+    char * host; // the request host
     int    host_len;
 
     char * remote_addr;
@@ -128,6 +129,8 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
 node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data);
 
 void r3_tree_dump(node * n, int level);
+
+sds r3_tree_dump_str(node *n, int level, sds output);
 
 int r3_tree_render_file(node * tree, char * format, char * filename);
 
