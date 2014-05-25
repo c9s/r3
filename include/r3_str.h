@@ -8,6 +8,7 @@
 #define STR_H
 
 #include "r3.h"
+#include "sds.h"
 #include "config.h"
 
 int slug_count(char * p, int len);
@@ -27,6 +28,8 @@ char * ltrim_slash(char* str);
 void str_repeat(char *s, char *c, int len);
 
 void print_indent(int level);
+
+sds concat_indent(sds s, int level);
 
 #ifndef HAVE_STRDUP
 char *strdup(const char *s);

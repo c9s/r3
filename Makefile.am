@@ -10,6 +10,7 @@ r3_include_HEADERS = \
 	include/r3_str.h \
 	include/str_array.h \
 	include/zmalloc.h \
+	include/sds.h \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig

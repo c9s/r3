@@ -219,6 +219,15 @@ void print_indent(int level) {
     }
 }
 
+sds concat_indent(sds s, int level) {
+    int len = level * 2;
+    while(len--) {
+        s = sdscatprintf(s, " ");
+    }
+
+    return s;
+}
+
 #ifndef HAVE_STRDUP
 char *zstrdup(const char *s) {
     char *out;

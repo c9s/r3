@@ -63,6 +63,10 @@ r3_tree_compile(n);
 // dump the compiled tree
 r3_tree_dump(n, 0);
 
+// dump the compiled tree to a string
+sds tree_dump = sdsempty();
+tree_dump = r3_tree_dump_str(n, 0, tree_dump);
+
 // match a route
 node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar"), NULL);
 if (matched_node) {

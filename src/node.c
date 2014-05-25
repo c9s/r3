@@ -11,6 +11,7 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "str_array.h"
+#include "sds.h"
 #include "zmalloc.h"
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
@@ -647,6 +648,39 @@ void r3_tree_dump(node * n, int level) {
             r3_tree_dump( e->child, level + 1);
         }
         printf("\n");
+    }
+}
+
+sds r3_tree_dump_str(node *n, int level, sds output) {
+    output = concat_indent(output, level);
+
+    output = sdscatprintf(output, "(o)");
+
+    if ( n->combined_pattern ) {
+        output = sdscatprintf(output, " regexp:%s", n->combined_pattern);
+    }
+
+    output = sdscatprintf(output, " endpoint:%d", n->endpoint);
+
+    if (n->data) {
+        output = sdscatprintf(output, " data:%p", n->data);
+    }
+    output = sdscatprintf(output, "\n");
+
+    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+        edge * e = n->edges[i];
+        print_indent(level + 1);
+        output = sdscatprintf(output, "|-\"%s\"", e->pattern);
+
+        if (e->opcode ) {
+            output = sdscatprintf(output, " opcode:%d", e->opcode);
+        }
+
+        if ( e->child ) {
+            output = sdscatprintf(output, "\n");
+            r3_tree_dump_str( e->child, level + 1, output);
+        }
+        output = sdscatprintf(output, "\n");
     }
 }
 
