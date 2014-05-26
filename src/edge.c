@@ -25,7 +25,7 @@
 
 edge * r3_edge_create(const char * pattern, int pattern_len, node * child) {
     edge * e = (edge*) zmalloc( sizeof(edge) );
-    e->pattern = pattern;
+    e->pattern = (char*) pattern;
     e->pattern_len = pattern_len;
     e->opcode = 0;
     e->child = child;
