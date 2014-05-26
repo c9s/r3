@@ -10,7 +10,6 @@
 #include <assert.h>
 #include "r3.h"
 #include "r3_str.h"
-#include "str_array.h"
 #include "zmalloc.h"
 
 int r3_pattern_to_opcode(char * pattern, int len) {

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "str_array.h"
+#include "r3.h"
 #include "r3_str.h"
 #include "zmalloc.h"
 

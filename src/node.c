@@ -10,7 +10,6 @@
 
 #include "r3.h"
 #include "r3_str.h"
-#include "str_array.h"
 #include "zmalloc.h"
 
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm

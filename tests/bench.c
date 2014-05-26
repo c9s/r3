@@ -12,7 +12,6 @@
 
 #include "r3.h"
 #include "r3_str.h"
-#include "str_array.h"
 #include "zmalloc.h"
 #include "bench.h"
 
