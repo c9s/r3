@@ -42,7 +42,7 @@ int r3_pattern_to_opcode(char * pattern, int len) {
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
-int slug_count(char * p, int len) {
+int slug_count(const char * p, int len) {
     int s = 0;
     int lev = 0;
     while( len-- ) {

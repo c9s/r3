@@ -10,7 +10,7 @@
 #include "r3.h"
 #include "config.h"
 
-int slug_count(char * p, int len);
+int slug_count(const char * p, int len);
 
 char * slug_compile(char * str, int len);
 
