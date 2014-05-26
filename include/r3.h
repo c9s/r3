@@ -24,7 +24,7 @@ typedef struct _str_array {
 
 str_array * str_array_create(int cap);
 
-bool str_array_is_full(str_array * l);
+bool str_array_is_full(const str_array * l);
 
 bool str_array_resize(str_array *l, int new_cap);
 
@@ -32,7 +32,7 @@ bool str_array_append(str_array * list, char * token);
 
 void str_array_free(str_array *l);
 
-void str_array_dump(str_array *l);
+void str_array_dump(const str_array *l);
 
 str_array * split_route_pattern(char *pattern, int pattern_len);
 
@@ -136,7 +136,7 @@ edge * r3_node_connectl(node * n, char * pat, int len, int strdup, node *child);
 
 #define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
 
-edge * r3_node_find_edge(node * n, char * pat);
+edge * r3_node_find_edge(const node * n, char * pat);
 
 void r3_node_append_edge(node *n, edge *child);
 
@@ -151,7 +151,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
  */
 node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data);
 
-void r3_tree_dump(node * n, int level);
+void r3_tree_dump(const node * n, int level);
 
 int r3_tree_render_file(node * tree, char * format, char * filename);
 
@@ -171,9 +171,9 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 // node * r3_tree_match_entry(node * n, match_entry * entry);
 #define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path, entry->path_len, entry)
 
-bool r3_node_has_slug_edges(node *n);
+bool r3_node_has_slug_edges(const node *n);
 
-edge * r3_edge_create(char * pattern, int pattern_len, node * child);
+edge * r3_edge_create(const char * pattern, int pattern_len, node * child);
 
 node * r3_edge_branch(edge *e, int dl);
 
@@ -188,9 +188,9 @@ match_entry * match_entry_createl(char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
-route * r3_route_create(char * path);
+route * r3_route_create(const char * path);
 
-route * r3_route_createl(char * path, int path_len);
+route * r3_route_createl(const char * path, int path_len);
 
 int r3_route_cmp(route *r1, match_entry *r2);
 

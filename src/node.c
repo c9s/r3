@@ -109,7 +109,7 @@ void r3_node_append_edge(node *n, edge *e) {
     n->edges[ n->edge_len++ ] = e;
 }
 
-edge * r3_node_find_edge(node * n, char * pat) {
+edge * r3_node_find_edge(const node * n, char * pat) {
     edge * e;
     for (int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
@@ -420,7 +420,7 @@ node * r3_node_create() {
 }
 
 
-route * r3_route_create(char * path) {
+route * r3_route_create(const char * path) {
     return r3_route_createl(path, strlen(path));
 }
 
@@ -428,9 +428,9 @@ void r3_route_free(route * route) {
     zfree(route);
 }
 
-route * r3_route_createl(char * path, int path_len) {
+route * r3_route_createl(const char * path, int path_len) {
     route * info = zmalloc(sizeof(route));
-    info->path = path;
+    info->path = (char*) path;
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
 
@@ -602,7 +602,7 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
     return n;
 }
 
-bool r3_node_has_slug_edges(node *n) {
+bool r3_node_has_slug_edges(const node *n) {
     bool found = FALSE;
     edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
@@ -616,7 +616,7 @@ bool r3_node_has_slug_edges(node *n) {
 
 
 
-void r3_tree_dump(node * n, int level) {
+void r3_tree_dump(const node * n, int level) {
     print_indent(level);
 
     printf("(o)");

@@ -22,17 +22,18 @@ str_array * str_array_create(int cap) {
 
 void str_array_free(str_array *l) {
     for ( int i = 0; i < l->len ; i++ ) {
-        char * t = l->tokens[ i ];
-        zfree(t);
+        if (l->tokens[ i ]) {
+            zfree(l->tokens[i]);
+        }
     }
     zfree(l);
 }
 
-bool str_array_is_full(str_array * l) {
+bool str_array_is_full(const str_array * l) {
     return l->len >= l->cap;
 }
 
-bool str_array_resize(str_array *l, int new_cap) {
+bool str_array_resize(str_array * l, int new_cap) {
     l->tokens = zrealloc(l->tokens, sizeof(char**) * new_cap);
     l->cap = new_cap;
     return l->tokens != NULL;
@@ -49,7 +50,7 @@ bool str_array_append(str_array * l, char * token) {
     return TRUE;
 }
 
-void str_array_dump(str_array *l) {
+void str_array_dump(const str_array *l) {
     printf("[");
     for ( int i = 0; i < l->len ; i++ ) {
         printf("\"%s\"", l->tokens[i] );

@@ -23,7 +23,7 @@
 #include "r3_str.h"
 #include "zmalloc.h"
 
-edge * r3_edge_create(char * pattern, int pattern_len, node * child) {
+edge * r3_edge_create(const char * pattern, int pattern_len, node * child) {
     edge * e = (edge*) zmalloc( sizeof(edge) );
     e->pattern = pattern;
     e->pattern_len = pattern_len;
