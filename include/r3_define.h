@@ -7,6 +7,7 @@
 
 #ifndef DEFINE_H
 #define DEFINE_H
+#include <stdbool.h>
 
 #ifndef bool
 typedef unsigned char bool;
