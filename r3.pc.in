@@ -7,5 +7,5 @@ Name: r3
 Description: High-performance URL router library
 Version: @PACKAGE_VERSION@
 Requires:
-Libs: -L${libdir} -lr3
+Libs: -L${libdir} -lr3 -lpcre
 CFlags: -I${includedir}
