@@ -12,6 +12,7 @@
 #include <string.h>
 #include <assert.h>
 #include <pcre.h>
+#include <stdbool.h>
 
 #include "r3_define.h"
 
