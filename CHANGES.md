@@ -1,3 +1,6 @@
+# CHANGELOG
+
+by Yo-An Lin <yoanlin93@gmail.com>
 
 ### 1.2.1  - Tue May 27 21:16:13 2014
 
