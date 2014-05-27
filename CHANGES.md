@@ -1,3 +1,10 @@
+
+### 1.2.1  - Tue May 27 21:16:13 2014
+
+- Bug fixes.
+- Function declaration improvement.
+- pkg-config flags update (r3.pc)
+
 ### 1.2    - Fri May 23 23:30:11 2014
 
 - Added simple pattern optimization.
