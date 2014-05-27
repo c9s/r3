@@ -157,14 +157,14 @@ int r3_tree_render_file(node * tree, char * format, char * filename);
 
 int r3_tree_render_dot(node * tree);
 
-edge * r3_node_find_edge_str(const node * n, char * str, int str_len);
+edge * r3_node_find_edge_str(const node * n, const char * str, int str_len);
 
 
 void r3_tree_compile(node *n);
 
 void r3_tree_compile_patterns(node * n);
 
-node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * entry);
+node * r3_tree_matchl(const node * n, const char * path, int path_len, match_entry * entry);
 
 #define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
 

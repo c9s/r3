@@ -251,7 +251,7 @@ void match_entry_free(match_entry * entry) {
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * entry) {
+node * r3_tree_matchl(const node * n, const char * path, int path_len, match_entry * entry) {
     info("try matching: %s\n", path);
 
     edge *e;
@@ -260,9 +260,9 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 
     if (n->compare_type == NODE_COMPARE_OPCODE) {
         char *pp;
-        char *pp_end = path + path_len;
+        const char *pp_end = path + path_len;
         for (i = 0; i < n->edge_len ; i++ ) {
-            pp = path;
+            pp = (char*) path;
             e = n->edges[i];
             switch(e->opcode) {
                 case OP_EXPECT_NOSLASH:
@@ -337,7 +337,7 @@ node * r3_tree_matchl(const node * n, char * path, int path_len, match_entry * e
 
         for (i = 1; i < rc; i++)
         {
-            substring_start = path + ov[2*i];
+            substring_start = ((char*) path) + ov[2*i];
             substring_length = ov[2*i+1] - ov[2*i];
             // info("%2d: %.*s\n", i, substring_length, substring_start);
 
@@ -388,7 +388,7 @@ route * r3_tree_match_route(const node *tree, match_entry * entry) {
     return NULL;
 }
 
-inline edge * r3_node_find_edge_str(const node * n, char * str, int str_len) {
+inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_len) {
     unsigned short i = 0;
     char firstbyte = *str;
     for (; i < n->edge_len ; i++ ) {
