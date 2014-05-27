@@ -169,7 +169,7 @@ char * slug_compile(char * str, int len)
     }
 
     char * out = NULL;
-    if ((out = zcalloc(200)) == NULL) {
+    if ((out = zcalloc(sizeof(char) * 200)) == NULL) {
         return (NULL);
     }
 
