@@ -153,7 +153,7 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
 
 void r3_tree_dump(const node * n, int level);
 
-int r3_tree_render_file(node * tree, char * format, char * filename);
+int r3_tree_render_file(const node * tree, const char * format, char * filename);
 
 int r3_tree_render_dot(node * tree);
 
