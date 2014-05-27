@@ -54,6 +54,7 @@ typedef struct _route route;
 
 struct _node {
     edge  ** edges;
+    // edge  ** edge_table;
 
     // almost less than 255
     unsigned char    edge_len;

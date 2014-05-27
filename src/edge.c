@@ -49,26 +49,35 @@ node * r3_edge_branch(edge *e, int dl) {
     char * s1 = e->pattern + dl;
     int s1_len = 0;
 
-    edge **tmp_edges = e->child->edges;
-    int   tmp_edge_len = e->child->edge_len;
-
     // the suffix edge of the leaf
     new_child = r3_tree_create(3);
     s1_len = e->pattern_len - dl;
     e1 = r3_edge_create(zstrndup(s1, s1_len), s1_len, new_child);
 
     // Migrate the child edges to the new edge we just created.
-    for ( int i = 0 ; i < tmp_edge_len ; i++ ) {
-        r3_node_append_edge(new_child, tmp_edges[i]);
+    for ( int i = 0 ; i < e->child->edge_len ; i++ ) {
+        r3_node_append_edge(new_child, e->child->edges[i]);
         e->child->edges[i] = NULL;
     }
     e->child->edge_len = 0;
+
+
+    // Migrate the child routes
+    for ( int i = 0 ; i < e->child->route_len ; i++ ) {
+        r3_node_append_route(new_child, e->child->routes[i]);
+        e->child->routes[i] = NULL;
+    }
+    e->child->route_len = 0;
+
+    // Migrate the endpoint
     new_child->endpoint = e->child->endpoint;
     e->child->endpoint = 0; // reset endpoint
 
-    r3_node_append_edge(e->child, e1);
+    // Migrate the data
     new_child->data = e->child->data; // copy data pointer
     e->child->data = NULL;
+
+    r3_node_append_edge(e->child, e1);
 
     // truncate the original edge pattern
     char *oldpattern = e->pattern;
