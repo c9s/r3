@@ -64,10 +64,9 @@ r3_tree_compile(n);
 r3_tree_dump(n, 0);
 
 // match a route
-node *matched_node = r3_tree_match(n, "/foo/bar", strlen("/foo/bar"), NULL);
+node *matched_node = r3_tree_matchl(n, "/foo/bar", strlen("/foo/bar"), NULL);
 if (matched_node) {
-    matched_node->endpoint; // make sure there is a route end at here.
-    int ret = *( (*int) matched_node->route_ptr );
+    int ret = *( (*int) matched_node->data );
 }
 
 // release the tree
