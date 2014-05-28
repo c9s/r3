@@ -223,7 +223,7 @@ void r3_tree_compile_patterns(node * n) {
 }
 
 
-match_entry * match_entry_createl(char * path, int path_len) {
+match_entry * match_entry_createl(const char * path, int path_len) {
     match_entry * entry = zmalloc(sizeof(match_entry));
     if(!entry)
         return NULL;
@@ -251,7 +251,7 @@ void match_entry_free(match_entry * entry) {
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-node * r3_tree_matchl(const node * n, const char * path, int path_len, match_entry * entry) {
+node * r3_tree_matchl(const node * n, const char * path, int path_len, const match_entry * entry) {
     info("try matching: %s\n", path);
 
     edge *e;
@@ -374,7 +374,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 
 
 
-route * r3_tree_match_route(const node *tree, match_entry * entry) {
+route * r3_tree_match_route(const node *tree, const match_entry * entry) {
     node *n;
     n = r3_tree_match_entry(tree, entry);
     if (n->routes && n->route_len > 0) {
@@ -655,7 +655,7 @@ void r3_tree_dump(const node * n, int level) {
  *
  * -1 == different route
  */
-int r3_route_cmp(route *r1, match_entry *r2) {
+int r3_route_cmp(route *r1, const match_entry *r2) {
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;

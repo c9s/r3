@@ -96,7 +96,7 @@ struct _edge {
 
 typedef struct {
     str_array * vars;
-    char * path; // current path to dispatch
+    const char * path; // current path to dispatch
     int    path_len; // the length of the current path
     int    request_method;  // current request method
 
@@ -165,7 +165,7 @@ void r3_tree_compile(node *n);
 
 void r3_tree_compile_patterns(node * n);
 
-node * r3_tree_matchl(const node * n, const char * path, int path_len, match_entry * entry);
+node * r3_tree_matchl(const node * n, const char * path, int path_len, const match_entry * entry);
 
 #define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
 
@@ -182,7 +182,7 @@ void r3_edge_free(edge * edge);
 
 
 
-match_entry * match_entry_createl(char * path, int path_len);
+match_entry * match_entry_createl(const char * path, int path_len);
 
 #define match_entry_create(path) match_entry_createl(path,strlen(path))
 
@@ -193,13 +193,13 @@ route * r3_route_create(const char * path);
 
 route * r3_route_createl(const char * path, int path_len);
 
-int r3_route_cmp(route *r1, match_entry *r2);
+int r3_route_cmp(route *r1, const match_entry *r2);
 
 void r3_node_append_route(node * n, route * route);
 
 void r3_route_free(route * route);
 
-route * r3_tree_match_route(const node *n, match_entry * entry);
+route * r3_tree_match_route(const node *n, const match_entry * entry);
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
