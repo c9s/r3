@@ -148,7 +148,7 @@ route * r3_route_create(const char * path);
 
 route * r3_route_createl(const char * path, int path_len);
 
-int r3_route_cmp(route *r1, const match_entry *r2);
+int r3_route_cmp(const route *r1, const match_entry *r2);
 
 void r3_node_append_route(node * n, route * route);
 
@@ -166,7 +166,7 @@ route * r3_tree_match_route(const node *n, const match_entry * entry);
 
 
 
-int r3_pattern_to_opcode(char * pattern, int pattern_len);
+int r3_pattern_to_opcode(const char * pattern, int pattern_len);
 
 enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 

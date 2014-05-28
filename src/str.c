@@ -12,7 +12,7 @@
 #include "r3_str.h"
 #include "zmalloc.h"
 
-int r3_pattern_to_opcode(char * pattern, int len) {
+int r3_pattern_to_opcode(const char * pattern, int len) {
     if ( strncmp(pattern, "\\w+",len) == 0 ) {
         return OP_EXPECT_MORE_WORDS;
     }

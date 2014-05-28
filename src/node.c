@@ -640,7 +640,7 @@ void r3_tree_dump(const node * n, int level) {
  *
  * -1 == different route
  */
-int r3_route_cmp(route *r1, const match_entry *r2) {
+int r3_route_cmp(const route *r1, const match_entry *r2) {
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;
