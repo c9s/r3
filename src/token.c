@@ -10,6 +10,7 @@
 #include <assert.h>
 #include "r3.h"
 #include "r3_str.h"
+#include "str_array.h"
 #include "zmalloc.h"
 
 str_array * str_array_create(int cap) {

@@ -8,7 +8,23 @@
 #ifndef MATCH_ENTRY_H
 #define MATCH_ENTRY_H
 
-#include "r3.h"
+#include "r3_define.h"
+#include "str_array.h"
+
+typedef struct {
+    str_array * vars;
+    const char * path; // current path to dispatch
+    int    path_len; // the length of the current path
+    int    request_method;  // current request method
+
+    void * data; // route ptr
+
+    char * host; // the request host 
+    int    host_len;
+
+    char * remote_addr;
+    int    remote_addr_len;
+} match_entry;
 
 match_entry * match_entry_createl(const char * path, int path_len);
 

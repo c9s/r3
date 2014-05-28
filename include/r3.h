@@ -13,37 +13,9 @@
 #include <assert.h>
 #include <pcre.h>
 #include <stdbool.h>
-
 #include "r3_define.h"
-
-typedef struct _str_array {
-  char **tokens;
-  int    len;
-  int    cap;
-} str_array;
-
-str_array * str_array_create(int cap);
-
-bool str_array_is_full(const str_array * l);
-
-bool str_array_resize(str_array *l, int new_cap);
-
-bool str_array_append(str_array * list, char * token);
-
-void str_array_free(str_array *l);
-
-void str_array_dump(const str_array *l);
-
-str_array * split_route_pattern(char *pattern, int pattern_len);
-
-#define str_array_fetch(t,i)  t->tokens[i]
-#define str_array_len(t)  t->len
-#define str_array_cap(t)  t->cap
-
-
-#define node_edge_pattern(node,i) node->edges[i]->pattern
-#define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
-
+#include "str_array.h"
+#include "match_entry.h"
 
 struct _edge;
 struct _node;
@@ -86,6 +58,9 @@ struct _node {
     void * data;
 };
 
+#define node_edge_pattern(node,i) node->edges[i]->pattern
+#define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
+
 struct _edge {
     char * pattern;
     node * child;
@@ -93,21 +68,6 @@ struct _edge {
     unsigned char  opcode; // 1 byte
     unsigned char  has_slug; // 1 bit
 };
-
-typedef struct {
-    str_array * vars;
-    const char * path; // current path to dispatch
-    int    path_len; // the length of the current path
-    int    request_method;  // current request method
-
-    void * data; // route ptr
-
-    char * host; // the request host 
-    int    host_len;
-
-    char * remote_addr;
-    int    remote_addr_len;
-} match_entry;
 
 struct _route {
     char * path;
