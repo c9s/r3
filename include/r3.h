@@ -133,11 +133,11 @@ void r3_tree_free(node * tree);
 
 void r3_edge_free(edge * edge);
 
-edge * r3_node_connectl(node * n, char * pat, int len, int strdup, node *child);
+edge * r3_node_connectl(node * n, const char * pat, int len, int strdup, node *child);
 
 #define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
 
-edge * r3_node_find_edge(const node * n, char * pat);
+edge * r3_node_find_edge(const node * n, const char * pat);
 
 void r3_node_append_edge(node *n, edge *child);
 

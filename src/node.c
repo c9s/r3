@@ -77,7 +77,7 @@ void r3_tree_free(node * tree) {
     tree = NULL;
 }
 
-edge * r3_node_connectl(node * n, char * pat, int len, int dupl, node *child) {
+edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *child) {
     // find the same sub-pattern, if it does not exist, create one
     edge * e;
 
@@ -109,7 +109,7 @@ void r3_node_append_edge(node *n, edge *e) {
     n->edges[ n->edge_len++ ] = e;
 }
 
-edge * r3_node_find_edge(const node * n, char * pat) {
+edge * r3_node_find_edge(const node * n, const char * pat) {
     edge * e;
     for (int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
