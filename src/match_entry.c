@@ -4,8 +4,16 @@
  *
  * Distributed under terms of the MIT license.
  */
-#include "match_entry.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pcre.h>
+#include <stdbool.h>
+
+#include "r3.h"
 #include "zmalloc.h"
+#include "match_entry.h"
+
 
 match_entry * match_entry_createl(const char * path, int path_len) {
     match_entry * entry = zmalloc(sizeof(match_entry));
