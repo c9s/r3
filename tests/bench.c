@@ -7,6 +7,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <sys/time.h>
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
