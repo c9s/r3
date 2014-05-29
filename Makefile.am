@@ -8,6 +8,8 @@ r3_include_HEADERS = \
 	include/r3_define.h \
 	include/r3_list.h \
 	include/r3_str.h \
+	include/r3_gvc.h \
+	include/str_array.h \
 	include/zmalloc.h \
 	$(NULL)
 
