@@ -480,7 +480,7 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
     /* length of common prefix */
     int prefix_len = 0;
     for( int i = 0 ; i < n->edge_len ; i++ ) {
-        prefix_len = strndiff( path, n->edges[i]->pattern, n->edges[i]->pattern_len);
+        prefix_len = strndiff( (char*) path, n->edges[i]->pattern, n->edges[i]->pattern_len);
 
         // printf("prefix_len: %d   %s vs %s\n", prefix_len, path, n->edges[i]->pattern );
 

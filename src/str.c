@@ -59,11 +59,11 @@ int slug_count(const char * p, int len) {
     return s;
 }
 
-bool contains_slug(char * str) {
+bool contains_slug(const char * str) {
     return strchr(str, '{') != NULL ? TRUE : FALSE;
 }
 
-char * inside_slug(char * needle, int needle_len, char *offset) {
+char * inside_slug(const char * needle, int needle_len, char *offset) {
     char * s1 = offset;
     char * s2 = offset;
 

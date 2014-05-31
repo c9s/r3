@@ -14,13 +14,13 @@ int slug_count(const char * p, int len);
 
 char * slug_compile(char * str, int len);
 
-bool contains_slug(char * str);
+bool contains_slug(const char * str);
 
 char * slug_find_pattern(char *s1, int *len);
 
 char * slug_find_placeholder(char *s1, int *len);
 
-char * inside_slug(char * needle, int needle_len, char *offset);
+char * inside_slug(const char * needle, int needle_len, char *offset);
 
 char * ltrim_slash(char* str);
 
