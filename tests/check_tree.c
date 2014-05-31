@@ -110,7 +110,7 @@ START_TEST (test_pcre_patterns_insert)
     char *errstr = NULL;
     int errno;
     errno = r3_tree_compile(n, &errstr);
-    assert(errno == 0); // no error
+    ck_assert(errno == 0); // no error
 
     // r3_tree_dump(n, 0);
 
