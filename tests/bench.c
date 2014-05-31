@@ -441,7 +441,7 @@ r3_tree_insert_path(n, "/garply/grault/quux",  NULL);
 r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
     MEASURE(tree_compile)
-    r3_tree_compile(n);
+    r3_tree_compile(n, NULL);
     END_MEASURE(tree_compile)
 
     node *m;
@@ -466,7 +466,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
 
     node * tree2 = r3_tree_create(1);
     r3_tree_insert_path(tree2, "/post/{year}/{month}",  NULL);
-    r3_tree_compile(tree2);
+    r3_tree_compile(tree2, NULL);
 
     BENCHMARK(pcre_dispatch)
     r3_tree_matchl(tree2, "/post/2014/12", strlen("/post/2014/12"), NULL);
