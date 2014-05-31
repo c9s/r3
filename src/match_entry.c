@@ -27,6 +27,8 @@ match_entry * match_entry_createl(const char * path, int path_len) {
 }
 
 void match_entry_free(match_entry * entry) {
-    str_array_free(entry->vars);
+    if (entry->vars) {
+        str_array_free(entry->vars);
+    }
     zfree(entry);
 }
