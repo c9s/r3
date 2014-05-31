@@ -58,7 +58,7 @@ r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), &route_dat
 
 // let's compile the tree!
 char *errstr = NULL;
-int errno = r3_tree_compile(n, &errstr);
+int err = r3_tree_compile(n, &errstr);
 
 
 // dump the compiled tree
@@ -110,8 +110,8 @@ int route_data = 3;
 r3_tree_insert_routel(n, METHOD_GET | METHOD_POST, "/blog/post", sizeof("/blog/post") - 1, &route_data );
 
 char *errstr = NULL;
-int errno;
-errno = r3_tree_compile(n, &errstr);
+int err;
+err = r3_tree_compile(n, &errstr);
 
 
 // in your http server handler
