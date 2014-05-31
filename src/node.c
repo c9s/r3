@@ -253,7 +253,7 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-node * r3_tree_matchl(const node * n, const char * path, int path_len, const match_entry * entry) {
+node * r3_tree_matchl(const node * n, const char * path, int path_len, match_entry * entry) {
     info("try matching: %s\n", path);
 
     edge *e;
@@ -376,7 +376,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, const mat
 
 
 
-route * r3_tree_match_route(const node *tree, const match_entry * entry) {
+route * r3_tree_match_route(const node *tree, match_entry * entry) {
     node *n;
     n = r3_tree_match_entry(tree, entry);
     if (n && n->routes && n->route_len > 0) {
