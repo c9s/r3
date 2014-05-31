@@ -429,6 +429,16 @@ route * r3_route_createl(const char * path, int path_len) {
     return info;
 }
 
+
+route * r3_tree_insert_routel(node *tree, int method, char *path, int path_len, void *data) {
+    route *r = r3_route_createl(path, path_len);
+    r->request_method = method; // ALLOW GET OR POST METHOD
+    r3_tree_insert_pathl_(tree, path, path_len, r, data);
+    return r;
+}
+
+
+
 node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data)
 {
     return r3_tree_insert_pathl_(tree, path, path_len, NULL , data);
@@ -446,7 +456,7 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
     /* length of common prefix */
     int prefix_len = 0;
     for( int i = 0 ; i < n->edge_len ; i++ ) {
-        prefix_len = strndiff(path, n->edges[i]->pattern, n->edges[i]->pattern_len);
+        prefix_len = strndiff( path, n->edges[i]->pattern, n->edges[i]->pattern_len);
 
         // printf("prefix_len: %d   %s vs %s\n", prefix_len, path, n->edges[i]->pattern );
 

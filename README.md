@@ -100,22 +100,23 @@ node *matched_node = r3_tree_match_entry(n, entry);
 ### Routing with conditions
 
 ```c
-// create the match entry for capturing dynamic variables.
-match_entry * entry = match_entry_create("/foo/bar");
-entry->request_method = METHOD_GET;
-
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
 n = r3_tree_create(10);
 
 int route_data = 3;
 
-// define the route with conditions
-route *r1 = route_create("/blog/post");
-r1->request_method = METHOD_GET | METHOD_POST; // ALLOW GET OR POST METHOD
-
 // insert the route path into the router tree
-r3_tree_insert_route(n, r1, &route_data );
+r3_tree_insert_routel(n, METHOD_GET | METHOD_POST, "/blog/post", sizeof("/blog/post") - 1, &route_data );
+
 r3_tree_compile(n);
+
+
+// in your http server handler
+
+// create the match entry for capturing dynamic variables.
+match_entry * entry = match_entry_create("/foo/bar");
+entry->request_method = METHOD_GET;
+
 
 route *matched_route = r3_tree_match_route(n, entry);
 matched_route->data; // get the data from matched route

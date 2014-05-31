@@ -338,24 +338,19 @@ START_TEST(test_insert_route)
 {
     int   var1 = 22;
     int   var2 = 33;
-    route *r1 = r3_route_create("/blog/post");
-    route *r2 = r3_route_create("/blog/post");
-    r1->request_method = METHOD_GET;
-    r2->request_method = METHOD_POST;
 
     match_entry * entry = match_entry_create("/blog/post");
     entry->request_method = METHOD_GET;
 
     node * n = r3_tree_create(2);
-    r3_tree_insert_route(n, r1, &var1);
-    r3_tree_insert_route(n, r2, &var2);
+    r3_tree_insert_route(n, METHOD_GET, "/blog/post", &var1);
+    r3_tree_insert_route(n, METHOD_POST, "/blog/post", &var2);
 
     route *c = r3_tree_match_route(n, entry);
     fail_if(c == NULL);
 
+    r3_tree_free(n);
     match_entry_free(entry);
-    r3_route_free(r1);
-    r3_route_free(r2);
 }
 END_TEST
 
