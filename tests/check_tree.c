@@ -55,11 +55,11 @@ static node * create_simple_str_tree() {
 
 START_TEST (test_compile)
 {
-    str_array *t;
-    node * n = create_simple_str_tree();
-
+    node *n;
     node *m;
-    edge *e ;
+    edge *e;
+
+    n = create_simple_str_tree();
 
 #ifdef DEBUG
     r3_tree_dump(n, 0);
@@ -134,7 +134,10 @@ START_TEST (test_pcre_patterns_insert_2)
     r3_tree_insert_path(n, "/zoo", NULL);
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
-    r3_tree_compile(n, NULL);
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
     r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_match(n, "/post/11/22", NULL);
@@ -159,7 +162,10 @@ START_TEST (test_pcre_patterns_insert_3)
 
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
-    r3_tree_compile(n, NULL);
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
     r3_tree_dump(n, 0);
     node *matched;
 
@@ -205,7 +211,9 @@ START_TEST (testr3_tree_insert_pathl)
     r3_tree_insert_path(n, "/post/{handle}", NULL);
 
     r3_tree_insert_path(n, "/post/{handle}-{id}", NULL);
-    r3_tree_compile(n, NULL);
+
+    char * errstr = NULL;
+    r3_tree_compile(n, &errstr);
 
 #ifdef DEBUG
     r3_tree_dump(n, 0);
