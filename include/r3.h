@@ -90,8 +90,6 @@ node * r3_node_create();
 
 void r3_tree_free(node * tree);
 
-void r3_edge_free(edge * edge);
-
 edge * r3_node_connectl(node * n, const char * pat, int len, int strdup, node *child);
 
 #define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
