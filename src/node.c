@@ -362,7 +362,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, const mat
 route * r3_tree_match_route(const node *tree, const match_entry * entry) {
     node *n;
     n = r3_tree_match_entry(tree, entry);
-    if (n->routes && n->route_len > 0) {
+    if (n && n->routes && n->route_len > 0) {
         int i;
         for (i = 0; i < n->route_len ; i++ ) {
             if ( r3_route_cmp(n->routes[i], entry) == 0 ) {
