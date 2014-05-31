@@ -39,6 +39,8 @@ static int strdiff(char * d1, char * d2) {
  */
 node * r3_tree_create(int cap) {
     node * n = (node*) zmalloc( sizeof(node) );
+    if (!n)
+        return NULL;
 
     n->edges = (edge**) zmalloc( sizeof(edge*) * cap );
     n->edge_len = 0;
@@ -390,6 +392,9 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
 
 node * r3_node_create() {
     node * n = (node*) zmalloc( sizeof(node) );
+    if (!n) {
+        return NULL;
+    }
     n->edges = NULL;
     n->edge_len = 0;
     n->edge_cap = 0;
@@ -415,6 +420,8 @@ void r3_route_free(route * route) {
 
 route * r3_route_createl(const char * path, int path_len) {
     route * info = zmalloc(sizeof(route));
+    if (!info)
+        return NULL;
     info->path = (char*) path;
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
