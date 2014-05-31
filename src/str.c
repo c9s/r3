@@ -78,7 +78,7 @@ char * inside_slug(const char * needle, int needle_len, char *offset) {
         s1--;
     }
 
-    char * end = needle + needle_len;
+    const char * end = needle + needle_len;
     while( (s2 + 1) < end ) {
         if ( *s2 == '}' ) {
             found_s2 = 1;
@@ -92,7 +92,7 @@ char * inside_slug(const char * needle, int needle_len, char *offset) {
     return NULL;
 }
 
-char * slug_find_placeholder(char *s1, int *len) {
+char * slug_find_placeholder(const char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 0;
@@ -124,7 +124,7 @@ char * slug_find_placeholder(char *s1, int *len) {
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * slug_find_pattern(char *s1, int *len) {
+char * slug_find_pattern(const char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 1;
@@ -153,7 +153,7 @@ char * slug_find_pattern(char *s1, int *len) {
 /**
  * @param char * sep separator
  */
-char * slug_compile(char * str, int len)
+char * slug_compile(const char * str, int len)
 {
     char *s1 = NULL, *o = NULL;
     char *pat = NULL;

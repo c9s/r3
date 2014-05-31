@@ -12,13 +12,13 @@
 
 int slug_count(const char * p, int len);
 
-char * slug_compile(char * str, int len);
+char * slug_compile(const char * str, int len);
 
 bool contains_slug(const char * str);
 
-char * slug_find_pattern(char *s1, int *len);
+char * slug_find_pattern(const char *s1, int *len);
 
-char * slug_find_placeholder(char *s1, int *len);
+char * slug_find_placeholder(const char *s1, int *len);
 
 char * inside_slug(const char * needle, int needle_len, char *offset);
 
