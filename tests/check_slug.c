@@ -74,7 +74,6 @@ END_TEST
 
 START_TEST (test_inside_slug)
 {
-    int slug_len = 0;
     char * pattern = "/user/{name:\\s+}/to/{id}";
     char * offset = strchr(pattern, '{') + 2;
     ck_assert( (int)inside_slug(pattern, strlen(pattern), offset) );
@@ -85,7 +84,6 @@ END_TEST
 
 START_TEST (test_slug_count)
 {
-    int slug_len = 0;
     char * pattern = "/user/{name:\\s+}/to/{id}";
     ck_assert_int_eq( slug_count(pattern, strlen(pattern) ), 2 );
 

@@ -205,7 +205,7 @@ char * ltrim_slash(char* str)
     return zstrdup(p);
 }
 
-void str_repeat(char *s, char *c, int len) {
+void str_repeat(char *s, const char *c, int len) {
     while(len--) {
         s[len - 1] = *c;
     }
