@@ -15,6 +15,8 @@
 
 str_array * str_array_create(int cap) {
     str_array * list = (str_array*) zmalloc( sizeof(str_array) );
+    if (!list)
+        return NULL;
     list->len = 0;
     list->cap = cap;
     list->tokens = (char**) zmalloc( sizeof(char*) * cap);
