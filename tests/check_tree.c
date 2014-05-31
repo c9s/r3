@@ -107,7 +107,10 @@ START_TEST (test_pcre_patterns_insert)
 
 
     char *errstr = NULL;
-    r3_tree_compile(n, &errstr);
+    int errno;
+    errno = r3_tree_compile(n, &errstr);
+    assert(errno == 0); // no error
+
     // r3_tree_dump(n, 0);
 
     node *matched;
