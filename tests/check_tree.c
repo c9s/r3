@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <check.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "r3.h"
 #include "r3_str.h"
 #include "zmalloc.h"
@@ -47,7 +48,7 @@ static node * create_simple_str_tree() {
     r3_tree_insert_path(n, "/zoo", NULL);
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
-    r3_tree_compile(n);
+    r3_tree_compile(n, NULL);
     return n;
 }
 
@@ -55,11 +56,11 @@ static node * create_simple_str_tree() {
 
 START_TEST (test_compile)
 {
-    str_array *t;
-    node * n = create_simple_str_tree();
-
+    node *n;
     node *m;
-    edge *e ;
+    edge *e;
+
+    n = create_simple_str_tree();
 
 #ifdef DEBUG
     r3_tree_dump(n, 0);
@@ -67,8 +68,8 @@ START_TEST (test_compile)
 
     r3_tree_insert_path(n, "/foo/{id}", NULL);
     r3_tree_insert_path(n, "/{id}", NULL);
-    r3_tree_compile(n);
-    r3_tree_compile(n); // test double compile
+    r3_tree_compile(n, NULL);
+    r3_tree_compile(n, NULL); // test double compile
     r3_tree_dump(n, 0);
     match_entry * entry;
 
@@ -104,7 +105,13 @@ START_TEST (test_pcre_patterns_insert)
 
     // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d+}-{id:\\d+}", NULL);
-    r3_tree_compile(n);
+
+
+    char *errstr = NULL;
+    int errno;
+    errno = r3_tree_compile(n, &errstr);
+    ck_assert(errno == 0); // no error
+
     // r3_tree_dump(n, 0);
 
     node *matched;
@@ -131,7 +138,10 @@ START_TEST (test_pcre_patterns_insert_2)
     r3_tree_insert_path(n, "/zoo", NULL);
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
-    r3_tree_compile(n);
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
     r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_match(n, "/post/11/22", NULL);
@@ -156,7 +166,10 @@ START_TEST (test_pcre_patterns_insert_3)
 
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
-    r3_tree_compile(n);
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
     r3_tree_dump(n, 0);
     node *matched;
 
@@ -202,7 +215,9 @@ START_TEST (testr3_tree_insert_pathl)
     r3_tree_insert_path(n, "/post/{handle}", NULL);
 
     r3_tree_insert_path(n, "/post/{handle}-{id}", NULL);
-    r3_tree_compile(n);
+
+    char * errstr = NULL;
+    r3_tree_compile(n, &errstr);
 
 #ifdef DEBUG
     r3_tree_dump(n, 0);
@@ -270,7 +285,7 @@ START_TEST(test_pcre_pattern_simple)
     node * n = r3_tree_create(10);
     r3_tree_insert_path(n, "/user/{id:\\d+}", NULL);
     r3_tree_insert_path(n, "/user", NULL);
-    r3_tree_compile(n);
+    r3_tree_compile(n, NULL);
     // r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
@@ -302,7 +317,7 @@ START_TEST(test_pcre_pattern_more)
     r3_tree_insert_path(n, "/user2/{id:\\d+}", &var2);
     r3_tree_insert_path(n, "/user3/{id:\\d{3}}", &var3);
     r3_tree_insert_path(n, "/user", &var0);
-    r3_tree_compile(n);
+    r3_tree_compile(n, NULL);
     r3_tree_dump(n, 0);
     node *matched;
 

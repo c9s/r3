@@ -124,19 +124,25 @@ edge * r3_node_find_edge(const node * n, const char * pat) {
     return NULL;
 }
 
-void r3_tree_compile(node *n)
+int r3_tree_compile(node *n, char **errstr)
 {
+    int ret = 0;
     bool use_slug = r3_node_has_slug_edges(n);
     if ( use_slug ) {
-        r3_tree_compile_patterns(n);
+        if ( (ret = r3_tree_compile_patterns(n, errstr)) ) {
+            return ret;
+        }
     } else {
         // use normal text matching...
         n->combined_pattern = NULL;
     }
 
     for (int i = 0 ; i < n->edge_len ; i++ ) {
-        r3_tree_compile(n->edges[i]->child);
+        if ( (ret = r3_tree_compile(n->edges[i]->child, errstr)) ) {
+            return ret; // stop here if error occurs
+        }
     }
+    return 0;
 }
 
 
@@ -144,13 +150,15 @@ void r3_tree_compile(node *n)
  * This function combines ['/foo', '/bar', '/{slug}'] into (/foo)|(/bar)|/([^/]+)}
  *
  */
-void r3_tree_compile_patterns(node * n) {
+int r3_tree_compile_patterns(node * n, char **errstr) {
     char * cpat;
     char * p;
 
-    cpat = zcalloc(sizeof(char) * 128);
-    if (cpat==NULL)
-        return;
+    cpat = zcalloc(sizeof(char) * 220); // XXX
+    if (!cpat) {
+        asprintf(errstr, "Can not allocate memory");
+        return -1;
+    }
 
     p = cpat;
 
@@ -195,8 +203,8 @@ void r3_tree_compile_patterns(node * n) {
 
     n->combined_pattern = cpat;
 
-    const char *error;
-    int erroffset;
+    const char *pcre_error;
+    int pcre_erroffset;
     unsigned int option_bits = 0;
 
     n->ov_cnt = (1 + n->edge_len) * 3;
@@ -207,23 +215,28 @@ void r3_tree_compile_patterns(node * n) {
     n->pcre_pattern = pcre_compile(
             n->combined_pattern,              /* the pattern */
             option_bits,                                /* default options */
-            &error,               /* for error message */
-            &erroffset,           /* for error offset */
+            &pcre_error,               /* for error message */
+            &pcre_erroffset,           /* for error offset */
             NULL);                /* use default character tables */
     if (n->pcre_pattern == NULL) {
-        printf("PCRE compilation failed at offset %d: %s, pattern: %s\n", erroffset, error, n->combined_pattern);
-        return;
+        if (errstr) {
+            asprintf(errstr, "PCRE compilation failed at offset %d: %s, pattern: %s\n", pcre_erroffset, pcre_error, n->combined_pattern);
+        }
+        return -1;
     }
 #ifdef PCRE_STUDY_JIT_COMPILE
     if (n->pcre_extra) {
         pcre_free_study(n->pcre_extra);
     }
-    n->pcre_extra = pcre_study(n->pcre_pattern, 0, &error);
+    n->pcre_extra = pcre_study(n->pcre_pattern, 0, &pcre_error);
     if (n->pcre_extra == NULL) {
-        printf("PCRE study failed at offset %s\n", error);
-        return;
+        if (errstr) {
+            asprintf(errstr, "PCRE study failed at offset %s\n", pcre_error);
+        }
+        return -1;
     }
 #endif
+    return 0;
 }
 
 

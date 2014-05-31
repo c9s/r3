@@ -122,9 +122,9 @@ int r3_tree_render_dot(node * tree);
 edge * r3_node_find_edge_str(const node * n, const char * str, int str_len);
 
 
-void r3_tree_compile(node *n);
+int r3_tree_compile(node *n, char** errstr);
 
-void r3_tree_compile_patterns(node * n);
+int r3_tree_compile_patterns(node * n, char** errstr);
 
 node * r3_tree_matchl(const node * n, const char * path, int path_len, const match_entry * entry);
 

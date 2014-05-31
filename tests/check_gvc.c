@@ -25,7 +25,7 @@ START_TEST (test_gvc_render_dot)
     r3_tree_insert_path(n, "/garply/grault/foo",  NULL);
     r3_tree_insert_path(n, "/garply/grault/bar",  NULL);
 
-    r3_tree_compile(n);
+    r3_tree_compile(n, NULL);
 
     r3_tree_render_dot(n);
 
@@ -48,7 +48,7 @@ START_TEST (test_gvc_render_file)
     r3_tree_insert_path(n, "/user/{id}",  NULL);
     r3_tree_insert_path(n, "/post/{title:\\w+}",  NULL);
 
-    r3_tree_compile(n);
+    r3_tree_compile(n, NULL);
     r3_tree_render_file(n, "png", "check_gvc.png");
     r3_tree_free(n);
 }
