@@ -94,6 +94,41 @@ START_TEST (test_incomplete_slug)
 }
 END_TEST
 
+
+START_TEST (test_slug_parse_with_pattern)
+{
+    char * pattern = "/user/{name:\\d{3}}";
+    char * errstr = NULL;
+    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), &errstr);
+
+    char * out = r3_slug_to_str(s);
+    printf("%s\n",out);
+    zfree(out);
+
+    r3_slug_free(s);
+}
+END_TEST
+
+
+START_TEST (test_slug_parse_without_pattern)
+{
+    char * pattern = "/user/{name}";
+    char * errstr = NULL;
+    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), &errstr);
+
+    char * out = r3_slug_to_str(s);
+    printf("%s\n",out);
+    zfree(out);
+
+    r3_slug_free(s);
+}
+END_TEST
+
+
+
+
+
+
 START_TEST (test_slug_count)
 {
     int cnt = 0;
@@ -134,6 +169,8 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_slug_compile);
         tcase_add_test(tcase, test_pattern_to_opcode);
         tcase_add_test(tcase, test_incomplete_slug);
+        tcase_add_test(tcase, test_slug_parse_with_pattern);
+        tcase_add_test(tcase, test_slug_parse_without_pattern);
 
         suite_add_tcase(suite, tcase);
         return suite;

@@ -38,6 +38,83 @@ int r3_pattern_to_opcode(const char * pattern, int len) {
 }
 
 
+r3_slug_t * r3_slug_new(char * path, int path_len) {
+    r3_slug_t * s = zmalloc(sizeof(r3_slug_t));
+    s->path = path;
+    s->path_len = path_len;
+
+    s->begin = NULL;
+    s->end = NULL;
+    s->len = 0;
+
+    s->pattern = NULL;
+    s->pattern_len = 0;
+    return s;
+}
+
+void r3_slug_free(r3_slug_t * s) {
+    zfree(s);
+}
+
+int r3_slug_check(r3_slug_t *s, char **errstr) {
+    if (s->begin == NULL) {
+        return 1;
+    }
+    if (s->end == NULL) {
+        return 1;
+    }
+    return 0;
+}
+
+
+char * r3_slug_to_str(r3_slug_t *s) {
+    char *str = NULL;
+    asprintf(&str, "slug: '%.*s', pattern: '%.*s', path: '%.*s'", s->len, s->begin, s->pattern_len, s->pattern, s->path_len, s->path);
+    return str;
+}
+
+
+r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char **errstr) {
+    r3_slug_t * s = r3_slug_new(needle, needle_len);
+
+    int cnt = 0;
+    int state = 0;
+    char * p = (char*) needle;
+
+    while( (p-needle) < needle_len) {
+
+        if (*p == '\\' ) {
+            p++; p++;
+        }
+        if (state == 0 && *p == '{') {
+            s->begin = p+1; 
+        }
+
+        if (state == 1 && *p == ':') {
+            // start from next
+            s->pattern = p+1;
+        }
+
+        // closing slug
+        if (state == 1 && *p == '}') {
+            s->end = p;
+            s->len = s->end - s->begin;
+            if (s->pattern) {
+                s->pattern_len = p - s->pattern;
+            }
+            cnt++;
+            break;
+        }
+
+        if ( *p == '{' ) {
+            state++;
+        } else if ( *p == '}' ) {
+            state--;
+        }
+        p++;
+    };
+    return s;
+}
 
 /**
  * provide a quick way to count slugs, simply search for '{'
@@ -66,7 +143,7 @@ int slug_count(const char * needle, int len, char **errstr) {
     info("FOUND PATTERN: '%s' (%d), STATE: %d\n", needle, len, state);
     if (state != 0) {
         if (errstr) {
-            asprintf(errstr, "incomplete slug pattern. PATTERN (%d): '%s' (%d), OFFSET: %d, STATE: %d", len, needle, p - needle, state);
+            asprintf(errstr, "incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
         }
         return 0;
     }
