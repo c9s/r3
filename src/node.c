@@ -452,7 +452,7 @@ route * r3_route_createl(const char * path, int path_len) {
 }
 
 
-route * r3_tree_insert_routel(node *tree, int method, char *path, int path_len, void *data) {
+route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data) {
     route *r = r3_route_createl(path, path_len);
     if(!r)
         return NULL;
@@ -463,7 +463,7 @@ route * r3_tree_insert_routel(node *tree, int method, char *path, int path_len, 
 
 
 
-node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data)
+node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data)
 {
     return r3_tree_insert_pathl_(tree, path, path_len, NULL , data);
 }

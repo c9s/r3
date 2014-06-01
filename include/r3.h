@@ -99,9 +99,9 @@ edge * r3_node_find_edge(const node * n, const char * pat);
 void r3_node_append_edge(node *n, edge *child);
 
 
-node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data);
+node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data);
 
-route * r3_tree_insert_routel(node *tree, int method, char *path, int path_len, void *data);
+route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data);
 
 #define r3_tree_insert_path(n,p,d) r3_tree_insert_pathl_(n,p,strlen(p), NULL, d)
 
