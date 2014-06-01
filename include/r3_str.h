@@ -10,8 +10,6 @@
 #include "r3.h"
 #include "config.h"
 
-int slug_count(const char * p, int len, char ** errstr);
-
 char * slug_compile(const char * str, int len);
 
 char * slug_find_pattern(const char *s1, int *len);
