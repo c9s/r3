@@ -1,13 +1,7 @@
-# INCLUDES                    = @CHECK_CFLAGS@
-# if HAVE_CHECK
-# TESTS                       = check_tree
-# else
-# TESTS                       =
-# endif
 TESTS =
 
-AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/src -I$(top_builddir)/3rdparty  -Wall -std=c99 -ggdb -Wall
-AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS) -L$(top_builddir) -lcheck @CHECK_LIBS@ $(top_builddir)/libr3.la
+AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) @CHECK_CFLAGS@ -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/src -I$(top_builddir)/3rdparty  -Wall -std=c99 -ggdb -Wall
+AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS) @CHECK_LIBS@ $(top_builddir)/libr3.la
 
 if USE_JEMALLOC
 AM_CFLAGS += -ljemalloc
@@ -23,7 +17,6 @@ dist_noinst_DATA = \
 
 TESTS += check_slug
 check_slug_SOURCES = check_slug.c
-
 
 TESTS += check_tree
 check_tree_SOURCES = check_tree.c

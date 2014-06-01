@@ -100,14 +100,19 @@ AM_CONDITIONAL(ENABLE_JSON, test "x$enable_json" = "xyes")
 
 # This does not work because configure does not look into /opt/local/include...
 # AC_CHECK_HEADERS([check.h],[ enable_check=yes ],[ enable_check=unset ])
-AC_ARG_ENABLE(check, AS_HELP_STRING([--enable-check], [enable unit testing]))
-if test "$enable_check" = "xyes"; then
-    PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
-        ifdef([AM_PATH_CHECK],
-        [AM_PATH_CHECK(,[have_check="yes"])],
-        AC_MSG_WARN([Check not found; cannot run unit tests!])
-        [have_check="no"])]
-    ])
+
+
+AC_ARG_ENABLE(check,
+              AS_HELP_STRING([--enable-check],
+                             [enable unit testing]),
+              , enable_check=unset)
+if test "x$enable_check" != "xunset" ; then
+PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
+  ifdef([AM_PATH_CHECK],
+  [AM_PATH_CHECK(,[have_check="yes"])],
+  AC_MSG_WARN([Check not found; cannot run unit tests!])
+  [have_check="no"])]
+])
 fi
 AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
 
