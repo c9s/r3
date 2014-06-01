@@ -6,6 +6,7 @@ AM_INIT_AUTOMAKE([foreign])
 LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
+AC_PROG_INSTALL
 
 
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
