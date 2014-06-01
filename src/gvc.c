@@ -72,7 +72,7 @@ int r3_tree_render_dot(node * tree)
 /**
  * Render a tree to tree graph image via graphviz (dot)
  */
-int r3_tree_render_file(const node * tree, const char * format, char * filename)
+int r3_tree_render_file(const node * tree, const char * format, const char * filename)
 {
     Agraph_t *g;
 
