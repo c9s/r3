@@ -100,11 +100,13 @@ START_TEST (test_slug_parse_with_pattern)
 {
     char * pattern = "/user/{name:\\d{3}}";
     char * errstr = NULL;
-    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), pattern, &errstr);
+    const r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), pattern, &errstr);
+    ck_assert(s);
 
     char * out = r3_slug_to_str(s);
+    ck_assert(out);
     printf("%s\n",out);
-    zfree(out);
+    free(out);
 
     r3_slug_free(s);
 }
@@ -115,11 +117,13 @@ START_TEST (test_slug_parse_without_pattern)
 {
     char * pattern = "/user/{name}";
     char * errstr = NULL;
-    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), pattern, &errstr);
+    const r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), pattern, &errstr);
+    ck_assert(s);
 
     char * out = r3_slug_to_str(s);
+    ck_assert(out);
     printf("%s\n",out);
-    zfree(out);
+    free(out);
 
     r3_slug_free(s);
 }
