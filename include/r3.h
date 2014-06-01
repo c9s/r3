@@ -16,6 +16,11 @@
 #include "str_array.h"
 #include "match_entry.h"
 
+#ifdef ENABLE_JSON
+#include <json-c/json.h>
+#endif
+
+
 struct _edge;
 struct _node;
 struct _route;
@@ -170,7 +175,14 @@ enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
 enum { OP_EXPECT_MORE_DIGITS = 1, OP_EXPECT_MORE_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH, OP_EXPECT_MORE_ALPHA };
 
+#ifdef ENABLE_JSON
+json_object * r3_edge_to_json_object(const edge * e);
+json_object * r3_node_to_json_object(const node * n);
+json_object * r3_route_to_json_object(const route * r);
 
-
+const char * r3_node_to_json_string_ext(const node * n, int options);
+const char * r3_node_to_json_pretty_string(const node * n);
+const char * r3_node_to_json_string(const node * n);
+#endif
 
 #endif /* !R3_NODE_H */

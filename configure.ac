@@ -2,11 +2,10 @@ AC_INIT([r3], 1.0.0)
 AC_PREREQ([2.64])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
-
 
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
 
@@ -74,12 +73,28 @@ AM_CONDITIONAL(USE_JEMALLOC, test "x$have_jemalloc" = "xyes")
 # AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
 
 AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
+AM_CONDITIONAL(ENABLE_JSON, test "x$enable_json" = "xyes")
 AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
+
 AC_DEFINE(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes", "whether graphviz is enable")
+AC_DEFINE(ENABLE_JSON, test "x$enable_json" = "xyes", "whether json is enable")
 
 PKG_CHECK_MODULES(DEPS, [libpcre])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
+
+
+AC_ARG_ENABLE(json,
+              AS_HELP_STRING([--enable-json],
+                             [enable json encoder]),
+              , enable_json=unset)
+
+
+if test "x$enable_json" != "xunset" ; then
+PKG_CHECK_MODULES(JSONC, [json-c])
+AC_SUBST(JSONC_CFLAGS)
+AC_SUBST(JSONC_LIBS)
+fi
 
 
 # This does not work because configure does not look into /opt/local/include...
@@ -104,6 +119,7 @@ AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
 AC_CONFIG_FILES([
   r3.pc
   Makefile
+  3rdparty/Makefile
   src/Makefile
   tests/Makefile
 ])
