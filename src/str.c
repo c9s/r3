@@ -73,10 +73,6 @@ int slug_count(const char * needle, int len, char **errstr) {
     return cnt;
 }
 
-bool contains_slug(const char * str) {
-    return strchr(str, '{') != NULL ? TRUE : FALSE;
-}
-
 char * inside_slug(const char * needle, int needle_len, char *offset, char **errstr) {
     char * s1 = offset;
     char * s2 = offset;

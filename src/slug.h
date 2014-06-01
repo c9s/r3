@@ -41,12 +41,16 @@ typedef struct {
 
 r3_slug_t * r3_slug_new(char * path, int path_len);
 
-int r3_slug_check(r3_slug_t *s, char **errstr);
+int r3_slug_check(r3_slug_t *s);
 
 r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **errstr);
 
 char * r3_slug_to_str(const r3_slug_t *s);
 
 void r3_slug_free(r3_slug_t * s);
+
+inline int r3_path_contains_slug_char(const char * str) {
+    return strchr(str, '{') != NULL ? 1 : 0;
+}
 
 #endif /* !SLUG_H */

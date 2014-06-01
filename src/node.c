@@ -10,6 +10,7 @@
 
 #include "r3.h"
 #include "r3_str.h"
+#include "slug.h"
 #include "zmalloc.h"
 
 
@@ -629,7 +630,7 @@ bool r3_node_has_slug_edges(const node *n) {
     edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
-        e->has_slug = contains_slug(e->pattern);
+        e->has_slug = r3_path_contains_slug_char(e->pattern);
         if (e->has_slug)
             found = TRUE;
     }

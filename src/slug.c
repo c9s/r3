@@ -13,11 +13,6 @@
 #include "slug.h"
 #include "zmalloc.h"
 
-inline static int contains_slug_char(const char * str);
-
-inline static int contains_slug_char(const char * str) {
-    return strchr(str, '{') != NULL ? 1 : 0;
-}
 
 
 r3_slug_t * r3_slug_new(char * path, int path_len) {
@@ -46,7 +41,7 @@ void r3_slug_free(r3_slug_t * s) {
  * Return 0 means Empty
  * Return -1 means Error
  */
-int r3_slug_check(r3_slug_t *s, char **errstr) {
+int r3_slug_check(r3_slug_t *s) {
     // if it's empty
     if (s->begin == NULL && s->len == 0) {
         return 0;
@@ -88,7 +83,7 @@ r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **err
     }
 
     // there is no slug
-    if (!contains_slug_char(offset)) {
+    if (!r3_path_contains_slug_char(offset)) {
         return NULL;
     }
 

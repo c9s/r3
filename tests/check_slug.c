@@ -45,8 +45,7 @@ END_TEST
 
 START_TEST (test_contains_slug)
 {
-    char * path = "/user/{id}/{name}";
-    ck_assert( contains_slug(path) );
+    ck_assert( r3_path_contains_slug_char("/user/{id}/{name}") );
 }
 END_TEST
 
