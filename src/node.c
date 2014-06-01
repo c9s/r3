@@ -493,7 +493,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
 
     // branch the edge at correct position (avoid broken slugs)
     const char *slug_s;
-    if ( (slug_s = inside_slug(path, path_len, (char*) path + prefix_len)) != NULL ) {
+    if ( (slug_s = inside_slug(path, path_len, ((char*) path + prefix_len), NULL)) != NULL ) {
         prefix_len = slug_s - path;
     }
 
@@ -503,7 +503,9 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
     // common prefix not found, insert a new edge for this pattern
     if ( prefix_len == 0 ) {
         // there are two more slugs, we should break them into several parts
-        int slug_cnt = slug_count(path, path_len);
+        char *errstr = NULL;
+        int slug_cnt = slug_count(path, path_len, &errstr);
+
         if ( slug_cnt > 1 ) {
             int   slug_len;
             char *p = slug_find_placeholder(path, &slug_len);

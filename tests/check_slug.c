@@ -76,19 +76,19 @@ START_TEST (test_inside_slug)
 {
     char * pattern = "/user/{name:\\s+}/to/{id}";
     char * offset = strchr(pattern, '{') + 2;
-    ck_assert( (int)inside_slug(pattern, strlen(pattern), offset) );
-    ck_assert( *(inside_slug(pattern, strlen(pattern), offset)) == '{' );
-    ck_assert( ! inside_slug(pattern, strlen(pattern), pattern) );
+    ck_assert( (int)inside_slug(pattern, strlen(pattern), offset, NULL) );
+    ck_assert( *(inside_slug(pattern, strlen(pattern), offset, NULL)) == '{' );
+    ck_assert( ! inside_slug(pattern, strlen(pattern), pattern, NULL) );
 }
 END_TEST
 
 START_TEST (test_slug_count)
 {
     char * pattern = "/user/{name:\\s+}/to/{id}";
-    ck_assert_int_eq( slug_count(pattern, strlen(pattern) ), 2 );
+    ck_assert_int_eq( slug_count(pattern, strlen(pattern), NULL), 2 );
 
     char * pattern2 = "/user/{name:\\d{3}}/to/{id}";
-    ck_assert_int_eq( slug_count(pattern2, strlen(pattern) ), 2 );
+    ck_assert_int_eq( slug_count(pattern2, strlen(pattern), NULL), 2 );
 }
 END_TEST
 

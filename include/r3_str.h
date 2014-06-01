@@ -10,7 +10,7 @@
 #include "r3.h"
 #include "config.h"
 
-int slug_count(const char * p, int len);
+int slug_count(const char * p, int len, char ** errstr);
 
 char * slug_compile(const char * str, int len);
 
@@ -20,7 +20,7 @@ char * slug_find_pattern(const char *s1, int *len);
 
 char * slug_find_placeholder(const char *s1, int *len);
 
-char * inside_slug(const char * needle, int needle_len, char *offset);
+char * inside_slug(const char * needle, int needle_len, char *offset, char **errstr);
 
 char * ltrim_slash(char* str);
 
