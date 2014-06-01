@@ -3,7 +3,7 @@ AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS)
 
 noinst_LTLIBRARIES = libr3core.la
 # lib_LIBRARIES = libr3.a
-libr3core_la_SOURCES = node.c edge.c str.c token.c match_entry.c
+libr3core_la_SOURCES = node.c edge.c str.c token.c match_entry.c slug.c
 
 if ENABLE_JSON
 libr3core_la_SOURCES += json.c

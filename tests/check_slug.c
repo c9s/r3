@@ -11,6 +11,7 @@
 #include "r3.h"
 #include "r3_str.h"
 #include "zmalloc.h"
+#include "slug.h"
 
 START_TEST (test_pattern_to_opcode)
 {
@@ -99,7 +100,7 @@ START_TEST (test_slug_parse_with_pattern)
 {
     char * pattern = "/user/{name:\\d{3}}";
     char * errstr = NULL;
-    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), &errstr);
+    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), pattern, &errstr);
 
     char * out = r3_slug_to_str(s);
     printf("%s\n",out);
@@ -114,7 +115,7 @@ START_TEST (test_slug_parse_without_pattern)
 {
     char * pattern = "/user/{name}";
     char * errstr = NULL;
-    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), &errstr);
+    r3_slug_t *s = r3_slug_parse(pattern, strlen(pattern), pattern, &errstr);
 
     char * out = r3_slug_to_str(s);
     printf("%s\n",out);

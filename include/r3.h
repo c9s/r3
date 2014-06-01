@@ -180,44 +180,6 @@ enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
 enum { OP_EXPECT_MORE_DIGITS = 1, OP_EXPECT_MORE_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH, OP_EXPECT_MORE_ALPHA };
 
-typedef struct {
-    /**
-     * source path
-     */
-    char * path;
-
-    int path_len;
-
-    /**
-     * slug start pointer
-     */
-    char * begin;
-
-    /**
-     * slug end pointer
-     */
-    char * end;
-
-    /**
-     * slug length
-     */
-    int len;
-
-    // slug pattern pointer if we have one
-    char * pattern;
-
-    // the length of custom pattern, if the pattern is found.
-    int    pattern_len;
-
-} r3_slug_t;
-
-
-r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char **errstr);
-
-char * r3_slug_to_str(r3_slug_t *s);
-
-void r3_slug_free(r3_slug_t * s);
-
 #ifdef ENABLE_JSON
 json_object * r3_edge_to_json_object(const edge * e);
 json_object * r3_node_to_json_object(const node * n);
