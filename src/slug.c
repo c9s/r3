@@ -13,6 +13,8 @@
 #include "slug.h"
 #include "zmalloc.h"
 
+inline int contains_slug_char(const char * str);
+
 inline int contains_slug_char(const char * str) {
     return strchr(str, '{') != NULL ? 1 : 0;
 }
