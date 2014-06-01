@@ -12,6 +12,7 @@
 #include <string.h>
 #include <pcre.h>
 #include <stdbool.h>
+#include "config.h"
 #include "r3_define.h"
 #include "str_array.h"
 #include "match_entry.h"
