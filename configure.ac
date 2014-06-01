@@ -1,5 +1,6 @@
 AC_INIT([r3], 1.0.0)
 AC_PREREQ([2.64])
+AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
@@ -18,9 +19,6 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
-
-
-
 PKG_PROG_PKG_CONFIG
 
 

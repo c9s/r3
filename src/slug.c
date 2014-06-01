@@ -4,6 +4,7 @@
  *
  * Distributed under terms of the MIT license.
  */
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
@@ -19,6 +20,8 @@ inline int contains_slug_char(const char * str) {
 
 r3_slug_t * r3_slug_new(char * path, int path_len) {
     r3_slug_t * s = zmalloc(sizeof(r3_slug_t));
+    if (!s)
+        return NULL;
     s->path = path;
     s->path_len = path_len;
 
