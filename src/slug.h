@@ -45,7 +45,7 @@ int r3_slug_check(r3_slug_t *s, char **errstr);
 
 r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char *offset, char **errstr);
 
-char * r3_slug_to_str(r3_slug_t *s);
+char * r3_slug_to_str(const r3_slug_t *s);
 
 void r3_slug_free(r3_slug_t * s);
 
