@@ -4,10 +4,10 @@
  *
  * Distributed under terms of the MIT license.
  */
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "config.h"
 #include "r3.h"
 #include "r3_str.h"
 #include "slug.h"
