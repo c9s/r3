@@ -43,7 +43,7 @@ r3_slug_t * r3_slug_new(char * path, int path_len);
 
 int r3_slug_check(r3_slug_t *s, char **errstr);
 
-r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char *offset, char **errstr);
+r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **errstr);
 
 char * r3_slug_to_str(const r3_slug_t *s);
 
