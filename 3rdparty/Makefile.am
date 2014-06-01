@@ -8,9 +8,7 @@ libr3ext_la_LIBADD=$(DEPS_LIBS)
 libr3ext_la_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/3rdparty  -Wall -std=c99
 
 noinst_HEADERS = \
-	ujdecode.h \
 	zmalloc.h \
-	ultrajson.h \
 	$(NULL)
 
 
