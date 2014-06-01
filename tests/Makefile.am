@@ -41,8 +41,9 @@ TESTS += check_gvc
 check_gvc_SOURCES = check_gvc.c
 endif
 
-TESTS += benchmark
-benchmark_SOURCES = bench.c
+
+# TESTS += benchmark
+# benchmark_SOURCES = bench.c
 
 check_PROGRAMS = $(TESTS)
 

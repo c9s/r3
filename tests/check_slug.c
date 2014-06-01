@@ -84,11 +84,15 @@ END_TEST
 
 START_TEST (test_slug_count)
 {
+    int cnt = 0;
     char * pattern = "/user/{name:\\s+}/to/{id}";
-    ck_assert_int_eq( slug_count(pattern, strlen(pattern), NULL), 2 );
+    char * errstr = NULL;
+    cnt = slug_count(pattern, strlen(pattern), &errstr);
+    ck_assert_int_eq(cnt, 2);
 
     char * pattern2 = "/user/{name:\\d{3}}/to/{id}";
-    ck_assert_int_eq( slug_count(pattern2, strlen(pattern), NULL), 2 );
+    cnt = slug_count(pattern2, strlen(pattern2), &errstr);
+    ck_assert_int_eq(cnt, 2);
 }
 END_TEST
 
@@ -96,7 +100,7 @@ START_TEST (test_slug_find_placeholder_with_broken_slug)
 {
     int slug_len = 0;
     char * slug = slug_find_placeholder("/user/{name:\\s+/to/{id", &slug_len);
-    ck_assert(! slug);
+    ck_assert(slug == 0);
 }
 END_TEST
 

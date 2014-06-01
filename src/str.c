@@ -42,30 +42,30 @@ int r3_pattern_to_opcode(const char * pattern, int len) {
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
-int slug_count(const char * p, int len, char **errstr) {
-    int s = 0;
-    int lev = 0;
-    while( len-- ) {
-        if ( lev == 0 && *p == '{' )
-            s++;
-        if ( *p == '{' ) {
-            lev++;
+int slug_count(const char * needle, int len, char **errstr) {
+    int cnt = 0;
+    int state = 0;
+    char * p = (char*) needle;
+
+    while( (p-needle) < len) {
+        if (state == 1 && *p == '}') {
+            cnt++;
         }
-        if ( *p == '}' ) {
-            lev--;
+        if ( *p == '{' ) {
+            state++;
+        } else if ( *p == '}' ) {
+            state--;
         }
         p++;
-    }
-    /*
-    XXX:
-    if (lev != 0) {
+    };
+    info("FOUND PATTERN: %s (%d), CHAR: '%s', STATE: %d\n", needle, len, p, state);
+    if (state != 0) {
         if (errstr) {
-            asprintf(errstr, "incomplete slug pattern: %s", p);
+            asprintf(errstr, "incomplete slug pattern. PATTERN: %s (%d), CHAR: '%s', STATE: %d\n", needle, len, p, state);
         }
         return 0;
     }
-    */
-    return s;
+    return cnt;
 }
 
 bool contains_slug(const char * str) {
