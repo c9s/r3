@@ -103,12 +103,23 @@ START_TEST (test_incomplete_slug_path)
 {
     node * n = r3_tree_create(10);
 
+    node * ret_node;
+
     // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
-    r3_tree_insert_path(n, "/post/{handle", NULL);
-    r3_tree_insert_path(n, "/post/{handle:\\", NULL);
-    r3_tree_insert_path(n, "/post/{handle:\\d", NULL);
-    r3_tree_insert_path(n, "/post/{handle:\\d{", NULL);
-    r3_tree_insert_path(n, "/post/{handle:\\d{3", NULL);
+    ret_node = r3_tree_insert_path(n, "/post/{handle", NULL);
+    assert(!ret_node);
+
+    ret_node = r3_tree_insert_path(n, "/post/{handle:\\", NULL);
+    assert(!ret_node);
+
+    ret_node = r3_tree_insert_path(n, "/post/{handle:\\d", NULL);
+    assert(!ret_node);
+
+    ret_node = r3_tree_insert_path(n, "/post/{handle:\\d{", NULL);
+    assert(!ret_node);
+
+    ret_node = r3_tree_insert_path(n, "/post/{handle:\\d{3", NULL);
+    assert(!ret_node);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}", NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{", NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a", NULL);
