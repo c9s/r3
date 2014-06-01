@@ -17,6 +17,7 @@ install:
   - sudo apt-get install -qq automake pkg-config build-essential libtool automake autoconf m4 gnulib
   - sudo apt-get install -qq check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1
   - sudo apt-get install -qq graphviz-dev graphviz 
+  - sudo apt-get install -qq libjson-c-dev
   - if [ "x$COVERALLS" == xyes ]; then sudo pip install cpp-coveralls; fi
   - if [ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
 
