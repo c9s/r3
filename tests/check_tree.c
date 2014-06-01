@@ -162,6 +162,9 @@ START_TEST (test_pcre_patterns_insert)
     matched = r3_tree_match(n, "/post/kkkfoo", NULL);
     ck_assert(!matched);
 
+    matched = r3_tree_match(n, "/post/kkkbar", NULL);
+    ck_assert(!matched);
+
 
 
     matched = r3_tree_matchl(n, "/post/111-222", strlen("/post/111-222"), NULL);
