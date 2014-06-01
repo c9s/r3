@@ -624,7 +624,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
         r3_edge_branch(e, prefix_len);
         return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route , data, errstr);
     } else {
-        printf("unexpected route.");
+        fprintf(stderr, "unexpected route.");
         return NULL;
     }
     return n;
