@@ -138,6 +138,8 @@ START_TEST (test_pcre_patterns_insert)
     // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d+}-{id:\\d+}", NULL);
 
+    r3_tree_insert_path(n, "/post/foo", NULL);
+    r3_tree_insert_path(n, "/post/bar", NULL);
 
     char *errstr = NULL;
     int errcode;
@@ -147,6 +149,21 @@ START_TEST (test_pcre_patterns_insert)
     // r3_tree_dump(n, 0);
 
     node *matched;
+
+
+    matched = r3_tree_match(n, "/post/foo", NULL);
+    ck_assert(matched);
+    ck_assert(matched->endpoint > 0);
+
+    matched = r3_tree_match(n, "/post/bar", NULL);
+    ck_assert(matched);
+    ck_assert(matched->endpoint > 0);
+
+    matched = r3_tree_match(n, "/post/kkkfoo", NULL);
+    ck_assert(!matched);
+
+
+
     matched = r3_tree_matchl(n, "/post/111-222", strlen("/post/111-222"), NULL);
     ck_assert(matched);
     ck_assert(matched->endpoint > 0);
