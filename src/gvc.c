@@ -45,7 +45,7 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node 
 /**
  * Render a tree to tree graph image via graphviz (dot)
  */
-int r3_tree_render_dot(node * tree)
+int r3_tree_render_dot(const node * tree)
 {
     Agraph_t *g;
     /* set up a graphviz context - but only once even for multiple graphs */
