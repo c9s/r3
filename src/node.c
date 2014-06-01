@@ -472,7 +472,7 @@ node * r3_tree_insert_pathl(node *tree, char *path, int path_len, void * data)
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data)
+node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data)
 {
     node * n = tree;
     edge * e = NULL;
@@ -492,10 +492,13 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
     }
 
     // branch the edge at correct position (avoid broken slugs)
-    char *slug_s;
-    if ( (slug_s = inside_slug(path, path_len, path + prefix_len)) != NULL ) {
+    const char *slug_s;
+    if ( (slug_s = inside_slug(path, path_len, (char*) path + prefix_len)) != NULL ) {
         prefix_len = slug_s - path;
     }
+
+    const char * subpath = path + prefix_len;
+    const int    subpath_len = path_len - prefix_len;
 
     // common prefix not found, insert a new edge for this pattern
     if ( prefix_len == 0 ) {
@@ -591,9 +594,6 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
         }
     } else if ( prefix_len == e->pattern_len ) {    // fully-equal to the pattern of the edge
 
-        char * subpath = path + prefix_len;
-        int    subpath_len = path_len - prefix_len;
-
         // there are something more we can insert
         if ( subpath_len > 0 ) {
             return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route, data);
@@ -618,10 +618,8 @@ node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route
         /* it's partially matched with the pattern,
          * we should split the end point and make a branch here...
          */
-        char * s2 = path + prefix_len;
-        int   s2_len = path_len - prefix_len;
         r3_edge_branch(e, prefix_len);
-        return r3_tree_insert_pathl_(e->child, s2 , s2_len, route , data);
+        return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route , data);
     } else {
         printf("unexpected route.");
         return NULL;

@@ -111,7 +111,7 @@ route * r3_tree_insert_routel(node *tree, int method, char *path, int path_len, 
 /**
  * The private API to insert a path
  */
-node * r3_tree_insert_pathl_(node *tree, char *path, int path_len, route * route, void * data);
+node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data);
 
 void r3_tree_dump(const node * n, int level);
 
