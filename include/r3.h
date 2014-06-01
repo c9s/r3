@@ -16,6 +16,10 @@
 #include "str_array.h"
 #include "match_entry.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct _edge;
 struct _node;
 struct _route;
@@ -170,7 +174,8 @@ enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
 enum { OP_EXPECT_MORE_DIGITS = 1, OP_EXPECT_MORE_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH, OP_EXPECT_MORE_ALPHA };
 
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !R3_NODE_H */

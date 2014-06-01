@@ -11,6 +11,10 @@
 #include "r3_define.h"
 #include "str_array.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     str_array * vars;
     const char * path; // current path to dispatch
@@ -19,7 +23,7 @@ typedef struct {
 
     void * data; // route ptr
 
-    char * host; // the request host 
+    char * host; // the request host
     int    host_len;
 
     char * remote_addr;
@@ -31,5 +35,9 @@ match_entry * match_entry_createl(const char * path, int path_len);
 #define match_entry_create(path) match_entry_createl(path,strlen(path))
 
 void match_entry_free(match_entry * entry);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !MATCH_ENTRY_H */
