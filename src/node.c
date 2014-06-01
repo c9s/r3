@@ -12,6 +12,9 @@
 #include "r3_str.h"
 #include "zmalloc.h"
 
+
+#define CHECK_PTR(ptr) if (ptr == NULL) return NULL;
+
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
 
 
@@ -39,8 +42,7 @@ static int strdiff(char * d1, char * d2) {
  */
 node * r3_tree_create(int cap) {
     node * n = (node*) zmalloc( sizeof(node) );
-    if (!n)
-        return NULL;
+    CHECK_PTR(n);
 
     n->edges = (edge**) zmalloc( sizeof(edge*) * cap );
     n->edge_len = 0;
@@ -92,8 +94,7 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *chi
         pat = zstrndup(pat, len);
     }
     e = r3_edge_create(pat, len, child);
-    if (!e)
-        return NULL;
+    CHECK_PTR(e);
     r3_node_append_edge(n, e);
     return e;
 }
@@ -407,9 +408,7 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
 
 node * r3_node_create() {
     node * n = (node*) zmalloc( sizeof(node) );
-    if (!n) {
-        return NULL;
-    }
+    CHECK_PTR(n);
     n->edges = NULL;
     n->edge_len = 0;
     n->edge_cap = 0;
@@ -435,8 +434,7 @@ void r3_route_free(route * route) {
 
 route * r3_route_createl(const char * path, int path_len) {
     route * info = zmalloc(sizeof(route));
-    if (!info)
-        return NULL;
+    CHECK_PTR(info);
     info->path = (char*) path;
     info->path_len = path_len;
     info->request_method = 0; // can be (GET || POST)
@@ -454,8 +452,7 @@ route * r3_route_createl(const char * path, int path_len) {
 
 route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data) {
     route *r = r3_route_createl(path, path_len);
-    if(!r)
-        return NULL;
+    CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
     r3_tree_insert_pathl_(tree, path, path_len, r, data);
     return r;
@@ -524,8 +521,8 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
 
             // insert the first one edge, and break at "p"
             node * child = r3_tree_create(3);
-            if (!child)
-                return NULL;
+            CHECK_PTR(child);
+
             r3_node_connect(n, zstrndup(path, (int)(p - path)), child);
 
             // and insert the rest part to the child
@@ -553,16 +550,16 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
                     node *c1;
                     if (slug_p > path) {
                         c1 = r3_tree_create(3);
-                        if (!c1)
-                            return NULL;
+                        CHECK_PTR(c1);
+
                         r3_node_connectl(n, path, slug_p - path, 1, c1); // duplicate
                     } else {
                         c1 = n;
                     }
 
                     node * c2 = r3_tree_create(3);
-                    if (!c2) 
-                        return NULL;
+                    CHECK_PTR(c2);
+
                     edge * op_edge = r3_node_connectl(c1, slug_p, slug_len , 1, c2);
                     op_edge->opcode = opcode;
 
@@ -583,8 +580,8 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
             }
             // only one slug
             node * child = r3_tree_create(3);
-            if (!child)
-                return NULL;
+            CHECK_PTR(child);
+
             r3_node_connect(n, zstrndup(path, path_len) , child);
             child->data = data;
             child->endpoint++;
