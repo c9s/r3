@@ -74,6 +74,13 @@ char * r3_slug_to_str(r3_slug_t *s) {
 }
 
 
+/*
+r3_slug_t * r3_slug_parse_next(r3_slug_t *s) {
+    r3_slug_parse(s->end, s->path_len - (s->end - s->begin), s->end;
+}
+*/
+
+
 r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char **errstr) {
     r3_slug_t * s = r3_slug_new(needle, needle_len);
 

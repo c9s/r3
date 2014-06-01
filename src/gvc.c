@@ -23,8 +23,8 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node 
         node_cnt++;
 
         char *nodename = NULL;
-        if ( n->combined_pattern ) {
-            asprintf(&nodename,"%s", n->combined_pattern);
+        if ( e && e->child && e->child->combined_pattern ) {
+            asprintf(&nodename,"%s", e->child->combined_pattern);
         } else {
             asprintf(&nodename,"#%d", node_cnt);
         }
