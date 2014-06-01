@@ -90,6 +90,9 @@ AM_CONDITIONAL(ENABLE_GRAPHVIZ, test "x$enable_graphviz" = "xyes")
 
 AC_ARG_ENABLE(json, AS_HELP_STRING([--enable-json],[enable json encoder]))
 if test "x$enable_json" = "xyes"; then
+    PKG_CHECK_MODULES(JSONC, [json-c])
+    AC_SUBST(JSONC_CFLAGS)
+    AC_SUBST(JSONC_LIBS)
     AC_DEFINE(ENABLE_JSON, 1, [enable json])
 fi
 AM_CONDITIONAL(ENABLE_JSON, test "x$enable_json" = "xyes")

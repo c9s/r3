@@ -6,13 +6,12 @@
 # endif
 TESTS =
 
-AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/3rdparty  -Wall -std=c99 -ggdb -Wall
-AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) -L$(top_builddir) -lr3 -lcheck @CHECK_LIBS@
+AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/3rdparty  -Wall -std=c99 -ggdb -Wall
+AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS) -L$(top_builddir) -lr3 -lcheck @CHECK_LIBS@
 
 if USE_JEMALLOC
 AM_CFLAGS += -ljemalloc
 endif
-
 
 noinst_HEADERS = \
 	bench.h \

@@ -190,6 +190,9 @@ char * slug_compile(const char * str, int len)
     }
 
     o = out;
+    strncat(o, "^", 1);
+    o++;
+
     strncat(o, str, s1 - str); // string before slug
     o += (s1 - str);
 
