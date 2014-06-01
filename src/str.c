@@ -48,6 +48,11 @@ int slug_count(const char * needle, int len, char **errstr) {
     char * p = (char*) needle;
 
     while( (p-needle) < len) {
+
+        if (*p == '\\' ) {
+            p++; p++;
+        }
+
         if (state == 1 && *p == '}') {
             cnt++;
         }
@@ -58,10 +63,10 @@ int slug_count(const char * needle, int len, char **errstr) {
         }
         p++;
     };
-    info("FOUND PATTERN: %s (%d), CHAR: '%s', STATE: %d\n", needle, len, p, state);
+    info("FOUND PATTERN: '%s' (%d), STATE: %d\n", needle, len, state);
     if (state != 0) {
         if (errstr) {
-            asprintf(errstr, "incomplete slug pattern. PATTERN: %s (%d), CHAR: '%s', STATE: %d\n", needle, len, p, state);
+            asprintf(errstr, "incomplete slug pattern. PATTERN (%d): '%s' (%d), OFFSET: %d, STATE: %d", len, needle, p - needle, state);
         }
         return 0;
     }
