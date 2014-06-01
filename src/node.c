@@ -163,9 +163,6 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
 
     p = cpat;
 
-    strncat(p, "^", 1);
-    p++;
-
     edge *e = NULL;
     int opcode_cnt =  0;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
@@ -179,7 +176,8 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
             char * slug_pat = slug_compile(e->pattern, e->pattern_len);
             strcat(p, slug_pat);
         } else {
-            strncat(p++,"(", 1);
+            strncat(p,"^(", 2);
+            p += 2;
 
             strncat(p, e->pattern, e->pattern_len);
             p += e->pattern_len;
