@@ -205,9 +205,7 @@ Rendering routes with graphviz
 
 The `test_gvc_render_file` API let you render the whole route trie into a image.
 
-![Imgur](http://i.imgur.com/J2LdzeK.png)
-
-![Imgur](http://i.imgur.com/KRRkVhA.png)
+![Imgur](http://i.imgur.com/ZwaDEAq.png)
 
 Or you can even export it with dot format:
 
