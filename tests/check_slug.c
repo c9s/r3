@@ -91,6 +91,7 @@ START_TEST (test_incomplete_slug)
     ck_assert_int_eq(cnt, 0);
     ck_assert(errstr);
     printf("%s\n",errstr);
+    free(errstr);
 }
 END_TEST
 
@@ -140,14 +141,17 @@ START_TEST (test_slug_count)
     char * errstr = NULL;
     cnt = slug_count(pattern, strlen(pattern), &errstr);
     ck_assert_int_eq(cnt, 2);
+    if(errstr) free(errstr);
 
     char * pattern2 = "/user/{name:\\d{3}}/to/{id}";
     cnt = slug_count(pattern2, strlen(pattern2), &errstr);
     ck_assert_int_eq(cnt, 2);
+    if(errstr) free(errstr);
 
     char * pattern3 = "/user/{name:\\d{3}}/to/{id}";
     cnt = slug_count(pattern3, strlen(pattern3), &errstr);
     ck_assert_int_eq(cnt, 2);
+    if(errstr) free(errstr);
 }
 END_TEST
 
