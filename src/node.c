@@ -453,7 +453,7 @@ route * r3_tree_insert_routel(node *tree, int method, const char *path, int path
     route *r = r3_route_createl(path, path_len);
     CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
-    r3_tree_insert_pathl_(tree, path, path_len, r, data);
+    r3_tree_insert_pathl_(tree, path, path_len, r, data, NULL);
     return r;
 }
 
@@ -461,14 +461,14 @@ route * r3_tree_insert_routel(node *tree, int method, const char *path, int path
 
 node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data)
 {
-    return r3_tree_insert_pathl_(tree, path, path_len, NULL , data);
+    return r3_tree_insert_pathl_(tree, path, path_len, NULL , data, NULL);
 }
 
 
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data)
+node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
 {
     node * n = tree;
     edge * e = NULL;
@@ -499,10 +499,10 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
     // common prefix not found, insert a new edge for this pattern
     if ( prefix_len == 0 ) {
         // there are two more slugs, we should break them into several parts
-        char *errstr = NULL;
-        int slug_cnt = slug_count(path, path_len, &errstr);
-        if (errstr) {
-            printf("Can not insert path '%s'. Error: %s\n", path, errstr);
+        char *err = NULL;
+        int slug_cnt = slug_count(path, path_len, &err);
+        if (err) {
+            printf("Can not insert path '%s'. Error: %s\n", path, err);
             return NULL;
         }
 
@@ -529,7 +529,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
             r3_node_connect(n, zstrndup(path, (int)(p - path)), child);
 
             // and insert the rest part to the child
-            return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data);
+            return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data, errstr);
 
         } else {
             if (slug_cnt == 1) {
@@ -569,7 +569,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
                     // insert rest
                     int restlen = (path_len - (slug_p - path)) - slug_len;
                     if (restlen) {
-                        return r3_tree_insert_pathl_(c2, slug_p + slug_len, restlen, route, data);
+                        return r3_tree_insert_pathl_(c2, slug_p + slug_len, restlen, route, data, errstr);
                     }
 
                     c2->data = data;
@@ -598,7 +598,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
 
         // there are something more we can insert
         if ( subpath_len > 0 ) {
-            return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route, data);
+            return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route, data, errstr);
         } else {
             // there are no more path to insert
 
@@ -621,7 +621,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
          * we should split the end point and make a branch here...
          */
         r3_edge_branch(e, prefix_len);
-        return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route , data);
+        return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route , data, errstr);
     } else {
         printf("unexpected route.");
         return NULL;
