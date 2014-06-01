@@ -120,6 +120,7 @@ START_TEST (test_incomplete_slug_path)
 
     ret_node = r3_tree_insert_path(n, "/post/{handle:\\d{3", NULL);
     assert(!ret_node);
+
     r3_tree_insert_path(n, "/post/{handle:\\d{3}", NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{", NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a", NULL);
