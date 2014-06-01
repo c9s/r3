@@ -88,7 +88,7 @@ START_TEST (test_slug_count)
     ck_assert_int_eq( slug_count(pattern, strlen(pattern), NULL), 2 );
 
     char * pattern2 = "/user/{name:\\d{3}}/to/{id}";
-    ck_assert_int_eq( slug_count(pattern2, strlen(pattern), NULL), 2 );
+    ck_assert_int_eq( slug_count(pattern2, strlen(pattern2), NULL), 2 );
 }
 END_TEST
 
