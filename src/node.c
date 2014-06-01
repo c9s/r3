@@ -220,7 +220,7 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
             NULL);                /* use default character tables */
     if (n->pcre_pattern == NULL) {
         if (errstr) {
-            asprintf(errstr, "PCRE compilation failed at offset %d: %s, pattern: %s\n", pcre_erroffset, pcre_error, n->combined_pattern);
+            asprintf(errstr, "PCRE compilation failed at offset %d: %s, pattern: %s", pcre_erroffset, pcre_error, n->combined_pattern);
         }
         return -1;
     }
@@ -231,7 +231,7 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
     n->pcre_extra = pcre_study(n->pcre_pattern, 0, &pcre_error);
     if (n->pcre_extra == NULL) {
         if (errstr) {
-            asprintf(errstr, "PCRE study failed at offset %s\n", pcre_error);
+            asprintf(errstr, "PCRE study failed at offset %s, pattern: %s", pcre_error, n->combined_pattern);
         }
         return -1;
     }
