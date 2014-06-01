@@ -501,6 +501,10 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
         // there are two more slugs, we should break them into several parts
         char *errstr = NULL;
         int slug_cnt = slug_count(path, path_len, &errstr);
+        if (errstr) {
+            printf("Can not insert path '%s'. Error: %s\n", path, errstr);
+            return NULL;
+        }
 
         if ( slug_cnt > 1 ) {
             int   slug_len;

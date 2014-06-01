@@ -98,6 +98,27 @@ START_TEST (test_compile)
 }
 END_TEST
 
+
+START_TEST (test_incomplete_slug_path)
+{
+    node * n = r3_tree_create(10);
+
+    // r3_tree_insert_path(n, "/foo-{user}-{id}", NULL, NULL);
+    r3_tree_insert_path(n, "/post/{handle", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d{", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d{3", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d{3}", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a", NULL);
+    r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a}", NULL);
+
+    r3_tree_free(n);
+}
+END_TEST
+
+
 START_TEST (test_pcre_patterns_insert)
 {
     node * n = r3_tree_create(10);
@@ -387,6 +408,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert);
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
+        tcase_add_test(tcase, test_incomplete_slug_path);
         tcase_set_timeout(tcase, 30);
 
         suite_add_tcase(suite, tcase);

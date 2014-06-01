@@ -137,51 +137,12 @@ r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **err
 
     if (state > 0) {
         if (errstr) {
-            asprintf(errstr, "incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
+            asprintf(errstr, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
         }
         return NULL;
     }
     return s;
 }
-
-
-/*
-int slug_count2(char * needle, int needle_len, char **errstr) {
-    // r3_slug_t * s = r3_slug_parse(needle, needle_len, needle);
-
-
-    int cnt = 0;
-    int state = 0;
-    char * p = (char*) needle;
-    while( (p-needle) < len) {
-
-        if (*p == '\\' ) {
-            p++; p++;
-        }
-
-        if (state == 1 && *p == '}') {
-            cnt++;
-        }
-        if ( *p == '{' ) {
-            state++;
-        } else if ( *p == '}' ) {
-            state--;
-        }
-        p++;
-    };
-    info("FOUND PATTERN: '%s' (%d), STATE: %d\n", needle, len, state);
-    if (state != 0) {
-        if (errstr) {
-            asprintf(errstr, "incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
-        }
-        return 0;
-    }
-    return cnt;
-}
-*/
-
-
-
 
 
 /**
@@ -211,7 +172,7 @@ int slug_count(const char * needle, int len, char **errstr) {
     info("FOUND PATTERN: '%s' (%d), STATE: %d\n", needle, len, state);
     if (state != 0) {
         if (errstr) {
-            asprintf(errstr, "incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
+            asprintf(errstr, "Incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
         }
         return 0;
     }
