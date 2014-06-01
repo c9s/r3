@@ -12,6 +12,11 @@
 #include "slug.h"
 #include "zmalloc.h"
 
+inline int contains_slug_char(const char * str) {
+    return strchr(str, '{') != NULL ? 1 : 0;
+}
+
+
 r3_slug_t * r3_slug_new(char * path, int path_len) {
     r3_slug_t * s = zmalloc(sizeof(r3_slug_t));
     s->path = path;
@@ -60,6 +65,7 @@ char * r3_slug_to_str(r3_slug_t *s) {
 }
 
 
+
 /*
 r3_slug_t * r3_slug_parse_next(r3_slug_t *s, char **errstr) {
     return r3_slug_parse(s->end, s->path_len - (s->end - s->begin), errstr);
@@ -68,6 +74,18 @@ r3_slug_t * r3_slug_parse_next(r3_slug_t *s, char **errstr) {
 
 r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char *offset, char **errstr) {
     r3_slug_t * s = r3_slug_new(needle, needle_len);
+    if (!s) {
+        return NULL;
+    }
+
+    if (!offset) {
+        offset = (char*) needle; // from the begining of the needle
+    }
+
+    // there is no slug
+    if (!contains_slug_char(offset)) {
+        return NULL;
+    }
 
     int cnt = 0;
     int state = 0;
@@ -75,31 +93,40 @@ r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char *offset, char
 
     while( (p-needle) < needle_len) {
 
+        // escape one character
         if (*p == '\\' ) {
             p++; p++;
-        }
-        if (state == 0 && *p == '{') {
-            s->begin = p+1; 
+            continue;
         }
 
+        // slug starts with '{'
+        if (state == 0 && *p == '{') {
+            s->begin = ++p;
+            state++;
+            continue;
+        }
+
+        // in the middle of the slug (pattern)
         if (state == 1 && *p == ':') {
             // start from next
-            s->pattern = p+1;
+            s->pattern = ++p;
+            continue;
         }
 
-        // closing slug
+        // slug closed.
         if (state == 1 && *p == '}') {
             s->end = p;
             s->len = s->end - s->begin;
             if (s->pattern) {
                 s->pattern_len = p - s->pattern;
             }
-
             cnt++;
             state--;
+            p++;
             break;
         }
 
+        // might be inside the pattern
         if ( *p == '{' ) {
             state++;
         } else if ( *p == '}' ) {
@@ -114,6 +141,5 @@ r3_slug_t * r3_slug_parse(const char *needle, int needle_len, char *offset, char
         }
         return NULL;
     }
-
     return s;
 }
