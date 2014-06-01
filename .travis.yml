@@ -6,9 +6,9 @@ compiler:
 matrix:
   include:
     - compiler: gcc
-      env: CONFIGURE_OPTION='--enable-debug --with-malloc=jemalloc' COVERALLS=yes VALGRIND=no DEBUG=yes
+      env: CONFIGURE_OPTION='--enable-debug --enable-gcov --with-malloc=jemalloc' COVERALLS=yes VALGRIND=no DEBUG=yes
     - compiler: gcc
-      env: CONFIGURE_OPTION='--enable-debug' COVERALLS=yes VALGRIND=yes DEBUG=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+      env: CONFIGURE_OPTION='--enable-debug --enable-gcov' COVERALLS=yes VALGRIND=yes DEBUG=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
     - compiler: clang
       env: ASAN_OPTIONS=symbolize=1 ASAN_SYMBOLIZER_PATH=/usr/local/clang-3.4/bin/llvm-symbolizer CFLAGS='-fsanitize=address -g -O1'
 

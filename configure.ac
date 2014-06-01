@@ -3,7 +3,7 @@ AC_PREREQ([2.64])
 AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([foreign subdir-objects])
+AM_INIT_AUTOMAKE([foreign subdir-objects color-tests])
 LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
@@ -22,6 +22,13 @@ AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
 PKG_PROG_PKG_CONFIG
 
 
+
+AC_ARG_ENABLE([gcov],
+  [AS_HELP_STRING([--enable-gcov],
+    [use Gcov to test the test suite])],
+    [],
+    [enable_gcov=no])
+AM_CONDITIONAL([COND_GCOV],[test '!' "$enable_gcov" = no])
 
 
 
