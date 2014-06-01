@@ -154,9 +154,9 @@ int slug_count(const char * needle, int len, char **errstr) {
     char * p = (char*) needle;
 
     while( (p-needle) < len) {
-
         if (*p == '\\' ) {
             p++; p++;
+            continue;
         }
 
         if (state == 1 && *p == '}') {
