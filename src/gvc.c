@@ -12,14 +12,7 @@
 #include "r3_gvc.h"
 #include "zmalloc.h"
 
-
-static char * node_id_str(int id) {
-    char * name = zmalloc(sizeof(char) * 20);
-    sprintf(name, "#%d", id);
-    return name;
-}
-
-void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, int node_cnt) {
+void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int node_cnt) {
     edge * e;
     Agnode_t *agn_child;
     Agedge_t *agn_edge;
@@ -28,7 +21,15 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, node * n, i
         e = n->edges[i];
 
         node_cnt++;
-        agn_child = agnode(g, node_id_str(node_cnt) , 1);
+
+        char *nodename = NULL;
+        if ( n->combined_pattern ) {
+            asprintf(&nodename,"%s", n->combined_pattern);
+        } else {
+            asprintf(&nodename,"#%d", node_cnt);
+        }
+
+        agn_child = agnode(g, nodename, 1);
         agn_edge = agedge(g, ag_parent_node, agn_child, 0, 1);
         agsafeset(agn_edge, "label", e->pattern, "");
         if (e->child && e->child->endpoint) {

@@ -115,9 +115,6 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
 
 void r3_tree_dump(const node * n, int level);
 
-int r3_tree_render_file(const node * tree, const char * format, const char * filename);
-
-int r3_tree_render_dot(node * tree);
 
 edge * r3_node_find_edge_str(const node * n, const char * str, int str_len);
 

@@ -48,7 +48,10 @@ START_TEST (test_gvc_render_file)
     r3_tree_insert_path(n, "/user/{id}",  NULL);
     r3_tree_insert_path(n, "/post/{title:\\w+}",  NULL);
 
-    r3_tree_compile(n, NULL);
+    char *errstr = NULL;
+    int errcode;
+    errcode = r3_tree_compile(n, &errstr);
+
     r3_tree_render_file(n, "png", "check_gvc.png");
     r3_tree_free(n);
 }

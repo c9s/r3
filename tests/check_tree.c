@@ -33,7 +33,6 @@ START_TEST (test_r3_node_find_edge)
     node * child = r3_tree_create(3);
 
     fail_if( r3_node_connect(n, zstrdup("/add") , child) == FALSE );
-
     fail_if( r3_node_find_edge(n, "/add") == NULL );
     fail_if( r3_node_find_edge(n, "/bar") != NULL );
 
@@ -108,9 +107,9 @@ START_TEST (test_pcre_patterns_insert)
 
 
     char *errstr = NULL;
-    int errno;
-    errno = r3_tree_compile(n, &errstr);
-    ck_assert(errno == 0); // no error
+    int errcode;
+    errcode = r3_tree_compile(n, &errstr);
+    ck_assert(errcode == 0); // no error
 
     // r3_tree_dump(n, 0);
 
