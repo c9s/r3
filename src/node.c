@@ -495,6 +495,7 @@ node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * d
 edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix_len, char **errstr) {
     int i = 0;
     int prefix = 0;
+    *prefix_len = 0;
     edge *e = NULL;
     for(i = 0 ; i < n->edge_len ; i++ ) {
         // ignore all edges with slug
