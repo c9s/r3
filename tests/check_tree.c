@@ -304,12 +304,17 @@ START_TEST (test_incomplete_slug_path)
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a}", NULL);
 
     ret_node = r3_tree_insert_path(n, "/users/{idx:\\d{3}}/{idy}", NULL);
-    assert(ret_node);
+    ck_assert(ret_node);
 
     // OK to insert, but should return error when compiling patterns
-    // FIXME: this one returns the inserted node object.
-    ret_node = r3_tree_insert_path(n, "/users/{idx:\\d{3}}/{idy:aaa}", NULL);
-    assert(ret_node);
+    node * ret_node2 = r3_tree_insert_path(n, "/users/{idx:\\d{3}}/{idy:aaa}", NULL);
+    ck_assert(ret_node2);
+    ck_assert(ret_node2 != ret_node); // make sure it's another node
+
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+    ck_assert(errstr == NULL); // no error
 
     r3_tree_dump(n, NULL);
 
