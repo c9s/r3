@@ -40,12 +40,14 @@ check_gvc_SOURCES = check_gvc.c
 endif
 
 
-# TESTS += benchmark
-# benchmark_SOURCES = bench.c
 
 check_PROGRAMS = $(TESTS)
+
+noinst_PROGRAMS             = benchmark
+
+benchmark_SOURCES           = bench.c
 
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir)/include
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
 CLEANFILES                  = check_tree.log
-# noinst_PROGRAMS             = $(TESTS)
+
