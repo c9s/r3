@@ -277,28 +277,6 @@ END_TEST
 
 
 
-START_TEST (test_str_array)
-{
-    str_array * l = str_array_create(3);
-    ck_assert(l);
-
-    ck_assert(str_array_append(l, zstrdup("abc")));
-    ck_assert( l->len == 1 );
-
-    ck_assert(str_array_append(l, zstrdup("foo") ));
-    ck_assert( l->len == 2 );
-
-    fail_if( FALSE == str_array_append(l, zstrdup("bar") ) );
-    fail_if( l->len != 3 );
-
-    fail_if( FALSE == str_array_append(l, zstrdup("zoo") ) );
-    fail_if( l->len != 4 );
-
-    fail_if( FALSE == str_array_resize(l, l->cap * 2) );
-
-    str_array_free(l);
-}
-END_TEST
 
 START_TEST(test_route_cmp)
 {
@@ -422,7 +400,6 @@ Suite* r3_suite (void) {
 
         TCase *tcase = tcase_create("testcase");
         tcase_add_test(tcase, test_r3_node_construct_and_free);
-        tcase_add_test(tcase, test_str_array);
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, testr3_tree_insert_pathl);
         tcase_add_test(tcase, test_compile);
