@@ -540,7 +540,8 @@ edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix
                     break;
                 }
             } else if (ret == -1) {
-                return -1;
+                
+                return NULL;
             } else {
                 break;
             }
@@ -568,8 +569,11 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
     /* length of common prefix */
     int prefix_len = 0;
-    e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len, errstr);
-    if (e == -1) {
+    char *err = NULL;
+    e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len, &err);
+    if (err) {
+        // copy the error message pointer
+        if (errstr) *errstr = err;
         return NULL;
     }
 
