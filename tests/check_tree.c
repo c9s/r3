@@ -455,6 +455,26 @@ END_TEST
 
 
 
+START_TEST (test_insert_pathl_fail)
+{
+    node * n = r3_tree_create(10);
+
+    node * ret;
+
+    char *errstr = NULL;
+    ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"),  NULL, NULL, &errstr);
+    ck_assert(ret == NULL);
+    ck_assert(errstr != NULL);
+    printf("%s\n", errstr); // Returns Incomplete slug pattern. PATTERN (16): '/foo/{name:\d{5}', OFFSET: 16, STATE: 1
+    SAFE_FREE(errstr);
+
+    errstr = NULL;
+    r3_tree_compile(n, &errstr);
+    ck_assert(errstr == NULL);
+
+    r3_tree_free(n);
+}
+END_TEST
 
 
 
@@ -681,6 +701,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_common_prefix_same_pattern);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern2);
         tcase_add_test(tcase, test_insert_pathl);
+        tcase_add_test(tcase, test_insert_pathl_fail);
         tcase_add_test(tcase, test_node_construct_and_free);
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_compile);
