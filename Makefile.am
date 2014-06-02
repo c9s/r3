@@ -1,4 +1,4 @@
-SUBDIRS=3rdparty src tests
+SUBDIRS=3rdparty src . tests
 
 lib_LTLIBRARIES = libr3.la
 libr3_la_SOURCES =
@@ -7,6 +7,7 @@ libr3_la_LDFLAGS =
 
 AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/3rdparty -Wall -std=c99
 AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS)
+
 
 ACLOCAL_AMFLAGS=-I m4
 

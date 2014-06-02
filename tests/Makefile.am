@@ -43,9 +43,8 @@ endif
 
 check_PROGRAMS = $(TESTS)
 
-noinst_PROGRAMS             = benchmark
-
-benchmark_SOURCES           = bench.c
+noinst_PROGRAMS = bench
+bench_SOURCES = bench.c
 
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir)/include
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
