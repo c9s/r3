@@ -41,7 +41,7 @@ paths.each_index do |idx|
     puts "    m = r3_tree_match(n, \"#{path}\", NULL);"
     puts "    ck_assert(m);"
     puts "    ck_assert(m->data == data#{idx});"
-    puts "    ck_assert_int_gt(m->endpoint, 0);"
+    puts "    ck_assert(m->endpoint > 0);"
 end
 
 
