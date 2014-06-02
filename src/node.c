@@ -99,7 +99,7 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *chi
     if (dupl) {
         pat = zstrndup(pat, len);
     }
-    e = r3_edge_create(pat, len, child);
+    e = r3_edge_createl(pat, len, child);
     CHECK_PTR(e);
     r3_node_append_edge(n, e);
     return e;
@@ -520,7 +520,7 @@ edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix
         slug = r3_slug_new(path, path_len);
 
         do {
-            ret = r3_slug_parse(slug, path, path_len, path, NULL);
+            ret = r3_slug_parse(slug, path, path_len, offset, NULL);
             // found slug
             if (ret == 1) {
                 // inside slug, backtrace to the begin of the slug
@@ -529,13 +529,15 @@ edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix
                     break;
                 } else if ( p < slug->begin ) {
                     break;
-                } else if ( p > slug->end && p < (path + path_len) ) {
-                    offset = slug->end;
+                } else if ( p >= slug->end && p < (path + path_len) ) {
+                    offset = slug->end + 1;
+                    prefix = p - path;
                     continue;
-                    // XXX: see if it's in another slug
                 } else {
                     break;
                 }
+            } else {
+                break;
             }
         } while(ret == 1);
     }
@@ -558,25 +560,10 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
     // common edge
     edge * e = NULL;
 
+
     /* length of common prefix */
     int prefix_len = 0;
-    for( int i = 0 ; i < n->edge_len ; i++ ) {
-        // ignore all edges with slug
-        prefix_len = strndiff( (char*) path, n->edges[i]->pattern, n->edges[i]->pattern_len);
-
-        // no common, consider insert a new edge
-        if ( prefix_len > 0 ) {
-            e = n->edges[i];
-            break;
-        }
-    }
-
-
-    // branch the edge at correct position (avoid broken slugs)
-    const char *slug_s;
-    if ( (slug_s = inside_slug(path, path_len, ((char*) path + prefix_len), NULL)) != NULL ) {
-        prefix_len = slug_s - path;
-    }
+    e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len);
 
     const char * subpath = path + prefix_len;
     const int    subpath_len = path_len - prefix_len;

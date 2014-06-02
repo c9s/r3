@@ -144,7 +144,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 
 bool r3_node_has_slug_edges(const node *n);
 
-edge * r3_edge_create(const char * pattern, int pattern_len, node * child);
+edge * r3_edge_createl(const char * pattern, int pattern_len, node * child);
 
 node * r3_edge_branch(edge *e, int dl);
 

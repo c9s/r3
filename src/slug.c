@@ -76,7 +76,7 @@ int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char
     s->path = needle;
     s->path_len = needle_len;
 
-    if (!offset) {
+    if (offset == NULL) {
         offset = (char*) needle; // from the begining of the needle
     }
 
@@ -90,7 +90,6 @@ int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char
     char * p = offset;
 
     while( (p-needle) < needle_len) {
-
         // escape one character
         if (*p == '\\' ) {
             p++; p++;
@@ -133,13 +132,13 @@ int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char
         p++;
     };
 
-    if (state > 0) {
+    if (state != 0) {
         if (errstr) {
             asprintf(errstr, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
         }
         return -1;
     }
-    // found slug
+    info("found slug\n");
     return 1;
 }
 
