@@ -612,9 +612,6 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
                 int   slug_pattern_len = 0;
                 char *slug_pattern = slug_find_pattern(slug_p, &slug_pattern_len);
 
-                fprintf(stderr, "slug: %.*s\n", slug_len, slug_p);
-                fprintf(stderr, "slug pattern: '%.*s'\n", slug_pattern_len, slug_pattern);
-
                 int opcode = 0;
                 // if there is a pattern defined.
                 if (slug_pattern_len) {
@@ -664,8 +661,6 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
             child->endpoint++;
             if (data)
                 child->data = data;
-
-            printf("insert %.*s\n", path_len, path);
 
             r3_node_connectl(n, path, path_len, 1, child);
             if (route) {
