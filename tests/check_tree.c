@@ -12,17 +12,16 @@
 
 START_TEST (test_find_common_prefix)
 {
-    char *errstr = NULL;
     node * n = r3_tree_create(10);
     edge * e = r3_edge_createl(zstrdup("/foo/{slug}"), sizeof("/foo/{slug}")-1, NULL);
     r3_node_append_edge(n,e);
 
-    int prefix_len;
+    char *errstr = NULL;
+    int prefix_len = 0;
     edge *ret_edge = NULL;
 
 
     errstr = NULL;
-    prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "/foo", sizeof("/foo")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 4);
@@ -30,7 +29,6 @@ START_TEST (test_find_common_prefix)
 
 
     errstr = NULL;
-    prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "/foo/", sizeof("/foo/")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
@@ -46,7 +44,6 @@ START_TEST (test_find_common_prefix)
 
 
     errstr = NULL;
-    prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "/foo/{bar}", sizeof("/foo/{bar}")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
@@ -54,7 +51,6 @@ START_TEST (test_find_common_prefix)
 
 
     errstr = NULL;
-    prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "/foo/bar", sizeof("/foo/bar")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
@@ -62,7 +58,6 @@ START_TEST (test_find_common_prefix)
 
 
     errstr = NULL;
-    prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "/bar/", sizeof("/bar/")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 1);
@@ -70,7 +65,6 @@ START_TEST (test_find_common_prefix)
 
 
     errstr = NULL;
-    prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "{bar}", sizeof("{bar}")-1, &prefix_len, &errstr);
     ck_assert(!ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 0);
@@ -91,26 +85,29 @@ START_TEST (test_find_common_prefix_after)
     edge * e = r3_edge_createl(zstrdup("{slug}/foo"), sizeof("{slug}/foo")-1, NULL);
     r3_node_append_edge(n,e);
 
-    int prefix_len;
+    int prefix_len = 0;
     edge *ret_edge = NULL;
+    char *errstr = NULL;
 
-
-    prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo", sizeof("/foo")-1, &prefix_len, NULL);
+    errstr = NULL;
+    ret_edge = r3_node_find_common_prefix(n, "/foo", sizeof("/foo")-1, &prefix_len, &errstr);
     ck_assert(ret_edge == NULL);
     ck_assert_int_eq(prefix_len, 0);
+    SAFE_FREE(errstr);
 
 
-    prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "{slug}/bar", sizeof("{slug}/bar")-1, &prefix_len, NULL);
+    errstr = NULL;
+    ret_edge = r3_node_find_common_prefix(n, "{slug}/bar", sizeof("{slug}/bar")-1, &prefix_len, &errstr);
     ck_assert(ret_edge);
     ck_assert_int_eq(prefix_len, 7);
+    SAFE_FREE(errstr);
 
 
-    prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "{slug}/foo", sizeof("{slug}/foo")-1, &prefix_len, NULL);
+    errstr = NULL;
+    ret_edge = r3_node_find_common_prefix(n, "{slug}/foo", sizeof("{slug}/foo")-1, &prefix_len, &errstr);
     ck_assert(ret_edge);
     ck_assert_int_eq(prefix_len, 10);
+    SAFE_FREE(errstr);
 
 
     r3_tree_free(n);
@@ -127,11 +124,13 @@ START_TEST (test_find_common_prefix_double_middle)
 
     int prefix_len;
     edge *ret_edge = NULL;
+    char *errstr;
 
-    prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "{slug}/foo/{number}", sizeof("{slug}/foo/{number}")-1, &prefix_len, NULL);
+    errstr = NULL;
+    ret_edge = r3_node_find_common_prefix(n, "{slug}/foo/{number}", sizeof("{slug}/foo/{number}")-1, &prefix_len, &errstr);
     ck_assert(ret_edge);
     ck_assert_int_eq(prefix_len, 11);
+    SAFE_FREE(errstr);
 
     r3_tree_free(n);
 }
@@ -147,16 +146,19 @@ START_TEST (test_find_common_prefix_middle)
 
     int prefix_len;
     edge *ret_edge = NULL;
+    char *errstr = NULL;
 
-    prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo/{slug}/bar", sizeof("/foo/{slug}/bar")-1, &prefix_len, NULL);
+    errstr = NULL;
+    ret_edge = r3_node_find_common_prefix(n, "/foo/{slug}/bar", sizeof("/foo/{slug}/bar")-1, &prefix_len, &errstr);
     ck_assert(ret_edge);
     ck_assert_int_eq(prefix_len, 12);
+    SAFE_FREE(errstr);
 
-    prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/fo/{slug}/bar", sizeof("/fo/{slug}/bar")-1, &prefix_len, NULL);
+    errstr = NULL;
+    ret_edge = r3_node_find_common_prefix(n, "/fo/{slug}/bar", sizeof("/fo/{slug}/bar")-1, &prefix_len, &errstr);
     ck_assert(ret_edge);
     ck_assert_int_eq(prefix_len, 3);
+    SAFE_FREE(errstr);
 
     r3_tree_free(n);
 }
