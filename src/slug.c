@@ -70,6 +70,10 @@ char * r3_slug_to_str(const r3_slug_t *s) {
 r3_slug_t * r3_slug_parse_next(r3_slug_t *s, char **errstr) {
     return r3_slug_parse(s->end, s->path_len - (s->end - s->begin), errstr);
 }
+
+Return 0 => Empty, slug not found
+Return 1 => Slug found
+Return -1 => Slug parsing error
 */
 
 int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char **errstr) {

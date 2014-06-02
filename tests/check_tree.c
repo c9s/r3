@@ -8,10 +8,11 @@
 #include "zmalloc.h"
 #include "bench.h"
 
-
+#define SAFE_FREE(ptr) if(ptr) free(ptr);
 
 START_TEST (test_find_common_prefix)
 {
+    char *errstr = NULL;
     node * n = r3_tree_create(10);
     edge * e = r3_edge_createl(zstrdup("/foo/{slug}"), sizeof("/foo/{slug}")-1, NULL);
     r3_node_append_edge(n,e);
@@ -19,45 +20,61 @@ START_TEST (test_find_common_prefix)
     int prefix_len;
     edge *ret_edge = NULL;
 
+
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo", sizeof("/foo")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "/foo", sizeof("/foo")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 4);
+    SAFE_FREE(errstr);
 
 
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo/", sizeof("/foo/")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "/foo/", sizeof("/foo/")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
+    SAFE_FREE(errstr);
 
 
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo/{slog}", sizeof("/foo/{slog}")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "/foo/{slog}", sizeof("/foo/{slog}")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
+    SAFE_FREE(errstr);
 
 
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo/{bar}", sizeof("/foo/{bar}")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "/foo/{bar}", sizeof("/foo/{bar}")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
+    SAFE_FREE(errstr);
 
 
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/foo/bar", sizeof("/foo/bar")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "/foo/bar", sizeof("/foo/bar")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
+    SAFE_FREE(errstr);
 
+
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "/bar/", sizeof("/bar/")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "/bar/", sizeof("/bar/")-1, &prefix_len, &errstr);
     ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 1);
+    SAFE_FREE(errstr);
 
 
+    errstr = NULL;
     prefix_len = 0;
-    ret_edge = r3_node_find_common_prefix(n, "{bar}", sizeof("{bar}")-1, &prefix_len, NULL);
+    ret_edge = r3_node_find_common_prefix(n, "{bar}", sizeof("{bar}")-1, &prefix_len, &errstr);
     ck_assert(!ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 0);
+    SAFE_FREE(errstr);
 
 
     r3_tree_free(n);
