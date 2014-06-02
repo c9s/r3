@@ -72,11 +72,9 @@ r3_slug_t * r3_slug_parse_next(r3_slug_t *s, char **errstr) {
 }
 */
 
-r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **errstr) {
-    r3_slug_t * s = r3_slug_new(needle, needle_len);
-    if (!s) {
-        return NULL;
-    }
+int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char **errstr) {
+    s->path = needle;
+    s->path_len = needle_len;
 
     if (!offset) {
         offset = (char*) needle; // from the begining of the needle
@@ -84,7 +82,7 @@ r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **err
 
     // there is no slug
     if (!r3_path_contains_slug_char(offset)) {
-        return NULL;
+        return 0;
     }
 
     int cnt = 0;
@@ -139,9 +137,10 @@ r3_slug_t * r3_slug_parse(char *needle, int needle_len, char *offset, char **err
         if (errstr) {
             asprintf(errstr, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
         }
-        return NULL;
+        return -1;
     }
-    return s;
+    // found slug
+    return 1;
 }
 
 

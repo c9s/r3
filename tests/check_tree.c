@@ -9,6 +9,64 @@
 #include "bench.h"
 
 
+START_TEST (test_find_common_prefix)
+{
+    node * n = r3_tree_create(10);
+    edge * e = r3_edge_create("/foo/{slug}", sizeof("/foo/{slug}")-1, NULL);
+    r3_node_append_edge(n,e);
+
+    int prefix_len;
+    edge *ret_edge = NULL;
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "/foo", sizeof("/foo")-1, &prefix_len);
+    ck_assert(ret_edge);
+    ck_assert_int_eq(prefix_len, 4);
+
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "/foo/", sizeof("/foo/")-1, &prefix_len);
+    ck_assert(ret_edge);
+    ck_assert_int_eq(prefix_len, 5);
+
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "/foo/{slog}", sizeof("/foo/{slog}")-1, &prefix_len);
+    ck_assert(ret_edge);
+    ck_assert_int_eq(prefix_len, 5);
+
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "/foo/{bar}", sizeof("/foo/{bar}")-1, &prefix_len);
+    ck_assert(ret_edge);
+    ck_assert_int_eq(prefix_len, 5);
+
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "/foo/bar", sizeof("/foo/bar")-1, &prefix_len);
+    ck_assert(ret_edge);
+    ck_assert_int_eq(prefix_len, 5);
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "/bar/", sizeof("/bar/")-1, &prefix_len);
+    ck_assert(ret_edge);
+    ck_assert_int_eq(prefix_len, 1);
+
+
+    prefix_len = 0;
+    ret_edge = r3_node_find_common_prefix(n, "{bar}", sizeof("{bar}")-1, &prefix_len);
+    ck_assert(!ret_edge);
+    ck_assert_int_eq(prefix_len, 0);
+}
+END_TEST
+
+
+
+
+
+
+
+
 
 START_TEST (test_ltrim_slash)
 {
@@ -399,6 +457,10 @@ Suite* r3_suite (void) {
         Suite *suite = suite_create("r3 core tests");
 
         TCase *tcase = tcase_create("testcase");
+
+        tcase_add_test(tcase, test_find_common_prefix);
+
+        /*
         tcase_add_test(tcase, test_r3_node_construct_and_free);
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, testr3_tree_insert_pathl);
@@ -411,6 +473,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
+        */
 
         suite_add_tcase(suite, tcase);
 
