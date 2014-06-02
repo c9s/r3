@@ -109,7 +109,7 @@ edge * r3_node_find_edge(const node * n, const char * pat, int pat_len);
 void r3_node_append_edge(node *n, edge *child);
 
 
-edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix_len);
+edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix_len, char **errstr);
 
 node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data);
 

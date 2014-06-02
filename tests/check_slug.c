@@ -88,7 +88,7 @@ START_TEST (test_incomplete_slug)
     char * errstr = NULL;
     char * pattern = "/user/{name:\\d{3}}/to/{id";
     cnt = slug_count(pattern, strlen(pattern), &errstr);
-    ck_assert_int_eq(cnt, 0);
+    ck_assert_int_eq(cnt, -1);
     ck_assert(errstr);
     printf("%s\n",errstr);
     free(errstr);
