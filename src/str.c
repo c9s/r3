@@ -11,6 +11,7 @@
 #include <assert.h>
 #include "r3.h"
 #include "r3_str.h"
+#include "slug.h"
 #include "zmalloc.h"
 
 int r3_pattern_to_opcode(const char * pattern, int len) {

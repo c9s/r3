@@ -172,7 +172,7 @@ int slug_count(const char * needle, int len, char **errstr) {
         if (errstr) {
             asprintf(errstr, "Incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
         }
-        return 0;
+        return -1;
     }
     return cnt;
 }
