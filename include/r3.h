@@ -43,7 +43,7 @@ struct _node {
     unsigned char    endpoint;
     unsigned char    ov_cnt;
 
-    // <-- here comes a char[3] struct padding for alignment since we have 5 char above.
+    // <-- here comes a char[4] struct padding for alignment since we have 4 char above.
 
 
     /** compile-time variables here.... **/
