@@ -468,7 +468,7 @@ route * r3_tree_insert_routel(node *tree, int method, const char *path, int path
     route *r = r3_route_createl(path, path_len);
     CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
-    r3_tree_insert_pathl_(tree, path, path_len, r, data, NULL);
+    r3_tree_insert_pathl_ex(tree, path, path_len, r, data, NULL);
     return r;
 }
 
@@ -476,7 +476,7 @@ route * r3_tree_insert_routel(node *tree, int method, const char *path, int path
 
 node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data)
 {
-    return r3_tree_insert_pathl_(tree, path, path_len, NULL , data, NULL);
+    return r3_tree_insert_pathl_ex(tree, path, path_len, NULL , data, NULL);
 }
 
 
@@ -552,7 +552,7 @@ edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
+node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
 {
     node * n = tree;
 
@@ -602,7 +602,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
             r3_node_connect(n, zstrndup(path, (int)(p - path)), child);
 
             // and insert the rest part to the child
-            return r3_tree_insert_pathl_(child, p, path_len - (int)(p - path),  route, data, errstr);
+            return r3_tree_insert_pathl_ex(child, p, path_len - (int)(p - path),  route, data, errstr);
 
         } else {
             if (slug_cnt == 1) {
@@ -644,7 +644,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
                 int restlen = path_len - ((slug_p - path) + slug_len);
 
                 if (restlen) {
-                    return r3_tree_insert_pathl_(c2, slug_p + slug_len, restlen, route, data, errstr);
+                    return r3_tree_insert_pathl_ex(c2, slug_p + slug_len, restlen, route, data, errstr);
                 }
 
                 c2->data = data;
@@ -673,7 +673,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
 
         // there are something more we can insert
         if ( subpath_len > 0 ) {
-            return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route, data, errstr);
+            return r3_tree_insert_pathl_ex(e->child, subpath, subpath_len, route, data, errstr);
         } else {
             // there are no more path to insert
 
@@ -696,7 +696,7 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
          * we should split the end point and make a branch here...
          */
         r3_edge_branch(e, prefix_len);
-        return r3_tree_insert_pathl_(e->child, subpath, subpath_len, route , data, errstr);
+        return r3_tree_insert_pathl_ex(e->child, subpath, subpath_len, route , data, errstr);
     } else {
         fprintf(stderr, "unexpected route.");
         return NULL;
