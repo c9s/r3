@@ -86,7 +86,7 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *chi
     // find the same sub-pattern, if it does not exist, create one
     edge * e;
 
-    e = r3_node_find_edge(n, pat);
+    e = r3_node_find_edge(n, pat, len);
     if (e) {
         return e;
     }
@@ -115,10 +115,17 @@ void r3_node_append_edge(node *n, edge *e) {
     n->edges[ n->edge_len++ ] = e;
 }
 
-edge * r3_node_find_edge(const node * n, const char * pat) {
+
+/**
+ * Find the existing edge with specified pattern (include slug)
+ */
+edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
     edge * e;
     for (int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
+
+        // there is a case: "{foo}" vs "{foo:xxx}",
+        // we should return the match result: full-match or partial-match 
         if ( strcmp(e->pattern, pat) == 0 ) {
             return e;
         }
@@ -476,6 +483,10 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
     /* length of common prefix */
     int prefix_len = 0;
     for( int i = 0 ; i < n->edge_len ; i++ ) {
+        // ignore all edges with slug
+        if (n->edges[i]->has_slug)
+            continue;
+
         prefix_len = strndiff( (char*) path, n->edges[i]->pattern, n->edges[i]->pattern_len);
 
         // printf("prefix_len: %d   %s vs %s\n", prefix_len, path, n->edges[i]->pattern );
@@ -539,56 +550,63 @@ node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route *
                 char *slug_p = slug_find_placeholder(path, &slug_len);
                 int   slug_pattern_len = 0;
                 char *slug_pattern = slug_find_pattern(slug_p, &slug_pattern_len);
+
+                fprintf(stderr, "slug: %.*s\n", slug_len, slug_p);
+                fprintf(stderr, "slug pattern: '%.*s'\n", slug_pattern_len, slug_pattern);
+
                 int opcode = 0;
                 // if there is a pattern defined.
-                if (slug_pattern) {
+                if (slug_pattern_len) {
                     char *cpattern = slug_compile(slug_pattern, slug_pattern_len);
                     opcode = r3_pattern_to_opcode(cpattern, strlen(cpattern));
                     zfree(cpattern);
                 } else {
                     opcode = OP_EXPECT_NOSLASH;
                 }
-                // found opcode
-                if (opcode) {
-                    // if the slug starts after one+ charactor, for example foo{slug}
-                    node *c1;
-                    if (slug_p > path) {
-                        c1 = r3_tree_create(3);
-                        CHECK_PTR(c1);
 
-                        r3_node_connectl(n, path, slug_p - path, 1, c1); // duplicate
-                    } else {
-                        c1 = n;
-                    }
 
-                    node * c2 = r3_tree_create(3);
-                    CHECK_PTR(c2);
-
-                    edge * op_edge = r3_node_connectl(c1, slug_p, slug_len , 1, c2);
-                    op_edge->opcode = opcode;
-
-                    // insert rest
-                    int restlen = (path_len - (slug_p - path)) - slug_len;
-                    if (restlen) {
-                        return r3_tree_insert_pathl_(c2, slug_p + slug_len, restlen, route, data, errstr);
-                    }
-
-                    c2->data = data;
-                    c2->endpoint++;
-                    if (route) {
-                        route->data = data;
-                        r3_node_append_route(c2, route);
-                    }
-                    return c2;
+                // if the slug starts after one+ charactor, for example foo{slug}
+                node *c1;
+                if (slug_p > path) {
+                    c1 = r3_tree_create(3);
+                    CHECK_PTR(c1);
+                    r3_node_connectl(n, path, slug_p - path, 1, c1); // duplicate
+                } else {
+                    c1 = n;
                 }
+
+                node * c2 = r3_tree_create(3);
+                CHECK_PTR(c2);
+
+                edge * op_edge = r3_node_connectl(c1, slug_p, slug_len , 1, c2);
+                if(opcode) {
+                    op_edge->opcode = opcode;
+                }
+
+                int restlen = path_len - ((slug_p - path) + slug_len);
+
+                if (restlen) {
+                    return r3_tree_insert_pathl_(c2, slug_p + slug_len, restlen, route, data, errstr);
+                }
+
+                c2->data = data;
+                c2->endpoint++;
+                if (route) {
+                    route->data = data;
+                    r3_node_append_route(c2, route);
+                }
+                return c2;
             }
             // only one slug
             node * child = r3_tree_create(3);
             CHECK_PTR(child);
-
-            r3_node_connect(n, zstrndup(path, path_len) , child);
-            child->data = data;
             child->endpoint++;
+            if (data)
+                child->data = data;
+
+            printf("insert %.*s\n", path_len, path);
+
+            r3_node_connectl(n, path, path_len, 1, child);
             if (route) {
                 route->data = data;
                 r3_node_append_route(child, route);

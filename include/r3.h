@@ -104,7 +104,7 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int strdup, node *c
 
 #define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
 
-edge * r3_node_find_edge(const node * n, const char * pat);
+edge * r3_node_find_edge(const node * n, const char * pat, int pat_len);
 
 void r3_node_append_edge(node *n, edge *child);
 

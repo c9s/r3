@@ -21,6 +21,7 @@
 
 #include "r3.h"
 #include "r3_str.h"
+#include "slug.h"
 #include "zmalloc.h"
 
 edge * r3_edge_create(const char * pattern, int pattern_len, node * child) {
@@ -29,6 +30,7 @@ edge * r3_edge_create(const char * pattern, int pattern_len, node * child) {
     e->pattern_len = pattern_len;
     e->opcode = 0;
     e->child = child;
+    e->has_slug = r3_path_contains_slug_char(e->pattern);
     return e;
 }
 

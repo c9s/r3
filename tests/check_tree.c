@@ -26,21 +26,6 @@ START_TEST (test_r3_node_construct_and_free)
 }
 END_TEST
 
-START_TEST (test_r3_node_find_edge)
-{
-    node * n = r3_tree_create(10);
-
-    node * child = r3_tree_create(3);
-
-    fail_if( r3_node_connect(n, zstrdup("/add") , child) == FALSE );
-    fail_if( r3_node_find_edge(n, "/add") == NULL );
-    fail_if( r3_node_find_edge(n, "/bar") != NULL );
-
-    r3_tree_free(n);
-}
-END_TEST
-
-
 static node * create_simple_str_tree() {
     node * n;
     n = r3_tree_create(10);
@@ -125,6 +110,16 @@ START_TEST (test_incomplete_slug_path)
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{", NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a", NULL);
     r3_tree_insert_path(n, "/post/{handle:\\d{3}}/{a}", NULL);
+
+    ret_node = r3_tree_insert_path(n, "/users/{idx:\\d{3}}/{idy}", NULL);
+    assert(ret_node);
+
+    // OK to insert, but should return error when compiling patterns
+    // FIXME: this one returns the inserted node object.
+    ret_node = r3_tree_insert_path(n, "/users/{idx:\\d{3}}/{idy:aaa}", NULL);
+    assert(ret_node);
+
+    r3_tree_dump(n, NULL);
 
     r3_tree_free(n);
 }
@@ -285,13 +280,13 @@ END_TEST
 START_TEST (test_str_array)
 {
     str_array * l = str_array_create(3);
-    fail_if( l == NULL );
+    ck_assert(l);
 
-    fail_if( FALSE == str_array_append(l, zstrdup("abc") ) );
-    fail_if( l->len != 1 );
+    ck_assert(str_array_append(l, zstrdup("abc")));
+    ck_assert( l->len == 1 );
 
-    fail_if( FALSE == str_array_append(l, zstrdup("foo") ) );
-    fail_if( l->len != 2 );
+    ck_assert(str_array_append(l, zstrdup("foo") ));
+    ck_assert( l->len == 2 );
 
     fail_if( FALSE == str_array_append(l, zstrdup("bar") ) );
     fail_if( l->len != 3 );
@@ -423,14 +418,12 @@ END_TEST
 
 
 Suite* r3_suite (void) {
-        Suite *suite = suite_create("blah");
+        Suite *suite = suite_create("r3 core tests");
 
         TCase *tcase = tcase_create("testcase");
-        tcase_set_timeout(tcase, 30);
         tcase_add_test(tcase, test_r3_node_construct_and_free);
         tcase_add_test(tcase, test_str_array);
         tcase_add_test(tcase, test_ltrim_slash);
-        tcase_add_test(tcase, test_r3_node_find_edge);
         tcase_add_test(tcase, testr3_tree_insert_pathl);
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_route_cmp);
@@ -441,7 +434,6 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
-        tcase_set_timeout(tcase, 30);
 
         suite_add_tcase(suite, tcase);
 
