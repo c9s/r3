@@ -574,7 +574,9 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
         char *err = NULL;
         int slug_cnt = slug_count(path, path_len, &err);
         if (err) {
-            fprintf(stderr, "Can not insert path '%s'. Error: %s\n", path, err);
+            if(errstr) {
+                *errstr = err;
+            }
             free(err);
             return NULL;
         }
