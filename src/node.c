@@ -82,6 +82,11 @@ void r3_tree_free(node * tree) {
     tree = NULL;
 }
 
+
+
+/**
+ * Connect two node objects, and create an edge object between them.
+ */
 edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *child) {
     // find the same sub-pattern, if it does not exist, create one
     edge * e;
@@ -94,7 +99,7 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *chi
     if (dupl) {
         pat = zstrndup(pat, len);
     }
-    e = r3_edge_create(pat, len, child);
+    e = r3_edge_createl(pat, len, child);
     CHECK_PTR(e);
     r3_node_append_edge(n, e);
     return e;
@@ -118,10 +123,13 @@ void r3_node_append_edge(node *n, edge *e) {
 
 /**
  * Find the existing edge with specified pattern (include slug)
+ *
+ * if "pat" is a slug, we should compare with the specified pattern.
  */
 edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
     edge * e;
-    for (int i = 0 ; i < n->edge_len ; i++ ) {
+    int i;
+    for (i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
 
         // there is a case: "{foo}" vs "{foo:xxx}",
@@ -473,36 +481,89 @@ node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * d
 
 
 /**
- * Return the last inserted node.
+ * Find common prefix from the edges of the node.
+ *
+ * Some cases of the common prefix:
+ *
+ * 1.  "/foo/{slug}" vs "/foo/bar"                      => common prefix = "/foo/"
+ * 2.  "{slug}/hate" vs "{slug}/bar"                    => common prefix = "{slug}/"
+ * 2.  "/z/{slug}/hate" vs "/z/{slog}/bar"              => common prefix = "/z/"
+ * 3.  "{slug:xxx}/hate" vs "{slug:yyy}/bar"            => common prefix = ""
+ * 4.  "aaa{slug:xxx}/hate" vs "aab{slug:yyy}/bar"      => common prefix = "aa"
+ * 5.  "/foo/{slug}/hate" vs "/fo{slug}/bar"            => common prefix = "/fo"
  */
-node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
-{
-    node * n = tree;
-    edge * e = NULL;
-
-    /* length of common prefix */
-    int prefix_len = 0;
-    for( int i = 0 ; i < n->edge_len ; i++ ) {
+edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix_len) {
+    int i = 0;
+    int prefix = 0;
+    edge *e = NULL;
+    for(i = 0 ; i < n->edge_len ; i++ ) {
         // ignore all edges with slug
-        if (n->edges[i]->has_slug)
-            continue;
-
-        prefix_len = strndiff( (char*) path, n->edges[i]->pattern, n->edges[i]->pattern_len);
-
-        // printf("prefix_len: %d   %s vs %s\n", prefix_len, path, n->edges[i]->pattern );
+        prefix = strndiff( (char*) path, n->edges[i]->pattern, n->edges[i]->pattern_len);
 
         // no common, consider insert a new edge
-        if ( prefix_len > 0 ) {
+        if ( prefix > 0 ) {
             e = n->edges[i];
             break;
         }
     }
 
-    // branch the edge at correct position (avoid broken slugs)
-    const char *slug_s;
-    if ( (slug_s = inside_slug(path, path_len, ((char*) path + prefix_len), NULL)) != NULL ) {
-        prefix_len = slug_s - path;
+    // found common prefix edge
+    if (prefix > 0) {
+        r3_slug_t *slug;
+        int ret = 0;
+        char *p = NULL;
+        char *offset = NULL;
+
+        offset = path;
+        p = path + prefix;
+
+        slug = r3_slug_new(path, path_len);
+
+        do {
+            ret = r3_slug_parse(slug, path, path_len, offset, NULL);
+            // found slug
+            if (ret == 1) {
+                // inside slug, backtrace to the begin of the slug
+                if ( p >= slug->begin && p <= slug->end ) {
+                    prefix = slug->begin - path - 1;
+                    break;
+                } else if ( p < slug->begin ) {
+                    break;
+                } else if ( p >= slug->end && p < (path + path_len) ) {
+                    offset = slug->end + 1;
+                    prefix = p - path;
+                    continue;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        } while(ret == 1);
     }
+
+    *prefix_len = prefix;
+    return e;
+}
+
+
+
+
+/**
+ * Return the last inserted node.
+ */
+node * r3_tree_insert_pathl_(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
+{
+    node * n = tree;
+
+
+    // common edge
+    edge * e = NULL;
+
+
+    /* length of common prefix */
+    int prefix_len = 0;
+    e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len);
 
     const char * subpath = path + prefix_len;
     const int    subpath_len = path_len - prefix_len;

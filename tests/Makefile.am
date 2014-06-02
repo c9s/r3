@@ -21,6 +21,12 @@ check_slug_SOURCES = check_slug.c
 TESTS += check_tree
 check_tree_SOURCES = check_tree.c
 
+TESTS += check_routes
+check_routes_SOURCES = check_routes.c
+
+TESTS += check_str_array
+check_str_array_SOURCES = check_str_array.c
+
 
 if ENABLE_JSON
 TESTS += check_json
