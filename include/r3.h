@@ -37,13 +37,17 @@ struct _node {
     edge  ** edges;
     // edge  ** edge_table;
 
-    // almost less than 255
+    // edges are mostly less than 255
     unsigned char    edge_len;
-    unsigned char    compare_type;
-    unsigned char    endpoint;
-    unsigned char    ov_cnt;
+    unsigned char    compare_type; // compare_type: pcre, opcode, string
+    unsigned char    endpoint; // endpoint, should be zero for non-endpoint nodes
+    unsigned char    ov_cnt; // capture vector array size for pcre
 
-    // <-- here comes a char[4] struct padding for alignment since we have 4 char above.
+    // almost less than 255
+    unsigned char      edge_cap;
+    unsigned char      route_len;
+    unsigned char      route_cap;
+    // <-- here comes a char[1] struct padding for alignment since we have 4 char above.
 
 
     /** compile-time variables here.... **/
@@ -55,11 +59,6 @@ struct _node {
     route ** routes;
 
     char * combined_pattern;
-
-    // almost less than 255
-    unsigned char      edge_cap;
-    unsigned char      route_len;
-    unsigned char      route_cap;
 
     /**
      * the pointer of route data
