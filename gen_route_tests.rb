@@ -39,7 +39,7 @@ END
 paths.each_index do |idx|
     path = paths.fetch(idx)
     puts "    m = r3_tree_match(n, \"#{path}\", NULL);"
-    puts "    ck_assert(m);"
+    puts "    ck_assert(m != NULL);"
     puts "    ck_assert(m->data == data#{idx});"
     puts "    ck_assert(m->endpoint > 0);"
 end
