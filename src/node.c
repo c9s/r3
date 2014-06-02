@@ -82,6 +82,11 @@ void r3_tree_free(node * tree) {
     tree = NULL;
 }
 
+
+
+/**
+ * Connect two node objects, and create an edge object between them.
+ */
 edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *child) {
     // find the same sub-pattern, if it does not exist, create one
     edge * e;
@@ -118,10 +123,13 @@ void r3_node_append_edge(node *n, edge *e) {
 
 /**
  * Find the existing edge with specified pattern (include slug)
+ *
+ * if "pat" is a slug, we should compare with the specified pattern.
  */
 edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
     edge * e;
-    for (int i = 0 ; i < n->edge_len ; i++ ) {
+    int i;
+    for (i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
 
         // there is a case: "{foo}" vs "{foo:xxx}",
