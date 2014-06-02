@@ -657,11 +657,10 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_common_prefix_same_pattern);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern2);
         tcase_add_test(tcase, test_insert_pathl);
-        tcase_add_test(tcase, test_compile_fail);
         tcase_add_test(tcase, test_node_construct_and_free);
-        /*
         tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_compile);
+        tcase_add_test(tcase, test_compile_fail);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
         tcase_add_test(tcase, test_pcre_pattern_simple);
@@ -670,8 +669,6 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
-        */
-
         suite_add_tcase(suite, tcase);
 
         return suite;
