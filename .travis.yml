@@ -33,7 +33,7 @@ script:
   # - if [ "x$VALGRIND" == xyes && "x$DEBUG" == xyes ]; then valgrind ./tests/check_* -v --trace-children=yes --show-leak-kinds=full --leak-check=full; fi
 
 after_success:
-  - if [ x$COVERALLS == xyes ]; then coveralls ; fi
+  - if [ x$COVERALLS == xyes ]; then coveralls --exclude php --exclude 3rdparty; fi
 
 cache:
   apt: true
