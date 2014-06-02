@@ -98,14 +98,14 @@ START_TEST (test_find_common_prefix_after)
 
     errstr = NULL;
     ret_edge = r3_node_find_common_prefix(n, "{slug}/bar", sizeof("{slug}/bar")-1, &prefix_len, &errstr);
-    ck_assert(ret_edge);
+    ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 7);
     SAFE_FREE(errstr);
 
 
     errstr = NULL;
     ret_edge = r3_node_find_common_prefix(n, "{slug}/foo", sizeof("{slug}/foo")-1, &prefix_len, &errstr);
-    ck_assert(ret_edge);
+    ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 10);
     SAFE_FREE(errstr);
 
@@ -181,7 +181,7 @@ START_TEST (test_find_common_prefix_same_pattern)
 
     prefix_len = 0;
     ret_edge = r3_node_find_common_prefix(n, "/foo/{slug}/hate", sizeof("/foo/{slug}/hate")-1, &prefix_len, NULL);
-    ck_assert(ret_edge);
+    ck_assert(ret_edge != NULL);
     ck_assert_int_eq(prefix_len, 5);
 
     r3_tree_free(n);
