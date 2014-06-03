@@ -468,11 +468,21 @@ route * r3_route_createl(const char * path, int path_len) {
 }
 
 
-route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data) {
+/**
+ * Helper function for creating routes from request URI path and request method
+ *
+ * method (int): METHOD_GET, METHOD_POST, METHOD_PUT, METHOD_DELETE ...
+ */
+route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, const char **errstr) {
     route *r = r3_route_createl(path, path_len);
     CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
-    r3_tree_insert_pathl_ex(tree, path, path_len, r, data, NULL);
+    node * ret = r3_tree_insert_pathl_ex(tree, path, path_len, r, data, errstr);
+    if (!ret) {
+        // failed insert
+        r3_route_free(r);
+        return NULL;
+    }
     return r;
 }
 

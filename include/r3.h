@@ -128,6 +128,10 @@ node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * d
 
 route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data);
 
+route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, const char **errstr);
+
+#define r3_tree_insert_routel(n, method, path, path_len, data) r3_tree_insert_routel_ex(n, method, path, path_len, data, NULL)
+
 #define r3_tree_insert_path(n,p,d) r3_tree_insert_pathl_ex(n,p,strlen(p), NULL, d, NULL)
 
 #define r3_tree_insert_route(n,method,path,data) r3_tree_insert_routel(n, method, path, strlen(path), data)
