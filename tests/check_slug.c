@@ -22,23 +22,23 @@ START_TEST (test_pattern_to_opcode)
 }
 END_TEST
 
-START_TEST (test_slug_compile)
+START_TEST (test_r3_slug_compile)
 {
     char * path = "/user/{id}";
     char * c = NULL;
-    ck_assert_str_eq( c = slug_compile(path, strlen(path) ) , "^/user/([^/]+)" );
+    ck_assert_str_eq( c = r3_slug_compile(path, strlen(path) ) , "^/user/([^/]+)" );
     zfree(c);
 
     char * path2 = "/what/{id}-foo";
-    ck_assert_str_eq( c = slug_compile(path2, strlen(path2) ) , "^/what/([^/]+)-foo" );
+    ck_assert_str_eq( c = r3_slug_compile(path2, strlen(path2) ) , "^/what/([^/]+)-foo" );
     zfree(c);
 
     char * path3 = "-{id}";
-    ck_assert_str_eq( c = slug_compile(path3, strlen(path3)), "^-([^/]+)" );
+    ck_assert_str_eq( c = r3_slug_compile(path3, strlen(path3)), "^-([^/]+)" );
     zfree(c);
 
     char * path4 = "-{idx:\\d{3}}";
-    ck_assert_str_eq( c = slug_compile(path4, strlen(path4)), "^-(\\d{3})" );
+    ck_assert_str_eq( c = r3_slug_compile(path4, strlen(path4)), "^-(\\d{3})" );
     zfree(c);
 }
 END_TEST
@@ -49,36 +49,36 @@ START_TEST (test_contains_slug)
 }
 END_TEST
 
-START_TEST (test_slug_find_pattern)
+START_TEST (test_r3_slug_find_pattern)
 {
     int len;
-    char * namerex = slug_find_pattern("{name:\\s+}", &len);
+    char * namerex = r3_slug_find_pattern("{name:\\s+}", &len);
     ck_assert( strncmp(namerex, "\\s+", len) == 0 );
 }
 END_TEST
 
 
-START_TEST (test_slug_find_placeholder)
+START_TEST (test_r3_slug_find_placeholder)
 {
     int slug_len = 0;
     char * slug;
-    slug = slug_find_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
+    slug = r3_slug_find_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
     ck_assert( strncmp(slug, "{name:\\s+}", slug_len) == 0 );
 
 
-    slug = slug_find_placeholder("/user/{idx:\\d{3}}/to/{idy:\\d{3}}", &slug_len);
+    slug = r3_slug_find_placeholder("/user/{idx:\\d{3}}/to/{idy:\\d{3}}", &slug_len);
     ck_assert( slug_len == strlen("{idx:\\d{3}}") );
     ck_assert( strncmp(slug, "{idx:\\d{3}}", slug_len) == 0 );
 }
 END_TEST
 
-START_TEST (test_inside_slug)
+START_TEST (test_r3_inside_slug)
 {
     char * pattern = "/user/{name:\\s+}/to/{id}";
     char * offset = strchr(pattern, '{') + 2;
-    ck_assert( (int)inside_slug(pattern, strlen(pattern), offset, NULL) );
-    ck_assert( *(inside_slug(pattern, strlen(pattern), offset, NULL)) == '{' );
-    ck_assert( ! inside_slug(pattern, strlen(pattern), pattern, NULL) );
+    ck_assert( (int)r3_inside_slug(pattern, strlen(pattern), offset, NULL) );
+    ck_assert( *(r3_inside_slug(pattern, strlen(pattern), offset, NULL)) == '{' );
+    ck_assert( ! r3_inside_slug(pattern, strlen(pattern), pattern, NULL) );
 }
 END_TEST
 
@@ -159,10 +159,10 @@ START_TEST (test_slug_count)
 }
 END_TEST
 
-START_TEST (test_slug_find_placeholder_with_broken_slug)
+START_TEST (test_r3_slug_find_placeholder_with_broken_slug)
 {
     int slug_len = 0;
-    char * slug = slug_find_placeholder("/user/{name:\\s+/to/{id", &slug_len);
+    char * slug = r3_slug_find_placeholder("/user/{name:\\s+/to/{id", &slug_len);
     ck_assert(slug == 0);
 }
 END_TEST
@@ -173,12 +173,12 @@ Suite* r3_suite (void) {
         TCase *tcase = tcase_create("test_slug");
         tcase_set_timeout(tcase, 30);
         tcase_add_test(tcase, test_contains_slug);
-        tcase_add_test(tcase, test_inside_slug);
-        tcase_add_test(tcase, test_slug_find_pattern);
-        tcase_add_test(tcase, test_slug_find_placeholder);
-        tcase_add_test(tcase, test_slug_find_placeholder_with_broken_slug);
+        tcase_add_test(tcase, test_r3_inside_slug);
+        tcase_add_test(tcase, test_r3_slug_find_pattern);
+        tcase_add_test(tcase, test_r3_slug_find_placeholder);
+        tcase_add_test(tcase, test_r3_slug_find_placeholder_with_broken_slug);
         tcase_add_test(tcase, test_slug_count);
-        tcase_add_test(tcase, test_slug_compile);
+        tcase_add_test(tcase, test_r3_slug_compile);
         tcase_add_test(tcase, test_pattern_to_opcode);
         tcase_add_test(tcase, test_incomplete_slug);
         // tcase_add_test(tcase, test_slug_parse_with_pattern);

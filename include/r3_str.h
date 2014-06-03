@@ -10,15 +10,13 @@
 #include "r3.h"
 #include "config.h"
 
-char * slug_compile(const char * str, int len);
+char * r3_slug_compile(const char * str, int len);
 
-char * slug_find_pattern(const char *s1, int *len);
+char * r3_slug_find_pattern(const char *s1, int *len);
 
-char * slug_find_placeholder(const char *s1, int *len);
+char * r3_slug_find_placeholder(const char *s1, int *len);
 
-char * inside_slug(const char * needle, int needle_len, char *offset, char **errstr);
-
-char * ltrim_slash(char* str);
+char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **errstr);
 
 void str_repeat(char *s, const char *c, int len);
 

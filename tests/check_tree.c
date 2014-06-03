@@ -221,12 +221,6 @@ END_TEST
 
 
 
-START_TEST (test_ltrim_slash)
-{
-    fail_if( strcmp( ltrim_slash("/blog") , "blog" ) != 0 );
-    fail_if( strcmp( ltrim_slash("blog") , "blog" ) != 0 );
-}
-END_TEST
 
 START_TEST (test_node_construct_and_free)
 {
@@ -702,7 +696,6 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_insert_pathl);
         tcase_add_test(tcase, test_insert_pathl_fail);
         tcase_add_test(tcase, test_node_construct_and_free);
-        tcase_add_test(tcase, test_ltrim_slash);
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_compile_fail);
         tcase_add_test(tcase, test_route_cmp);

@@ -191,7 +191,7 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
 
         if ( e->has_slug ) {
             // compile "foo/{slug}" to "foo/[^/]+"
-            char * slug_pat = slug_compile(e->pattern, e->pattern_len);
+            char * slug_pat = r3_slug_compile(e->pattern, e->pattern_len);
             strcat(p, slug_pat);
         } else {
             strncat(p,"^(", 2);
@@ -590,7 +590,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
         if ( slug_cnt > 1 ) {
             int   slug_len;
-            char *p = slug_find_placeholder(path, &slug_len);
+            char *p = r3_slug_find_placeholder(path, &slug_len);
 
 #ifdef DEBUG
             assert(p);
@@ -598,7 +598,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
             // find the next one '{', then break there
             if(p) {
-                p = slug_find_placeholder(p + slug_len + 1, NULL);
+                p = r3_slug_find_placeholder(p + slug_len + 1, NULL);
             }
 #ifdef DEBUG
             assert(p);
@@ -617,14 +617,14 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
             if (slug_cnt == 1) {
                 // there is one slug, let's see if it's optimiz-able by opcode
                 int   slug_len = 0;
-                char *slug_p = slug_find_placeholder(path, &slug_len);
+                char *slug_p = r3_slug_find_placeholder(path, &slug_len);
                 int   slug_pattern_len = 0;
-                char *slug_pattern = slug_find_pattern(slug_p, &slug_pattern_len);
+                char *slug_pattern = r3_slug_find_pattern(slug_p, &slug_pattern_len);
 
                 int opcode = 0;
                 // if there is a pattern defined.
                 if (slug_pattern_len) {
-                    char *cpattern = slug_compile(slug_pattern, slug_pattern_len);
+                    char *cpattern = r3_slug_compile(slug_pattern, slug_pattern_len);
                     opcode = r3_pattern_to_opcode(cpattern, strlen(cpattern));
                     zfree(cpattern);
                 } else {

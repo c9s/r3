@@ -42,7 +42,7 @@ int r3_pattern_to_opcode(const char * pattern, int len) {
 
 
 
-char * inside_slug(const char * needle, int needle_len, char *offset, char **errstr) {
+char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **errstr) {
     char * s1 = offset;
     char * s2 = offset;
 
@@ -78,7 +78,7 @@ char * inside_slug(const char * needle, int needle_len, char *offset, char **err
     return NULL;
 }
 
-char * slug_find_placeholder(const char *s1, int *len) {
+char * r3_slug_find_placeholder(const char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 0;
@@ -110,7 +110,7 @@ char * slug_find_placeholder(const char *s1, int *len) {
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * slug_find_pattern(const char *s1, int *len) {
+char * r3_slug_find_pattern(const char *s1, int *len) {
     char *c;
     char *s2;
     int cnt = 1;
@@ -139,7 +139,7 @@ char * slug_find_pattern(const char *s1, int *len) {
 /**
  * @param char * sep separator
  */
-char * slug_compile(const char * str, int len)
+char * r3_slug_compile(const char * str, int len)
 {
     char *s1 = NULL, *o = NULL;
     char *pat = NULL;
@@ -148,7 +148,7 @@ char * slug_compile(const char * str, int len)
 
     // append prefix
     int s1_len;
-    s1 = slug_find_placeholder(str, &s1_len);
+    s1 = r3_slug_find_placeholder(str, &s1_len);
 
     if ( s1 == NULL ) {
         return zstrdup(str);
@@ -168,7 +168,7 @@ char * slug_compile(const char * str, int len)
 
 
     int pat_len;
-    pat = slug_find_pattern(s1, &pat_len);
+    pat = r3_slug_find_pattern(s1, &pat_len);
 
     if (pat) {
         *o = '(';
