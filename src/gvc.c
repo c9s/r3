@@ -41,33 +41,40 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node 
 
 
 
-
 /**
  * Render a tree to tree graph image via graphviz (dot)
  */
-int r3_tree_render_dot(const node * tree, FILE *fp)
+int r3_tree_render(const node * tree, const char *layout, const char * format, FILE *fp)
 {
     Agraph_t *g;
     /* set up a graphviz context - but only once even for multiple graphs */
-    static GVC_t *gvc;
-
-    if (!gvc) {
-        gvc = gvContext();
-    }
+    GVC_t *gvc = NULL;
+    gvc = gvContext();
     /* Create a simple digraph */
     g = agopen("g", Agdirected, 0);
 
     // create self node
     Agnode_t *ag_root = agnode(g, "{root}", 1);
     r3_tree_build_ag_nodes(g, ag_root, tree, 0);
-    gvLayout(gvc, g, "dot");
-    gvRender(gvc, g, "dot", fp);
+    gvLayout(gvc, g, layout);
+    gvRender(gvc, g, format, fp);
     gvFreeLayout(gvc, g);
     agclose(g);
     return 0;
 }
 
 
+
+
+
+
+/**
+ * Render a tree to tree graph image via graphviz (dot)
+ */
+int r3_tree_render_dot(const node * tree, const char *layout, FILE *fp)
+{
+    return r3_tree_render(tree, layout, "dot", fp);
+}
 
 
 /**
@@ -77,12 +84,15 @@ int r3_tree_render_file(const node * tree, const char * format, const char * fil
 {
     Agraph_t *g;
 
-    /* set up a graphviz context - but only once even for multiple graphs */
+    GVC_t *gvc = NULL;
+    gvc = gvContext();
+    /*
+    // set up a graphviz context - but only once even for multiple graphs
     static GVC_t *gvc;
-
     if (!gvc) {
         gvc = gvContext();
     }
+    */
 
     /* Create a simple digraph */
     g = agopen("g", Agdirected, 0);

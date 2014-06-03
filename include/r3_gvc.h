@@ -12,7 +12,9 @@
 
 void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int node_cnt);
 
-int r3_tree_render_dot(const node * tree, FILE *fp);
+int r3_tree_render(const node * tree, const char *layout, const char * format, FILE *fp);
+
+int r3_tree_render_dot(const node * tree, const char *layout, FILE *fp);
 
 int r3_tree_render_file(const node * tree, const char * format, const char * filename);
 
