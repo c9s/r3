@@ -76,7 +76,7 @@ Return 1 => Slug found
 Return -1 => Slug parsing error
 */
 
-int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *offset, char **errstr) {
+int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *offset, const char **errstr) {
     s->path = (char*) needle;
     s->path_len = needle_len;
 
@@ -138,7 +138,9 @@ int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *
 
     if (state != 0) {
         if (errstr) {
-            asprintf(errstr, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
+            char *err = NULL;
+            asprintf(&err, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
+            *errstr = err;
         }
         return -1;
     }
@@ -150,7 +152,7 @@ int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
-int slug_count(const char * needle, int len, char **errstr) {
+int slug_count(const char * needle, int len, const char **errstr) {
     int cnt = 0;
     int state = 0;
     char * p = (char*) needle;
@@ -174,7 +176,9 @@ int slug_count(const char * needle, int len, char **errstr) {
     info("FOUND PATTERN: '%s' (%d), STATE: %d\n", needle, len, state);
     if (state != 0) {
         if (errstr) {
-            asprintf(errstr, "Incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
+            char *err = NULL;
+            asprintf(&err, "Incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
+            *errstr = err;
         }
         return -1;
     }

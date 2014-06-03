@@ -496,7 +496,7 @@ node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * d
  * 4.  "aaa{slug:xxx}/hate" vs "aab{slug:yyy}/bar"      => common prefix = "aa"
  * 5.  "/foo/{slug}/hate" vs "/fo{slug}/bar"            => common prefix = "/fo"
  */
-edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, char **errstr) {
+edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, const char **errstr) {
     int i = 0;
     int prefix = 0;
     *prefix_len = 0;
@@ -557,7 +557,7 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
+node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, const char **errstr)
 {
     node * n = tree;
 
@@ -568,7 +568,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
     /* length of common prefix */
     int prefix_len = 0;
-    char *err = NULL;
+    const char *err = NULL;
     e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len, &err);
     if (err) {
         // copy the error message pointer
