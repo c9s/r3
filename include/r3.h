@@ -14,9 +14,6 @@
 #include <stdbool.h>
 #include "r3_define.h"
 #include "str_array.h"
-#include "match_entry.h"
-
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -88,6 +85,27 @@ struct _route {
     int    remote_addr_pattern_len;
 };
 
+typedef struct {
+    str_array * vars;
+    const char * path; // current path to dispatch
+    int    path_len; // the length of the current path
+    int    request_method;  // current request method
+
+    void * data; // route ptr
+
+    char * host; // the request host
+    int    host_len;
+
+    char * remote_addr;
+    int    remote_addr_len;
+} match_entry;
+
+
+
+
+
+
+
 
 node * r3_tree_create(int cap);
 
@@ -153,11 +171,12 @@ route * r3_route_create(const char * path);
 
 route * r3_route_createl(const char * path, int path_len);
 
-int r3_route_cmp(const route *r1, const match_entry *r2);
 
 void r3_node_append_route(node * n, route * route);
 
 void r3_route_free(route * route);
+
+int r3_route_cmp(const route *r1, const match_entry *r2);
 
 route * r3_tree_match_route(const node *n, match_entry * entry);
 
@@ -176,6 +195,17 @@ int r3_pattern_to_opcode(const char * pattern, int pattern_len);
 enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
 enum { OP_EXPECT_MORE_DIGITS = 1, OP_EXPECT_MORE_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH, OP_EXPECT_MORE_ALPHA };
+
+
+
+match_entry * match_entry_createl(const char * path, int path_len);
+
+#define match_entry_create(path) match_entry_createl(path,strlen(path))
+
+void match_entry_free(match_entry * entry);
+
+
+
 
 #ifdef __cplusplus
 }
