@@ -1,4 +1,4 @@
-SUBDIRS=3rdparty src . tests
+SUBDIRS=3rdparty src . tests examples
 
 lib_LTLIBRARIES = libr3.la
 libr3_la_SOURCES =

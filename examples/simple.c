@@ -6,16 +6,11 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
-
-#include "r3/r3.h"
+#include "r3.h"
 
 int main()
 {
     node * n = r3_tree_create(3);
-
-    int route_data = 999;
 
     r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
     r3_tree_insert_path(n, "/foo/bar/qux",  NULL);

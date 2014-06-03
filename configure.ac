@@ -127,5 +127,6 @@ AC_CONFIG_FILES([
   3rdparty/Makefile
   src/Makefile
   tests/Makefile
+  examples/Makefile
 ])
 AC_OUTPUT

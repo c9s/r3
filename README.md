@@ -41,8 +41,6 @@ API
 
 ```c
 #include <r3.h>
-#include <r3_str.h>
-
 
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
 n = r3_tree_create(10);
