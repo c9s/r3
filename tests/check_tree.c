@@ -66,7 +66,7 @@ START_TEST (test_find_common_prefix)
 
     errstr = NULL;
     ret_edge = r3_node_find_common_prefix(n, "{bar}", sizeof("{bar}")-1, &prefix_len, &errstr);
-    ck_assert(!ret_edge != NULL);
+    ck_assert(ret_edge == NULL);
     ck_assert_int_eq(prefix_len, 0);
     SAFE_FREE(errstr);
 
@@ -253,7 +253,6 @@ START_TEST (test_compile)
 {
     node *n;
     node *m;
-    edge *e;
 
     n = create_simple_str_tree();
 
@@ -335,7 +334,7 @@ START_TEST (test_incomplete_slug_path)
     r3_tree_compile(n, &errstr);
     ck_assert(errstr == NULL); // no error
 
-    r3_tree_dump(n, NULL);
+    r3_tree_dump(n, 0);
 
     r3_tree_free(n);
 }
