@@ -27,7 +27,7 @@ START_TEST (test_gvc_render_dot)
 
     r3_tree_compile(n, NULL);
 
-    r3_tree_render_dot(n);
+    r3_tree_render_dot(n, stderr);
 
     r3_tree_free(n);
 }
