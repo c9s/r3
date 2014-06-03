@@ -516,8 +516,8 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
     if (prefix > 0) {
         r3_slug_t *slug;
         int ret = 0;
-        char *offset = (char*) path;
-        char *p = ((char*)path) + prefix;
+        const char *offset = (char*) path;
+        const char *p = ((char*)path) + prefix;
 
         slug = r3_slug_new(path, path_len);
 
@@ -532,7 +532,7 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
                 } else if ( p < slug->begin ) {
                     break;
                 } else if ( p >= slug->end && p < (path + path_len) ) {
-                    offset = (char*) slug->end + 1;
+                    offset = slug->end + 1;
                     prefix = p - path;
                     continue;
                 } else {

@@ -76,7 +76,7 @@ Return 1 => Slug found
 Return -1 => Slug parsing error
 */
 
-int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, char *offset, char **errstr) {
+int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *offset, char **errstr) {
     s->path = (char*) needle;
     s->path_len = needle_len;
 
