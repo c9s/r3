@@ -2,6 +2,15 @@
 
 by Yo-An Lin <yoanlin93@gmail.com>
 
+
+### 1.3.0  - Tue Jun  3 18:47:14 2014
+
+- Added Incorrect slug syntax warnings
+- Added error message support for pcre/pcre-jit compile
+- Added JSON encode support for the tree structure
+- Improved Graphivz Related Functions
+- More failing test cases
+
 ### 1.2.1  - Tue May 27 21:16:13 2014
 
 - Bug fixes.
