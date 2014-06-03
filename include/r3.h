@@ -12,14 +12,10 @@
 #include <string.h>
 #include <pcre.h>
 #include <stdbool.h>
-#include "config.h"
 #include "r3_define.h"
 #include "str_array.h"
 #include "match_entry.h"
 
-#ifdef ENABLE_JSON
-#include <json-c/json.h>
-#endif
 
 
 #ifdef __cplusplus
@@ -108,7 +104,7 @@ edge * r3_node_find_edge(const node * n, const char * pat, int pat_len);
 void r3_node_append_edge(node *n, edge *child);
 
 
-edge * r3_node_find_common_prefix(node *n, char *path, int path_len, int *prefix_len, char **errstr);
+edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, char **errstr);
 
 node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data);
 
@@ -180,34 +176,6 @@ int r3_pattern_to_opcode(const char * pattern, int pattern_len);
 enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 
 enum { OP_EXPECT_MORE_DIGITS = 1, OP_EXPECT_MORE_WORDS, OP_EXPECT_NOSLASH, OP_EXPECT_NODASH, OP_EXPECT_MORE_ALPHA };
-
-#ifdef ENABLE_JSON
-json_object * r3_edge_to_json_object(const edge * e);
-json_object * r3_node_to_json_object(const node * n);
-json_object * r3_route_to_json_object(const route * r);
-
-const char * r3_node_to_json_string_ext(const node * n, int options);
-const char * r3_node_to_json_pretty_string(const node * n);
-const char * r3_node_to_json_string(const node * n);
-#endif
-
-
-#ifdef ENABLE_GRAPHVIZ
-#include <stdio.h>
-#include <gvc.h>
-
-void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int node_cnt);
-
-int r3_tree_render(const node * tree, const char *layout, const char * format, FILE *fp);
-
-int r3_tree_render_dot(const node * tree, const char *layout, FILE *fp);
-
-int r3_tree_render_file(const node * tree, const char * format, const char * filename);
-#endif
-
-
-
-
 
 #ifdef __cplusplus
 }

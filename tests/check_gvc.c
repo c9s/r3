@@ -9,6 +9,7 @@
 #include <check.h>
 #include <stdlib.h>
 #include "r3.h"
+#include "r3_gvc.h"
 #include "r3_str.h"
 #include "bench.h"
 

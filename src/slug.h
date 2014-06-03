@@ -39,11 +39,11 @@ typedef struct {
 } r3_slug_t;
 
 
-r3_slug_t * r3_slug_new(char * path, int path_len);
+r3_slug_t * r3_slug_new(const char * path, int path_len);
 
 int r3_slug_check(r3_slug_t *s);
 
-int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char **errstr);
+int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, char *offset, char **errstr);
 
 char * r3_slug_to_str(const r3_slug_t *s);
 

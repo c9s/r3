@@ -4,10 +4,10 @@
  *
  * Distributed under terms of the MIT license.
  */
-#include <json-c/json.h>
 #include "config.h"
+#include <json-c/json.h>
 #include "r3.h"
-
+#include "r3_json.h"
 
 json_object * r3_route_to_json_object(const route * r) {
     json_object *obj;

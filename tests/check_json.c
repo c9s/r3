@@ -11,6 +11,7 @@
 #include <json-c/json.h>
 #include "r3.h"
 #include "r3_str.h"
+#include "r3_json.h"
 #include "zmalloc.h"
 
 START_TEST (test_json_encode)

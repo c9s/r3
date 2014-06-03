@@ -15,11 +15,11 @@
 
 
 
-r3_slug_t * r3_slug_new(char * path, int path_len) {
+r3_slug_t * r3_slug_new(const char * path, int path_len) {
     r3_slug_t * s = zmalloc(sizeof(r3_slug_t));
     if (!s)
         return NULL;
-    s->path = path;
+    s->path = (char*) path;
     s->path_len = path_len;
 
     s->begin = NULL;
@@ -76,8 +76,8 @@ Return 1 => Slug found
 Return -1 => Slug parsing error
 */
 
-int r3_slug_parse(r3_slug_t *s, char *needle, int needle_len, char *offset, char **errstr) {
-    s->path = needle;
+int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, char *offset, char **errstr) {
+    s->path = (char*) needle;
     s->path_len = needle_len;
 
     if (offset == NULL) {
