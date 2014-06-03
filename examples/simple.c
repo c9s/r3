@@ -53,7 +53,7 @@ int main()
 
     m = r3_tree_match(n , "/qux/bar/corge", NULL);
 
-    match_entry * e = match_entry_createl("/qux/bar/corge", strlen("/qux/bar/corge") );
+    match_entry * e = match_entry_createl("/garply/baz/grault", strlen("/garply/baz/grault") );
     m = r3_tree_match_entry(n , e);
     if (m) {
         printf("Matched! %s\n", e->path);
