@@ -72,6 +72,11 @@ if (ret == NULL) {
 // let's compile the tree!
 char *errstr = NULL;
 int err = r3_tree_compile(n, &errstr);
+if (err != 0) {
+    // fail
+    printf("error: %s\n", errstr);
+    free(errstr); // errstr is created from `asprintf`, so you have to free it manually.
+}
 
 
 // dump the compiled tree
@@ -123,8 +128,12 @@ int route_data = 3;
 r3_tree_insert_routel(n, METHOD_GET | METHOD_POST, "/blog/post", sizeof("/blog/post") - 1, &route_data );
 
 char *errstr = NULL;
-int err;
-err = r3_tree_compile(n, &errstr);
+int err = r3_tree_compile(n, &errstr);
+if (err != 0) {
+    // fail
+    printf("error: %s\n", errstr);
+    free(errstr); // errstr is created from `asprintf`, so you have to free it manually.
+}
 
 
 // in your http server handler
@@ -241,8 +250,13 @@ r3_tree_insert_path(n, "/user/{id}",  NULL);
 r3_tree_insert_path(n, "/post/{title:\\w+}",  NULL);
 
 char *errstr = NULL;
-int errcode;
-errcode = r3_tree_compile(n, &errstr);
+int err;
+err = r3_tree_compile(n, &errstr);
+if (err != 0) {
+    // fail
+    printf("error: %s\n", errstr);
+    free(errstr); // errstr is created from `asprintf`, so you have to free it manually.
+}
 
 r3_tree_render_file(n, "png", "check_gvc.png");
 r3_tree_free(n);
