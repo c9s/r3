@@ -280,6 +280,19 @@ digraph g {
         ....
 ```
 
+### Graphviz Related Functions
+
+```c
+int r3_tree_render_file(const node * tree, const char * format, const char * filename);
+
+int r3_tree_render(const node * tree, const char *layout, const char * format, FILE *fp);
+
+int r3_tree_render_dot(const node * tree, const char *layout, FILE *fp);
+
+int r3_tree_render_file(const node * tree, const char * format, const char * filename);
+```
+
+
 JSON Output Support
 ----------------------------------------
 
