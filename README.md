@@ -222,7 +222,7 @@ Function prefix mapping
 
 
 
-Rendering Routes With Graphviz Support
+Rendering Routes With Graphviz
 ---------------------------------------
 
 The `r3_tree_render_file` API let you render the whole route trie into a image.
@@ -293,7 +293,7 @@ int r3_tree_render_file(const node * tree, const char * format, const char * fil
 ```
 
 
-JSON Output Support
+JSON Output
 ----------------------------------------
 
 You can render the whole tree structure into json format output.
