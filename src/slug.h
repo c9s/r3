@@ -11,19 +11,19 @@ typedef struct {
     /**
      * source path
      */
-    char * path;
+    const char * path;
 
     int path_len;
 
     /**
      * slug start pointer
      */
-    char * begin;
+    const char * begin;
 
     /**
      * slug end pointer
      */
-    char * end;
+    const char * end;
 
     /**
      * slug length
@@ -31,7 +31,7 @@ typedef struct {
     int len;
 
     // slug pattern pointer if we have one
-    char * pattern;
+    const char * pattern;
 
     // the length of custom pattern, if the pattern is found.
     int    pattern_len;

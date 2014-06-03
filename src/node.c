@@ -28,6 +28,7 @@ static int strndiff(char * d1, char * d2, unsigned int n) {
     return d1 - o;
 }
 
+/*
 static int strdiff(char * d1, char * d2) {
     char * o = d1;
     while( *d1 == *d2 ) {
@@ -36,6 +37,7 @@ static int strdiff(char * d1, char * d2) {
     }
     return d1 - o;
 }
+*/
 
 
 /**
@@ -530,7 +532,7 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
                 } else if ( p < slug->begin ) {
                     break;
                 } else if ( p >= slug->end && p < (path + path_len) ) {
-                    offset = slug->end + 1;
+                    offset = (char*) slug->end + 1;
                     prefix = p - path;
                     continue;
                 } else {

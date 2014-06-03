@@ -91,7 +91,7 @@ int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, char *offset
 
     int cnt = 0;
     int state = 0;
-    char * p = offset;
+    const char * p = offset;
 
     while( (p-needle) < needle_len) {
         // escape one character
