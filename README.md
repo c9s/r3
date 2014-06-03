@@ -60,7 +60,7 @@ r3_tree_insert_pathl(n ,"/post/{id}", strlen("/post/{id}") , &route_data );
 r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), &route_data );
 
 
-// if you want to cache error, you may call the extended path function for insertion
+// if you want to catch error, you may call the extended path function for insertion
 int data = 10;
 char *errstr = NULL;
 node *ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"), NULL, &data, &errstr);
