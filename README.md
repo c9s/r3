@@ -92,7 +92,11 @@ if (matched_node) {
 r3_tree_free(n);
 ```
 
-If you want to capture the variables from regular expression, you will need to create a match entry,
+
+**Capture Dynamic Variables**
+
+If you want to capture the variables from regular expression, you will need to
+create a `match_entry` object and pass the object to `r3_tree_matchl` function,
 the catched variables will be pushed into the match entry structure:
 
 ```c
@@ -115,6 +119,19 @@ When using `match_entry`, you may match the route with `r3_tree_match_entry` fun
 ```c
 node *matched_node = r3_tree_match_entry(n, entry);
 ```
+
+
+
+
+**Release Memroy**
+
+To release the memory, you may call `r3_tree_free(node *tree)` to release the whole tree structure, 
+`node*`, `edge*`, `route*` objects that were inserted into the tree will be freed.
+
+
+
+
+
 
 ### Routing with conditions
 
