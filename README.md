@@ -26,7 +26,8 @@ Requirement
 ### Runtime Requirement
 
 * pcre
-* graphviz version 2.38.0 (20140413.2041)
+* (optional) graphviz version 2.38.0 (20140413.2041)
+* (optional) libjson-c-dev
 
 Pattern Syntax
 -----------------------
@@ -200,10 +201,41 @@ Function prefix mapping
 
 
 
-Rendering routes with graphviz
--------------------------------
+Rendering Routes With Graphviz Support
+---------------------------------------
 
-The `test_gvc_render_file` API let you render the whole route trie into a image.
+The `r3_tree_render_file` API let you render the whole route trie into a image.
+
+To use graphviz, you need to enable graphviz while you run `configure`:
+
+
+    ./configure --enable-graphviz
+
+
+Here is the sample code of generating graph output:
+
+
+```c
+node * n = r3_tree_create(1);
+
+r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
+r3_tree_insert_path(n, "/foo/bar/qux",  NULL);
+r3_tree_insert_path(n, "/foo/bar/quux",  NULL);
+r3_tree_insert_path(n, "/foo/bar/corge",  NULL);
+r3_tree_insert_path(n, "/foo/bar/grault",  NULL);
+r3_tree_insert_path(n, "/garply/grault/foo",  NULL);
+r3_tree_insert_path(n, "/garply/grault/bar",  NULL);
+r3_tree_insert_path(n, "/user/{id}",  NULL);
+r3_tree_insert_path(n, "/post/{title:\\w+}",  NULL);
+
+char *errstr = NULL;
+int errcode;
+errcode = r3_tree_compile(n, &errstr);
+
+r3_tree_render_file(n, "png", "check_gvc.png");
+r3_tree_free(n);
+```
+
 
 ![Imgur](http://i.imgur.com/hA8QXRi.png)
 
@@ -221,6 +253,26 @@ digraph g {
 		width=0.75];
         ....
 ```
+
+JSON Output Support
+----------------------------------------
+
+You can render the whole tree structure into json format output.
+
+Please run `configure` with the `--enable-json` option.
+
+Here is the sample code to generate JSON string:
+
+```c
+json_object * obj = r3_node_to_json_object(n);
+
+const char *json = r3_node_to_json_pretty_string(n);
+printf("Pretty JSON: %s\n",json);
+
+const char *json = r3_node_to_json_string(n);
+printf("JSON: %s\n",json);
+```
+
 
 Use case in PHP
 -----------------------
