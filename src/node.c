@@ -286,8 +286,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
     if (n->compare_type == NODE_COMPARE_OPCODE) {
         pp_end = path + path_len;
 
-        i = n->edge_len;
-        while(i--) {
+        for (i = n->edge_len; i--; ) {
             pp = path;
             e = n->edges[i];
             switch(e->opcode) {
@@ -430,8 +429,7 @@ route * r3_tree_match_route(const node *tree, match_entry * entry) {
     int i;
     n = r3_tree_match_entry(tree, entry);
     if (n && n->routes && n->route_len > 0) {
-        i = n->route_len;
-        while(i--) {
+        for (i = n->route_len; i--; ) {
             if ( r3_route_cmp(n->routes[i], entry) == 0 ) {
                 return n->routes[i];
             }
