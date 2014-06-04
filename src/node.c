@@ -438,6 +438,7 @@ node * r3_node_create() {
     n->endpoint = 0;
     n->combined_pattern = NULL;
     n->pcre_pattern = NULL;
+    n->pcre_extra = NULL;
     return n;
 }
 
