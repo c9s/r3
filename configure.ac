@@ -3,11 +3,15 @@ AC_PREREQ([2.64])
 AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([foreign subdir-objects color-tests])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_INSTALL
+
+# older debian
+AC_PROG_LIBTOOL
+AM_PROG_CC_C_O
 
 AC_CHECK_HEADERS([stdlib.h string.h sys/time.h])
 
