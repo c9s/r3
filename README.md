@@ -212,7 +212,7 @@ r3 uses the same route path data for benchmarking, and here is the benchmark:
                 11460057.83 i/sec
 
 
-### The benchmarking route paths 
+### The Route Paths Of Benchmark
 
 The route path generator is from <https://github.com/stevegraham/rails/pull/1>:
 
