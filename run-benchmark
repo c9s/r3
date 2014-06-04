@@ -1,0 +1,6 @@
+#!/bin/bash
+i=10
+while [ $i -gt 0 ] ; do 
+    bash tests/bench
+    i=$(($i - 1))
+done
