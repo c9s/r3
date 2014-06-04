@@ -456,7 +456,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     BENCHMARK(str_match_entry)
     match_entry * e = match_entry_createl("/qux/bar/corge", strlen("/qux/bar/corge") );
     r3_tree_match_entry(n , e);
-    zfree(e);
+    match_entry_free(e);
     END_BENCHMARK(str_match_entry)
     BENCHMARK_SUMMARY(str_match_entry);
 
@@ -470,6 +470,10 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     END_BENCHMARK(pcre_dispatch)
     BENCHMARK_SUMMARY(pcre_dispatch);
 
+
     BENCHMARK_RECORD_CSV("bench_str.csv", 4, BR(str_dispatch), BR(pcre_dispatch), BR(tree_compile), BR(str_match_entry) );
+
+    r3_tree_free(tree2);
+    r3_tree_free(n);
     return 0;
 }
