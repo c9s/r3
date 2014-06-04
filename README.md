@@ -376,6 +376,15 @@ Install
     ./configure --with-malloc=jemalloc
 
 
+Binding For Other Languages
+---------------------------
+
+* Perl Router::R3 by CindyLinz <https://metacpan.org/pod/Router::R3>
+* Python pyr3 by Lucemia <https://github.com/lucemia/pyr3>
+* Python pyr3 by Thedrow <https://github.com/thedrow/pyr3>
+
+
+
 License
 --------------------
 This software is released under MIT License.
