@@ -361,28 +361,51 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
         }
 
 
+
+        restlen = path_len - ov[1]; // if it's fully matched to the end (rest string length)
+
+        if (restlen == 0 ) {
+            // Check the substring to decide we should go deeper on which edge 
+            for (i = 1; i < rc; i++)
+            {
+                substring_length = ov[2*i+1] - ov[2*i];
+
+                // if it's not matched for this edge, just skip them quickly
+                if (substring_length == 0)
+                    continue;
+
+                substring_start = path + ov[2*i];
+                e = n->edges[i - 1];
+
+                if (entry && e->has_slug) {
+                    // append captured token to entry
+                    str_array_append(entry->vars , zstrndup(substring_start, substring_length));
+                }
+
+                // since restlen == 0 return the edge quickly.
+                return e->child && e->child->endpoint > 0 ? e->child : NULL;
+            }
+        }
+
+
+        // Check the substring to decide we should go deeper on which edge 
         for (i = 1; i < rc; i++)
         {
-            substring_start = path + ov[2*i];
             substring_length = ov[2*i+1] - ov[2*i];
-            // info("%2d: %.*s\n", i, substring_length, substring_start);
 
+            // if it's not matched for this edge, just skip them quickly
             if ( substring_length == 0) {
                 continue;
             }
 
-            restlen = path_len - ov[1]; // fully match to the end
-            // info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
-
+            substring_start = path + ov[2*i];
             e = n->edges[i - 1];
 
             if (entry && e->has_slug) {
                 // append captured token to entry
                 str_array_append(entry->vars , zstrndup(substring_start, substring_length));
             }
-            if (restlen == 0 ) {
-                return e->child && e->child->endpoint > 0 ? e->child : NULL;
-            }
+
             // get the length of orginal string: $0
             return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
         }
@@ -419,8 +442,8 @@ route * r3_tree_match_route(const node *tree, match_entry * entry) {
 
 inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_len) {
     char firstbyte = *str;
-    unsigned int i = n->edge_len;
-    while (i--) {
+    unsigned int i;
+    for (i = n->edge_len; i--; ) {
         if ( firstbyte == *(n->edges[i]->pattern) ) {
             info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
             if ( strncmp( node_edge_pattern(n,i), str, node_edge_pattern_len(n,i) ) == 0 ) {
