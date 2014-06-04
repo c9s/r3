@@ -280,9 +280,11 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
     unsigned short i;
     unsigned short restlen;
 
+    const char *pp;
+    const char *pp_end;
+
     if (n->compare_type == NODE_COMPARE_OPCODE) {
-        const char *pp;
-        const char *pp_end = path + path_len;
+        pp_end = path + path_len;
 
         i = n->edge_len;
         while(i--) {
@@ -322,7 +324,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
     // if the pcre_pattern is found, and the pointer is not NULL, then it's
     // pcre pattern node, we use pcre_exec to match the nodes
     if (n->pcre_pattern) {
-        char *substring_start = NULL;
+        const char *substring_start = NULL;
         int   substring_length = 0;
         int   ov[ n->ov_cnt ];
         char rc;
@@ -361,26 +363,28 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 
         for (i = 1; i < rc; i++)
         {
-            substring_start = ((char*) path) + ov[2*i];
+            substring_start = path + ov[2*i];
             substring_length = ov[2*i+1] - ov[2*i];
             // info("%2d: %.*s\n", i, substring_length, substring_start);
 
-            if ( substring_length > 0) {
-                restlen = path_len - ov[1]; // fully match to the end
-                // info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
-
-                e = n->edges[i - 1];
-
-                if (entry && e->has_slug) {
-                    // append captured token to entry
-                    str_array_append(entry->vars , zstrndup(substring_start, substring_length));
-                }
-                if (restlen == 0 ) {
-                    return e->child && e->child->endpoint > 0 ? e->child : NULL;
-                }
-                // get the length of orginal string: $0
-                return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
+            if ( substring_length == 0) {
+                continue;
             }
+
+            restlen = path_len - ov[1]; // fully match to the end
+            // info("matched item => restlen:%d edges:%d i:%d\n", restlen, n->edge_len, i);
+
+            e = n->edges[i - 1];
+
+            if (entry && e->has_slug) {
+                // append captured token to entry
+                str_array_append(entry->vars , zstrndup(substring_start, substring_length));
+            }
+            if (restlen == 0 ) {
+                return e->child && e->child->endpoint > 0 ? e->child : NULL;
+            }
+            // get the length of orginal string: $0
+            return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
         }
         // does not match
         return NULL;
