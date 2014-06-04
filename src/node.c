@@ -281,10 +281,12 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
     unsigned short restlen;
 
     if (n->compare_type == NODE_COMPARE_OPCODE) {
-        char *pp;
+        const char *pp;
         const char *pp_end = path + path_len;
-        for (i = 0; i < n->edge_len ; i++ ) {
-            pp = (char*) path;
+
+        i = n->edge_len;
+        while(i--) {
+            pp = path;
             e = n->edges[i];
             switch(e->opcode) {
                 case OP_EXPECT_NOSLASH:
