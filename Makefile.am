@@ -28,6 +28,7 @@ r3_include_HEADERS = \
 	include/r3_gvc.h \
 	include/r3_json.h \
 	include/str_array.h \
+	include/r3.hpp \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
