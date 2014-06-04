@@ -400,10 +400,11 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 
 route * r3_tree_match_route(const node *tree, match_entry * entry) {
     node *n;
+    int i;
     n = r3_tree_match_entry(tree, entry);
     if (n && n->routes && n->route_len > 0) {
-        int i;
-        for (i = 0; i < n->route_len ; i++ ) {
+        i = n->route_len;
+        while(i--) {
             if ( r3_route_cmp(n->routes[i], entry) == 0 ) {
                 return n->routes[i];
             }
@@ -779,7 +780,7 @@ void r3_tree_dump(const node * n, int level) {
  *
  * -1 == different route
  */
-int r3_route_cmp(const route *r1, const match_entry *r2) {
+inline int r3_route_cmp(const route *r1, const match_entry *r2) {
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;
