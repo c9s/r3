@@ -48,6 +48,7 @@ node * r3_tree_create(int cap) {
     CHECK_PTR(n);
 
     n->edges = (edge**) zmalloc( sizeof(edge*) * cap );
+    CHECK_PTR(n->edges);
     n->edge_len = 0;
     n->edge_cap = cap;
 
