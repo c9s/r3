@@ -76,7 +76,7 @@ Return 1 => Slug found
 Return -1 => Slug parsing error
 */
 
-int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *offset, const char **errstr) {
+int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *offset, char **errstr) {
     s->path = (char*) needle;
     s->path_len = needle_len;
 
@@ -152,7 +152,7 @@ int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *
 /**
  * provide a quick way to count slugs, simply search for '{'
  */
-int slug_count(const char * needle, int len, const char **errstr) {
+int slug_count(const char * needle, int len, char **errstr) {
     int cnt = 0;
     int state = 0;
     char * p = (char*) needle;

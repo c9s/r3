@@ -473,7 +473,7 @@ route * r3_route_createl(const char * path, int path_len) {
  *
  * method (int): METHOD_GET, METHOD_POST, METHOD_PUT, METHOD_DELETE ...
  */
-route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, const char **errstr) {
+route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, char **errstr) {
     route *r = r3_route_createl(path, path_len);
     CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
@@ -506,7 +506,7 @@ node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * d
  * 4.  "aaa{slug:xxx}/hate" vs "aab{slug:yyy}/bar"      => common prefix = "aa"
  * 5.  "/foo/{slug}/hate" vs "/fo{slug}/bar"            => common prefix = "/fo"
  */
-edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, const char **errstr) {
+edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, char **errstr) {
     int i = 0;
     int prefix = 0;
     *prefix_len = 0;
@@ -567,7 +567,7 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, const char **errstr)
+node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
 {
     node * n = tree;
 
@@ -578,7 +578,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
     /* length of common prefix */
     int prefix_len = 0;
-    const char *err = NULL;
+    char *err = NULL;
     e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len, &err);
     if (err) {
         // copy the error message pointer

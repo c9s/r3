@@ -122,13 +122,13 @@ edge * r3_node_find_edge(const node * n, const char * pat, int pat_len);
 void r3_node_append_edge(node *n, edge *child);
 
 
-edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, const char **errstr);
+edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, char **errstr);
 
 node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data);
 
 route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data);
 
-route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, const char **errstr);
+route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, char **errstr);
 
 #define r3_tree_insert_routel(n, method, path, path_len, data) r3_tree_insert_routel_ex(n, method, path, path_len, data, NULL)
 
@@ -140,7 +140,7 @@ route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int p
 /**
  * The private API to insert a path
  */
-node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, const char ** errstr);
+node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, char ** errstr);
 
 void r3_tree_dump(const node * n, int level);
 
