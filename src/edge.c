@@ -23,8 +23,15 @@
 #include "slug.h"
 #include "zmalloc.h"
 
+
+#define CHECK_PTR(ptr) if (ptr == NULL) return NULL;
+
+
 edge * r3_edge_createl(const char * pattern, int pattern_len, node * child) {
     edge * e = (edge*) zmalloc( sizeof(edge) );
+
+    CHECK_PTR(e);
+
     e->pattern = (char*) pattern;
     e->pattern_len = pattern_len;
     e->opcode = 0;

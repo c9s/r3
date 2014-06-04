@@ -674,7 +674,7 @@ START_TEST(test_insert_route)
     r3_tree_insert_route(n, METHOD_POST, "/blog/post", &var2);
 
     route *c = r3_tree_match_route(n, entry);
-    fail_if(c == NULL);
+    ck_assert(c != NULL);
 
     r3_tree_free(n);
     match_entry_free(entry);

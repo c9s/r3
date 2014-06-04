@@ -450,11 +450,6 @@ node * r3_node_create() {
     return n;
 }
 
-
-route * r3_route_create(const char * path) {
-    return r3_route_createl(path, strlen(path));
-}
-
 void r3_route_free(route * route) {
     zfree(route);
 }
@@ -495,12 +490,6 @@ route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int p
     return r;
 }
 
-
-
-node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data)
-{
-    return r3_tree_insert_pathl_ex(tree, path, path_len, NULL , data, NULL);
-}
 
 
 /**

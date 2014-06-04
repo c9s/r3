@@ -126,6 +126,10 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
 
 node * r3_tree_insert_pathl(node *tree, const char *path, int path_len, void * data);
 
+#define r3_tree_insert_pathl(tree, path, path_len, data) r3_tree_insert_pathl_ex(tree, path, path_len, NULL , data, NULL)
+
+
+
 route * r3_tree_insert_routel(node *tree, int method, const char *path, int path_len, void *data);
 
 route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, char **errstr);
@@ -183,6 +187,9 @@ void r3_route_free(route * route);
 int r3_route_cmp(const route *r1, const match_entry *r2);
 
 route * r3_tree_match_route(const node *n, match_entry * entry);
+
+#define r3_route_create(p) r3_route_createl(p, strlen(p))
+
 
 #define METHOD_GET 2
 #define METHOD_POST 2<<1
