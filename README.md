@@ -379,9 +379,10 @@ Install
 Binding For Other Languages
 ---------------------------
 
-* Perl Router::R3 by CindyLinz <https://metacpan.org/pod/Router::R3>
-* Python pyr3 by Lucemia <https://github.com/lucemia/pyr3>
-* Python pyr3 by Thedrow <https://github.com/thedrow/pyr3>
+* Perl Router::R3 by @CindyLinz <https://metacpan.org/pod/Router::R3>
+* Python pyr3 by @lucemia <https://github.com/lucemia/pyr3>
+* Python pyr3 by @thedrow <https://github.com/thedrow/pyr3>
+* Haskell r3 by @MnO2 <https://github.com/MnO2/r3>
 
 
 
