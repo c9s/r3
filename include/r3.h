@@ -59,8 +59,8 @@ struct _node {
     void * data;
 };
 
-#define node_edge_pattern(node,i) node->edges[i]->pattern
-#define node_edge_pattern_len(node,i) node->edges[i]->pattern_len
+#define r3_node_edge_pattern(node,i) node->edges[i]->pattern
+#define r3_node_edge_pattern_len(node,i) node->edges[i]->pattern_len
 
 struct _edge {
     char * pattern; // 8 bytes

@@ -443,8 +443,8 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
     unsigned int i;
     for (i = n->edge_len; i--; ) {
         if ( firstbyte == *(n->edges[i]->pattern) ) {
-            info("matching '%s' with '%s'\n", str, node_edge_pattern(n,i) );
-            if ( strncmp( node_edge_pattern(n,i), str, node_edge_pattern_len(n,i) ) == 0 ) {
+            info("matching '%s' with '%s'\n", str, r3_node_edge_pattern(n,i) );
+            if ( strncmp( r3_node_edge_pattern(n,i), str, r3_node_edge_pattern_len(n,i) ) == 0 ) {
                 return n->edges[i];
             }
             return NULL;
