@@ -65,9 +65,9 @@ struct _node {
 struct _edge {
     char * pattern;
     node * child;
-    unsigned short pattern_len; // 2 byte
-    unsigned char  opcode; // 1 byte
-    unsigned char  has_slug; // 1 bit
+    unsigned char  pattern_len; // 1 byte
+    unsigned char  opcode:4; // 4 bit
+    unsigned char  has_slug:1; // 1 bit
 };
 
 struct _route {
