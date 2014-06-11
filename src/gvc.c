@@ -14,13 +14,14 @@
 
 void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int node_cnt) {
     edge * e;
-    Agnode_t *agn_child;
-    Agedge_t *agn_edge;
 
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = n->edges[i];
 
         node_cnt++;
+
+        Agnode_t *agn_child = NULL;
+        Agedge_t *agn_edge = NULL;
 
         char *nodename = NULL;
         if ( e && e->child && e->child->combined_pattern ) {
