@@ -714,17 +714,23 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
         } else {
             // there are no more path to insert
 
-            // see if there is an endpoint already
-            if (e->child->endpoint > 0) {
-                // XXX: return an error code instead of NULL
-                return NULL;
-            }
-            e->child->endpoint++; // make it as an endpoint
-            e->child->data = data;
+            // see if there is an endpoint already, we should n't overwrite the data on child.
+            // but we still need to append the route.
+
             if (route) {
                 route->data = data;
                 r3_node_append_route(e->child, route);
+                e->child->endpoint++; // make it as an endpoint
+                return e->child;
             }
+
+            // insertion without route
+            if (e->child->endpoint > 0) {
+                // TODO: return an error code instead of NULL
+                return NULL;
+            }
+            e->child->endpoint++; // make it as an endpoint
+            e->child->data = data; // set data
             return e->child;
         }
 
