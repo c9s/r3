@@ -1,0 +1,27 @@
+Source: libr3
+Priority: optional
+Maintainer: Ronmi Ren <ronmi.ren@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, check
+Standards-Version: 3.9.4
+Section: libs
+Homepage: https://github.com/c9s/r3
+
+Package: libr3-dev
+Section: libdevel
+Architecture: any
+Depends: libr3 (= ${binary:Version})
+Description: Development files for libr3
+ libr3 (https://github.com/c9s/r3) is an URL router library with high
+ performance, thus, it's implemented in C. It compiles your route paths into
+ a prefix trie.
+ .
+ This package contains header files for libr3.
+
+Package: libr3
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: High performance URL routing library written in C.
+ libr3 (https://github.com/c9s/r3) is an URL router library with high
+ performance, thus, it's implemented in C. It compiles your route paths into
+ a prefix trie.
