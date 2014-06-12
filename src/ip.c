@@ -11,19 +11,19 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 
-int r3_ip_cmp_str(const char* a, const char* b) { 
+int r3_ip_cmp(const char* a, const char* b) { 
     long al = inet_addr(a);
     long bl = inet_addr(b);
     return al == bl;
 }
 
-int r3_ip_cmp_long(long a, long b) { 
-    return 0;
+int r3_ip_mask_cmp(const char *a, const char* b, const char* mask_str) { 
+    long m = inet_addr(mask_str);
+    long al = inet_addr(a);
+    long bl = inet_addr(b);
+    return !((al ^ bl) & m);
 }
 
-int r3_ip_mask_cmp( ) { 
-    return 0;
-}
 
 /*
     long in;

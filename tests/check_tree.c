@@ -661,14 +661,24 @@ END_TEST
 
 START_TEST(test_ip_cmp)
 {
-    ck_assert(r3_ip_cmp_str("127.0.0.1","127.0.0.1"));
-    ck_assert(!r3_ip_cmp_str("127.0.0.1","220.12.12.12"));
+    ck_assert(r3_ip_cmp("127.0.0.1","127.0.0.1"));
+    ck_assert(!r3_ip_cmp("127.0.0.1","220.12.12.12"));
 }
 END_TEST
 
 
 
+START_TEST(test_ip_mask_cmp)
+{
+    ck_assert( r3_ip_mask_cmp("127.123.123.123" , "127.0.0.1"     , "255.0.0.0"    ));
+    ck_assert( r3_ip_mask_cmp("192.168.123.123" , "192.168.0.1"   , "255.0.0.0"    ));
+    ck_assert( r3_ip_mask_cmp("192.168.123.123" , "192.168.0.1"   , "255.255.0.0"    ));
+    ck_assert( r3_ip_mask_cmp("192.168.123.123" , "192.168.123.1" , "255.255.255.0"    ));
 
+    ck_assert(!r3_ip_mask_cmp("127.123.123.123" , "127.0.0.1", "255.255.0.0"     ));
+    ck_assert(!r3_ip_mask_cmp("127.123.123.123" , "127.0.0.1", "255.255.255.0"   ));
+}
+END_TEST
 
 
 START_TEST(test_insert_route)
@@ -733,6 +743,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
         tcase_add_test(tcase, test_ip_cmp);
+        tcase_add_test(tcase, test_ip_mask_cmp);
         suite_add_tcase(suite, tcase);
 
         return suite;

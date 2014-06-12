@@ -81,6 +81,11 @@ struct _route {
 
     void * data;
 
+    char * ip_addr;
+    char * ip_addr_mask;
+
+
+    // todo: take of this
     char * remote_addr_pattern;
     int    remote_addr_pattern_len;
 };
@@ -88,8 +93,8 @@ struct _route {
 typedef struct {
     str_array * vars;
     const char * path; // current path to dispatch
-    int    path_len; // the length of the current path
-    int    request_method;  // current request method
+    int          path_len; // the length of the current path
+    int          request_method;  // current request method
 
     void * data; // route ptr
 
@@ -216,9 +221,8 @@ match_entry * match_entry_createl(const char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
-int r3_ip_cmp_str(const char* a, const char* b);
-int r3_ip_cmp_long(long a, long b);
-
+int r3_ip_cmp(const char* a, const char* b);
+int r3_ip_mask_cmp(const char *a, const char* mask_str, const char* b);
 
 #ifdef __cplusplus
 }
