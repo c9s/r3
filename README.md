@@ -362,6 +362,13 @@ Install
     ./configure && make
     sudo make install
 
+And we support debian-based distro now!
+
+    sudo apt-get install build-essential autoconf automake libpcre3-dev pkg-config debhelper libtool check
+    dpkg-buildpackage -b -us -uc
+    sudo gdebi ../libr3*.deb
+
+
 #### Run Unit Tests
 
     ./configure --enable-check
@@ -383,6 +390,7 @@ Binding For Other Languages
 * Python pyr3 by @lucemia <https://github.com/lucemia/pyr3>
 * Python pyr3 by @thedrow <https://github.com/thedrow/pyr3>
 * Haskell r3 by @MnO2 <https://github.com/MnO2/r3>
+* Vala r3-vala by @Ronmi <https://github.com/Ronmi/r3-vala>
 
 
 
