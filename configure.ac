@@ -7,6 +7,7 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 AC_PROG_CC
 AC_PROG_CC_STDC
+AC_PROG_CXX
 AC_PROG_INSTALL
 
 # older debian
