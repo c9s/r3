@@ -11,7 +11,7 @@ matrix:
       env: CONFIGURE_OPTION='--enable-debug --enable-gcov' COVERALLS=yes VALGRIND=yes DEBUG=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
     # -D_BSD_SOURCE=1 is for asprintf
     - compiler: clang
-      env: ASAN_OPTIONS=symbolize=1 ASAN_SYMBOLIZER_PATH=/usr/local/clang-3.4/bin/llvm-symbolizer CFLAGS='-fsanitize=address -g -O1 -D_BSD_SOURCE=1'
+      env: ASAN_OPTIONS=symbolize=1 ASAN_SYMBOLIZER_PATH=/usr/local/clang-3.4/bin/llvm-symbolizer CFLAGS='-fsanitize=address -g -O1 -D_BSD_SOURCE=1' CXX=clang++ CXXFLAGS='-fsanitize=address -g -O1 -D_BSD_SOURCE=1'
 
 install:
   - sudo apt-get update -qq
@@ -29,7 +29,7 @@ script:
   - make V=1
   - sudo make install
   - if [ "x$VALGRIND" == xyes ]; then make check > /dev/null 2>&1; else make check V=1; fi
-  # XXX: tracing memory leak, disabled for some mystery reason for automake... 
+  # XXX: tracing memory leak, disabled for some mystery reason for automake...
   # - if [ "x$VALGRIND" == xyes && "x$DEBUG" == xyes ]; then valgrind ./tests/check_* -v --trace-children=yes --show-leak-kinds=full --leak-check=full; fi
 
 after_success:
