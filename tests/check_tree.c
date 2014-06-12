@@ -659,6 +659,16 @@ START_TEST(test_pcre_pattern_more)
 END_TEST
 
 
+START_TEST(test_ip_cmp)
+{
+    ck_assert(r3_ip_cmp_str("127.0.0.1","127.0.0.1"));
+    ck_assert(!r3_ip_cmp_str("127.0.0.1","220.12.12.12"));
+}
+END_TEST
+
+
+
+
 
 
 START_TEST(test_insert_route)
@@ -722,6 +732,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
+        tcase_add_test(tcase, test_ip_cmp);
         suite_add_tcase(suite, tcase);
 
         return suite;

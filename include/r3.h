@@ -216,6 +216,8 @@ match_entry * match_entry_createl(const char * path, int path_len);
 void match_entry_free(match_entry * entry);
 
 
+int r3_ip_cmp_str(const char* a, const char* b);
+int r3_ip_cmp_long(long a, long b);
 
 
 #ifdef __cplusplus
