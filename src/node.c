@@ -60,6 +60,7 @@ node * r3_tree_create(int cap) {
     n->combined_pattern = NULL;
     n->pcre_pattern = NULL;
     n->pcre_extra = NULL;
+    n->data = NULL;
     return n;
 }
 
@@ -468,6 +469,7 @@ node * r3_node_create() {
     n->combined_pattern = NULL;
     n->pcre_pattern = NULL;
     n->pcre_extra = NULL;
+    n->data = NULL;
     return n;
 }
 
