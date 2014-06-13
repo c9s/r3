@@ -365,6 +365,7 @@ Install
 And we support debian-based distro now!
 
     sudo apt-get install build-essential autoconf automake libpcre3-dev pkg-config debhelper libtool check
+    mv dist-debian debian
     dpkg-buildpackage -b -us -uc
     sudo gdebi ../libr3*.deb
 
