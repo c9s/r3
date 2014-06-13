@@ -82,7 +82,7 @@ struct _route {
     void * data;
 
     char * ip_addr;
-    char * ip_addr_mask;
+    char * ip_mask;
 
 
     // todo: take of this
