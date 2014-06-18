@@ -27,7 +27,4 @@ enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(tests)
-
-add_test(test_tree ${CMAKE_CURRENT_BINARY_DIR}/check_tree)
-
-add_executable(demo demo.c)
+# add_test(test_tree ${CMAKE_CURRENT_BINARY_DIR}/check_tree)

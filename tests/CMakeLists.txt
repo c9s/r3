@@ -1,5 +1,6 @@
 # set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} judy libr3)
 # set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} judy libr3)
+include_directories("${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}")
 find_package(Check REQUIRED)
 find_package(PCRE REQUIRED)
 # find_package(Judy REQUIRED)
@@ -11,13 +12,13 @@ else (NOT CHECK_FOUND)
 
     include_directories(${CHECK_INCLUDE_DIRS})
     # include_directories("${PROJECT_SOURCE_DIR}/include/r2")
-    add_executable(test_r3 test_tree.c)
-    target_link_libraries(test_r3 ${TEST_LIBS})
+    add_executable(check_tree check_tree.c)
+    target_link_libraries(check_tree ${TEST_LIBS})
 
     add_custom_command(
-        TARGET test_r3 POST_BUILD
+        TARGET check_tree POST_BUILD
         COMMENT "Running unit tests"
-        COMMAND test_r3
+        COMMAND check_tree
     )
 endif (NOT CHECK_FOUND)
 
