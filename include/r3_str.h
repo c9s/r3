@@ -22,6 +22,19 @@ void str_repeat(char *s, const char *c, int len);
 
 void print_indent(int level);
 
+
+#if _GNU_SOURCE || POSIX_C_SOURCE >= 200809L || _XOPEN_SOURCE >= 700 || __DARWIN_C_LEVEL >= 200809L
+#define HAVE_STRNDUP
+#endif
+
+#if _SVID_SOURCE || _BSD_SOURCE \
+    || _XOPEN_SOURCE >= 500 \
+    || _XOPEN_SOURCE && _XOPEN_SOURCE_EXTENDED \
+    || /* Since glibc 2.12: */ _POSIX_C_SOURCE >= 200809L \
+    || __DARWIN_C_LEVEL >= 200809L
+#define HAVE_STRDUP
+#endif
+
 #ifndef HAVE_STRDUP
 char *strdup(const char *s);
 #endif

@@ -1,4 +1,4 @@
-include_directories("${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/3rdparty ${PROJECT_SOURCE_DIR}")
 # install(TARGETS swiftnav-static DESTINATION lib${LIB_SUFFIX})
 
 set(libr3_SRCS node.c edge.c list.c slug.c str.c token.c)

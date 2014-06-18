@@ -15,7 +15,9 @@ SET(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     )
 
-include_directories(. "${PROJECT_SOURCE_DIR}/include" ${INCLUDE_DIRECTORIES} /opt/local/include)
+include_directories(. ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/3rdparty /opt/local/include)
+# include_directories(. ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/3rdparty ${PROJECT_SOURCE_DIR})
+
 link_directories(${LINK_DIRECTORIES} /opt/local/lib)
 find_package(PCRE REQUIRED)
 find_package(Judy REQUIRED)
