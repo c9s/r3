@@ -27,6 +27,7 @@ set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} r3)
 # set (CMAKE_CXX_FLAGS "-std=c++0x -arch x86_64 -stdlib=libc++ -g3 -Wall -O0")
 enable_testing()
 
+add_subdirectory(3rdparty)
 add_subdirectory(src)
 add_subdirectory(tests)
 # add_test(test_tree ${CMAKE_CURRENT_BINARY_DIR}/check_tree)
