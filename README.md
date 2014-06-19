@@ -383,6 +383,10 @@ And we support debian-based distro now!
 
     ./configure --with-malloc=jemalloc
 
+ubuntu PPA
+----------------------
+
+The PPA for libr3 can be found in <https://launchpad.net/~r3-team/+archive/libr3-daily>.
 
 Binding For Other Languages
 ---------------------------
