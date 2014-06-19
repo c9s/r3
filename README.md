@@ -156,7 +156,7 @@ if (err != 0) {
 // in your http server handler
 
 // create the match entry for capturing dynamic variables.
-match_entry * entry = match_entry_create("/foo/bar");
+match_entry * entry = match_entry_create("/blog/post");
 entry->request_method = METHOD_GET;
 
 
@@ -164,7 +164,7 @@ route *matched_route = r3_tree_match_route(n, entry);
 matched_route->data; // get the data from matched route
 
 // free the objects at the end
-r3_route_free(r1);
+match_entry_free(entry);
 r3_tree_free(n);
 ```
 
@@ -396,7 +396,8 @@ Binding For Other Languages
 * Python pyr3 by @thedrow <https://github.com/thedrow/pyr3>
 * Haskell r3 by @MnO2 <https://github.com/MnO2/r3>
 * Vala r3-vala by @Ronmi <https://github.com/Ronmi/r3-vala>
-
+* Node.js node-r3 by @othree <https://github.com/othree/node-r3>
+* Node.js node-libr3 by @caasi <https://github.com/caasi/node-r3>
 
 
 License
