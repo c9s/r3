@@ -24,7 +24,9 @@ void print_indent(int level);
 
 
 #if _GNU_SOURCE || POSIX_C_SOURCE >= 200809L || _XOPEN_SOURCE >= 700 || __DARWIN_C_LEVEL >= 200809L
+#ifndef HAVE_STRNDUP
 #define HAVE_STRNDUP
+#endif
 #endif
 
 #if _SVID_SOURCE || _BSD_SOURCE \
@@ -32,7 +34,9 @@ void print_indent(int level);
     || _XOPEN_SOURCE && _XOPEN_SOURCE_EXTENDED \
     || /* Since glibc 2.12: */ _POSIX_C_SOURCE >= 200809L \
     || __DARWIN_C_LEVEL >= 200809L
+#ifndef HAVE_STRDUP
 #define HAVE_STRDUP
+#endif
 #endif
 
 #ifndef HAVE_STRDUP
