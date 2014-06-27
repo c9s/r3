@@ -280,7 +280,7 @@ r3_tree_free(n);
 ```
 
 
-![Imgur](http://i.imgur.com/hA8QXRi.png)
+![Imgur](http://imgur.com/HrUoEbI.png)
 
 Or you can even export it with dot format:
 
