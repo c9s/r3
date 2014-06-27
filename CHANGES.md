@@ -3,6 +3,15 @@
 by Yo-An Lin <yoanlin93@gmail.com>
 
 
+### 1.3.3  - Sat Jun 28 00:53:48 2014
+
+- Fix graphviz generator.
+
+
+### 1.3.2  - Sat Jun 28 00:54:22 2014
+
+- `HAVE_STRNDUP` and `HAVE_STRDUP` definition fix
+
 ### 1.3.0  - Tue Jun  3 18:47:14 2014
 
 - Added Incorrect slug syntax warnings
