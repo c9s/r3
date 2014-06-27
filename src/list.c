@@ -1,5 +1,5 @@
 /*
- * list.c Copyright (C) 2014 c9s <c9s@c9smba.local>
+ * list.c Copyright (C) 2014 c9s <yoanlin93@gmail.com>
  * 
  * Distributed under terms of the MIT license.
  */
