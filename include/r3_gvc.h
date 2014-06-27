@@ -11,7 +11,7 @@
 #include <gvc.h>
 #include "r3.h"
 
-void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int node_cnt);
+void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int * node_cnt);
 
 int r3_tree_render(const node * tree, const char *layout, const char * format, FILE *fp);
 

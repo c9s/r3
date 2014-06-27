@@ -12,13 +12,13 @@
 #include "r3_gvc.h"
 #include "zmalloc.h"
 
-void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int node_cnt) {
-    edge * e;
+void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int * node_cnt) {
+    if (!n)
+        return;
 
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
-        e = n->edges[i];
-
-        node_cnt++;
+        edge * e = n->edges[i];
+        (*node_cnt)++;
 
         Agnode_t *agn_child = NULL;
         Agedge_t *agn_edge = NULL;
@@ -27,7 +27,7 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node 
         if ( e && e->child && e->child->combined_pattern ) {
             asprintf(&nodename,"%s", e->child->combined_pattern);
         } else {
-            asprintf(&nodename,"#%d", node_cnt);
+            asprintf(&nodename,"#%d", *node_cnt);
         }
 
         agn_child = agnode(g, nodename, 1);
@@ -52,11 +52,13 @@ int r3_tree_render(const node * tree, const char *layout, const char * format, F
     GVC_t *gvc = NULL;
     gvc = gvContext();
     /* Create a simple digraph */
-    g = agopen("g", Agdirected, 0);
+    // g = agopen("g", Agdirected, 0);
+    g = agopen("g", Agundirected, 0);
 
     // create self node
     Agnode_t *ag_root = agnode(g, "{root}", 1);
-    r3_tree_build_ag_nodes(g, ag_root, tree, 0);
+    int n = 0;
+    r3_tree_build_ag_nodes(g, ag_root, tree, &n);
     gvLayout(gvc, g, layout);
     gvRender(gvc, g, format, fp);
     gvFreeLayout(gvc, g);
@@ -96,11 +98,13 @@ int r3_tree_render_file(const node * tree, const char * format, const char * fil
     */
 
     /* Create a simple digraph */
-    g = agopen("g", Agdirected, 0);
+    // g = agopen("g", Agdirected, 0);
+    g = agopen("g", Agundirected, 0);
 
     // create self node
     Agnode_t *ag_root = agnode(g, "{root}", 1);
-    r3_tree_build_ag_nodes(g, ag_root, tree, 0);
+    int n = 0;
+    r3_tree_build_ag_nodes(g, ag_root, tree, &n);
 
     gvLayout(gvc, g, "dot");
     gvRenderFilename(gvc, g, format, filename);
