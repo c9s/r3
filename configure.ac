@@ -80,7 +80,7 @@ AC_SUBST(DEPS_LIBS)
 
 AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[enable debug]))
 if test "x$enable_debug" = "xyes"; then
-   AC_DEFINE(ENABLE_DEBUG, 1, "debug")
+   AC_DEFINE(DEBUG, 1, "debug")
 fi
 AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 
