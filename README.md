@@ -398,6 +398,7 @@ Binding For Other Languages
 * Vala r3-vala by @Ronmi <https://github.com/Ronmi/r3-vala>
 * Node.js node-r3 by @othree <https://github.com/othree/node-r3>
 * Node.js node-libr3 by @caasi <https://github.com/caasi/node-r3>
+* Ruby rr3 by @tonytonyjan <https://github.com/tonytonyjan/rr3>
 
 
 License
