@@ -43,7 +43,7 @@ API
 #include <r3/r3.h>
 
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
-n = r3_tree_create(10);
+node *n = r3_tree_create(10);
 
 int route_data = 3;
 
@@ -85,7 +85,7 @@ r3_tree_dump(n, 0);
 // match a route
 node *matched_node = r3_tree_matchl(n, "/foo/bar", strlen("/foo/bar"), NULL);
 if (matched_node) {
-    int ret = *( (*int) matched_node->data );
+    int ret = *( (int*) matched_node->data );
 }
 
 // release the tree
