@@ -327,7 +327,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
         const char *substring_start = NULL;
         int   substring_length = 0;
         int   ov[ n->ov_cnt ];
-        char rc;
+        int   rc;
 
         info("pcre matching %s on %s\n", n->combined_pattern, path);
 
