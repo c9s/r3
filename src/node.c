@@ -72,7 +72,6 @@ void r3_tree_free(node * tree) {
     }
     zfree(tree->edges);
     zfree(tree->routes);
-
     if (tree->pcre_pattern) {
         pcre_free(tree->pcre_pattern);
     }
@@ -570,12 +569,15 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
                     break;
                 }
             } else if (ret == -1) {
-                
+                r3_slug_free(slug);
                 return NULL;
             } else {
                 break;
             }
         } while(ret == 1);
+
+        // free the slug
+        r3_slug_free(slug);
     }
 
     *prefix_len = prefix;
