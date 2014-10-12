@@ -1,0 +1,9 @@
+{
+  "name": "r3",
+  "version": "1.3.3",
+  "repo": "brendanashworth/r3",
+  "description": "high-performance path dispatching library",
+  "keywords": ["path", "dispatch", "performance", "r3", "c9s"],
+  "license": "MIT",
+  "src": ["3rdparty/zmalloc.c", "3rdparty/zmalloc.h", "include/r3.h", "include/r3.hpp", "include/r3_define.h", "include/r3_gvc.h", "include/r3_json.h", "include/r3_list.h", "include/r3_str.h", "include/str_array.h", "src/edge.c", "src/gvc.c", "src/json.c", "src/list.c", "src/match_entry.c", "src/node.c", "src/slug.c", "src/slug.h", "src/str.c", "str/token.c"]
+}
