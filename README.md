@@ -3,7 +3,7 @@ R3
 
 [![Build Status](https://travis-ci.org/c9s/r3.svg?branch=master)](https://travis-ci.org/c9s/r3)
 
-[![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.png)](https://coveralls.io/r/c9s/r3)
+[![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.svg)](https://coveralls.io/r/c9s/r3)
 
 R3 is an URL router library with high performance, thus, it's implemented in C.
 It compiles your route paths into a prefix trie.
