@@ -137,6 +137,37 @@ char * r3_slug_find_pattern(const char *s1, int *len) {
 
 
 /**
+ * given a slug string, duplicate the parameter name string of the slug
+ */
+char * r3_slug_find_name(const char *s1, int *len) {
+    char *c;
+    char *s2;
+    int cnt = 0;
+    c = s1;
+    
+    while(1) {
+        if(*c == '{') cnt++;
+        if(*c == '}') cnt--;
+        if(*c == ':') break;
+        if(*c == '\0') return NULL;
+        if(cnt == 0) break;
+        c++;        
+    }
+    
+    // find starting '{'
+    s2 = c;
+    while(1) {
+        if ( *s2 == '{' )
+            break;
+        s2--;
+    }
+    s2++;
+    *len = c - s2;
+    return s2;
+}
+
+
+/**
  * @param char * sep separator
  */
 char * r3_slug_compile(const char * str, int len)

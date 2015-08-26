@@ -49,8 +49,6 @@ char * r3_slug_to_str(const r3_slug_t *s);
 
 void r3_slug_free(r3_slug_t * s);
 
-int slug_count(const char * needle, int len, char **errstr);
-
 static inline int r3_path_contains_slug_char(const char * str) {
     return strchr(str, '{') != NULL ? 1 : 0;
 }
