@@ -7,8 +7,9 @@
 #ifndef STR_H
 #define STR_H
 
-#include "r3.h"
-#include "config.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 char * r3_slug_compile(const char * str, int len);
 
@@ -51,6 +52,9 @@ char *strdup(const char *s);
 char *strndup(const char *s, int n);
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !STR_H */
 
