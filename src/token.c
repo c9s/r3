@@ -30,6 +30,7 @@ void str_array_free(str_array *l) {
             zfree(l->tokens[i]);
         }
     }
+    zfree(l->tokens);
     zfree(l);
 }
 
