@@ -9,7 +9,7 @@
 #define DEFINE_H
 #include <stdbool.h>
 
-#ifndef bool
+#if !defined(bool) && !defined(__cplusplus)
 typedef unsigned char bool;
 #endif
 #ifndef FALSE
