@@ -385,6 +385,45 @@ END_TEST
 
 
 /**
+ * Test for root '/'
+ */
+START_TEST (test_root_match)
+{
+    node * n = r3_tree_create(10);
+
+    int a = 10;
+    int b = 20;
+    int c = 30;
+    r3_tree_insert_path(n, "/", &a);
+    r3_tree_insert_path(n, "/foo", &b);
+    r3_tree_insert_path(n, "/bar", &c);
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
+    r3_tree_dump(n, 0);
+    node *matched;
+    matched = r3_tree_match(n, "/", NULL);
+    ck_assert(matched);
+    ck_assert(matched->data == &a);
+    ck_assert(matched->endpoint > 0);
+
+    matched = r3_tree_match(n, "/foo", NULL);
+    ck_assert(matched);
+    ck_assert(matched->data == &b);
+    ck_assert(matched->endpoint > 0);
+
+    matched = r3_tree_match(n, "/bar", NULL);
+    ck_assert(matched);
+    ck_assert(matched->data == &c);
+    ck_assert(matched->endpoint > 0);
+}
+END_TEST
+
+
+
+
+/**
  * Test for \d{2}/\d{2}
  */
 START_TEST (test_pcre_patterns_insert_2)
@@ -720,6 +759,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_pcre_pattern_more);
         tcase_add_test(tcase, test_pcre_patterns_insert);
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
+        tcase_add_test(tcase, test_root_match);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
         suite_add_tcase(suite, tcase);
