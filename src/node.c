@@ -173,26 +173,24 @@ int r3_tree_compile(node *n, char **errstr)
  * Return 0 if success
  */
 int r3_tree_compile_patterns(node * n, char **errstr) {
-    char * cpat;
+    edge * e = NULL;
     char * p;
-
-    cpat = zcalloc(sizeof(char) * 220); // XXX
+    char * cpat = zcalloc(sizeof(char) * 64 * 3); // XXX
     if (!cpat) {
         asprintf(errstr, "Can not allocate memory");
         return -1;
     }
 
     p = cpat;
-
-    edge *e = NULL;
-    int opcode_cnt =  0;
-    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+    int opcode_cnt = 0;
+    int i = 0;
+    for (; i < n->edge_len ; i++) {
         e = n->edges[i];
-
-        if ( e->opcode )
+        if (e->opcode) {
             opcode_cnt++;
+        }
 
-        if ( e->has_slug ) {
+        if (e->has_slug) {
             // compile "foo/{slug}" to "foo/[^/]+"
             char * slug_pat = r3_slug_compile(e->pattern, e->pattern_len);
             strcat(p, slug_pat);
