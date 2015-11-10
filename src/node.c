@@ -13,6 +13,13 @@
 #include "slug.h"
 #include "zmalloc.h"
 
+#ifdef __GNUC__
+#	define likely(x)   __builtin_expect(!!(x), 1)
+#	define unlikely(x) __builtin_expect(!!(x), 0)
+#else
+#	define likely(x)   !!(x)
+#	define unlikely(x) !!(x)
+#endif
 
 #define CHECK_PTR(ptr) if (ptr == NULL) return NULL;
 
@@ -308,7 +315,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
                     break;
             }
             // check match
-            if ( (pp - path) > 0) {
+            if ((pp - path) > 0) {
                 if (entry) {
                     str_array_append(entry->vars , zstrndup(path, pp - path));
                 }
@@ -413,7 +420,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
         return NULL;
     }
 
-    if ( (e = r3_node_find_edge_str(n, path, path_len)) != NULL ) {
+    if ((e = r3_node_find_edge_str(n, path, path_len)) != NULL) {
         restlen = path_len - e->pattern_len;
         if (restlen == 0) {
             return e->child && e->child->endpoint > 0 ? e->child : NULL;
@@ -440,12 +447,13 @@ route * r3_tree_match_route(const node *tree, match_entry * entry) {
 }
 
 inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_len) {
-    char firstbyte = *str;
+    edge * e;
     unsigned int i;
+    char firstbyte = *str;
     for (i = n->edge_len; i--; ) {
-        edge *e = &n->edges[i];
+        e = &n->edges[i];
         if (firstbyte == e->pattern[0]) {
-            if (strncmp(e->pattern, str, e->pattern_len) == 0 ) {
+            if (strncmp(e->pattern, str, e->pattern_len) == 0) {
                 return &n->edges[i];
             }
             return NULL;
