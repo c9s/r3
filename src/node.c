@@ -133,12 +133,14 @@ edge * r3_node_append_edge(node *n, edge *e)
  * if "pat" is a slug, we should compare with the specified pattern.
  */
 edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
+    edge * e;
     int i;
     for (i = 0 ; i < n->edge_len ; i++ ) {
+        e = &n->edges[i];
         // there is a case: "{foo}" vs "{foo:xxx}",
         // we should return the match result: full-match or partial-match 
-        if (strcmp(n->edges[i].pattern, pat) == 0) {
-            return &n->edges[i];
+        if (strcmp(e->pattern, pat) == 0) {
+            return e;
         }
     }
     return NULL;
