@@ -39,7 +39,7 @@ struct _node {
 
     // edges are mostly less than 255
     unsigned int edge_len;
-    unsigned char compare_type; // compare_type: pcre, opcode, string
+    unsigned int compare_type; // compare_type: pcre, opcode, string
     unsigned char    endpoint; // endpoint, should be zero for non-endpoint nodes
     unsigned char    ov_cnt; // capture vector array size for pcre
 
