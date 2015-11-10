@@ -29,13 +29,9 @@ typedef struct _route route;
 
 struct _node {
     edge * edges;
-    // edge  ** edge_table;
     char * combined_pattern;
     pcre * pcre_pattern;
-
-// #ifdef PCRE_STUDY_JIT_COMPILE
     pcre_extra * pcre_extra;
-// #endif
 
     // edges are mostly less than 255
     unsigned int edge_len;
@@ -47,18 +43,8 @@ struct _node {
     unsigned char      edge_cap;
     unsigned char      route_len;
     unsigned char      route_cap;
-    // <-- here comes a char[1] struct padding for alignment since we have 4 char above.
-
-
-    /** compile-time variables here.... **/
-
-    /* the combined regexp pattern string from pattern_tokens */
-
     route ** routes;
-
-    /**
-     * the pointer of route data
-     */
+    // the pointer of route data
     void * data;
 };
 
