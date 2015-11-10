@@ -30,6 +30,12 @@ typedef struct _route route;
 struct _node {
     edge  ** edges;
     // edge  ** edge_table;
+    char * combined_pattern;
+    pcre * pcre_pattern;
+
+#ifdef PCRE_STUDY_JIT_COMPILE
+    pcre_extra * pcre_extra;
+#endif
 
     // edges are mostly less than 255
     unsigned char    compare_type; // compare_type: pcre, opcode, string
@@ -47,12 +53,8 @@ struct _node {
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
-    pcre * pcre_pattern;
-    pcre_extra * pcre_extra;
 
     route ** routes;
-
-    char * combined_pattern;
 
     /**
      * the pointer of route data
