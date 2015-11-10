@@ -24,11 +24,20 @@
 #define CHECK_PTR(ptr) if (ptr == NULL) return NULL;
 
 
-edge * r3_edge_createl(const char * pattern, int pattern_len, node * child) {
+
+void r3_edge_initl(edge *e, const char * pattern, int pattern_len, node * child)
+{
+    e->pattern = (char*) pattern;
+    e->pattern_len = pattern_len;
+    e->opcode = 0;
+    e->child = child;
+    e->has_slug = r3_path_contains_slug_char(e->pattern);
+}
+
+edge * r3_edge_createl(const char * pattern, int pattern_len, node * child)
+{
     edge * e = (edge*) zmalloc( sizeof(edge) );
-
     CHECK_PTR(e);
-
     e->pattern = (char*) pattern;
     e->pattern_len = pattern_len;
     e->opcode = 0;
@@ -60,9 +69,9 @@ node * r3_edge_branch(edge *e, int dl) {
     e1 = r3_edge_createl(zstrndup(s1, s1_len), s1_len, new_child);
 
     // Migrate the child edges to the new edge we just created.
-    for ( int i = 0 ; i < e->child->edge_len ; i++ ) {
-        r3_node_append_edge(new_child, e->child->edges[i]);
-        e->child->edges[i] = NULL;
+    for (int i = 0 ; i < e->child->edge_len ; i++) {
+        r3_node_append_edge(new_child, &e->child->edges[i]);
+        // e->child->edges[i] = NULL;
     }
     e->child->edge_len = 0;
 
