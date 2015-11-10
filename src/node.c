@@ -277,8 +277,8 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
     info("try matching: %s\n", path);
 
     edge *e;
-    unsigned short i;
-    unsigned short restlen;
+    unsigned int i;
+    unsigned int restlen;
 
     const char *pp;
     const char *pp_end;

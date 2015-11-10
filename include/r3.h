@@ -38,8 +38,8 @@ struct _node {
 // #endif
 
     // edges are mostly less than 255
-    unsigned char    compare_type; // compare_type: pcre, opcode, string
-    unsigned char    edge_len;
+    unsigned int edge_len;
+    unsigned char compare_type; // compare_type: pcre, opcode, string
     unsigned char    endpoint; // endpoint, should be zero for non-endpoint nodes
     unsigned char    ov_cnt; // capture vector array size for pcre
 
@@ -68,8 +68,9 @@ struct _node {
 struct _edge {
     char * pattern; // 8 bytes
     node * child; // 8 bytes
-    unsigned char  pattern_len; // 1 byte
-    unsigned char  opcode:4; // 4 bit
+    unsigned int   pattern_len; // 1 byte
+    unsigned int   opcode;
+    // unsigned char   opcode:4; // 4 bit
     unsigned char  has_slug:1; // 1 bit
 };
 
