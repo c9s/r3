@@ -47,7 +47,7 @@ node * r3_tree_create(int cap) {
     node * n = (node*) zmalloc( sizeof(node) );
     CHECK_PTR(n);
 
-    n->edges = (edge**) zmalloc( sizeof(edge*) * cap );
+    n->edges = (edge*) zmalloc(sizeof(edge) * cap);
     CHECK_PTR(n->edges);
     n->edge_len = 0;
     n->edge_cap = cap;
@@ -65,12 +65,9 @@ node * r3_tree_create(int cap) {
 }
 
 void r3_tree_free(node * tree) {
-    for (int i = 0 ; i < tree->edge_len ; i++ ) {
-        if (tree->edges[i]) {
-            r3_edge_free(tree->edges[ i ]);
-        }
+    if (tree->edges) {
+        zfree(tree->edges);
     }
-    zfree(tree->edges);
     zfree(tree->routes);
     if (tree->pcre_pattern) {
         pcre_free(tree->pcre_pattern);
@@ -104,23 +101,29 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *chi
     }
     e = r3_edge_createl(pat, len, child);
     CHECK_PTR(e);
-    r3_node_append_edge(n, e);
-    return e;
+    edge *e2 = r3_node_append_edge(n, e);
+    zfree(e);
+    return e2;
 }
 
-void r3_node_append_edge(node *n, edge *e) {
+edge * r3_node_append_edge(node *n, edge *e)
+{
     if (n->edges == NULL) {
         n->edge_cap = 3;
         n->edges = zmalloc(sizeof(edge) * n->edge_cap);
     }
     if (n->edge_len >= n->edge_cap) {
         n->edge_cap *= 2;
-        edge ** p = zrealloc(n->edges, sizeof(edge) * n->edge_cap);
+        edge * p = zrealloc(n->edges, sizeof(edge) * n->edge_cap);
         if(p) {
             n->edges = p;
         }
     }
-    n->edges[ n->edge_len++ ] = e;
+
+    // r3_edge_initl(
+    // copy 'edge' into the edge array
+    n->edges[n->edge_len] = *e;
+    return &n->edges[n->edge_len++];
 }
 
 
@@ -130,15 +133,12 @@ void r3_node_append_edge(node *n, edge *e) {
  * if "pat" is a slug, we should compare with the specified pattern.
  */
 edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
-    edge * e;
     int i;
     for (i = 0 ; i < n->edge_len ; i++ ) {
-        e = n->edges[i];
-
         // there is a case: "{foo}" vs "{foo:xxx}",
         // we should return the match result: full-match or partial-match 
-        if ( strcmp(e->pattern, pat) == 0 ) {
-            return e;
+        if (strcmp(n->edges[i].pattern, pat) == 0) {
+            return &n->edges[i];
         }
     }
     return NULL;
@@ -146,6 +146,7 @@ edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
 
 int r3_tree_compile(node *n, char **errstr)
 {
+    int i;
     int ret = 0;
     bool use_slug = r3_node_has_slug_edges(n);
     if ( use_slug ) {
@@ -157,8 +158,8 @@ int r3_tree_compile(node *n, char **errstr)
         n->combined_pattern = NULL;
     }
 
-    for (int i = 0 ; i < n->edge_len ; i++ ) {
-        if ( (ret = r3_tree_compile(n->edges[i]->child, errstr)) ) {
+    for (i = 0 ; i < n->edge_len ; i++ ) {
+        if ((ret = r3_tree_compile(n->edges[i].child, errstr))) {
             return ret; // stop here if error occurs
         }
     }
@@ -173,7 +174,7 @@ int r3_tree_compile(node *n, char **errstr)
  * Return 0 if success
  */
 int r3_tree_compile_patterns(node * n, char **errstr) {
-    edge * e = NULL;
+    edge *e = NULL;
     char * p;
     char * cpat = zcalloc(sizeof(char) * 64 * 3); // XXX
     if (!cpat) {
@@ -185,7 +186,7 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
     int opcode_cnt = 0;
     int i = 0;
     for (; i < n->edge_len ; i++) {
-        e = n->edges[i];
+        e = &n->edges[i];
         if (e->opcode) {
             opcode_cnt++;
         }
@@ -286,7 +287,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 
         for (i = n->edge_len; i--; ) {
             pp = path;
-            e = n->edges[i];
+            e = &n->edges[i];
             switch(e->opcode) {
                 case OP_EXPECT_NOSLASH:
                     while (*pp != '/' && pp < pp_end) pp++;
@@ -372,7 +373,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
                     continue;
 
                 substring_start = path + ov[2*i];
-                e = n->edges[i - 1];
+                e = &n->edges[i - 1];
 
                 if (entry && e->has_slug) {
                     // append captured token to entry
@@ -396,7 +397,7 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
             }
 
             substring_start = path + ov[2*i];
-            e = n->edges[i - 1];
+            e = &n->edges[i - 1];
 
             if (entry && e->has_slug) {
                 // append captured token to entry
@@ -440,10 +441,10 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
     char firstbyte = *str;
     unsigned int i;
     for (i = n->edge_len; i--; ) {
-        edge *e = n->edges[i];
+        edge *e = &n->edges[i];
         if (firstbyte == e->pattern[0]) {
             if (strncmp(e->pattern, str, e->pattern_len) == 0 ) {
-                return n->edges[i];
+                return &n->edges[i];
             }
             return NULL;
         }
@@ -531,11 +532,11 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
     edge *e = NULL;
     for(i = 0 ; i < n->edge_len ; i++ ) {
         // ignore all edges with slug
-        prefix = strndiff( (char*) path, n->edges[i]->pattern, n->edges[i]->pattern_len);
+        prefix = strndiff( (char*) path, n->edges[i].pattern, n->edges[i].pattern_len);
 
         // no common, consider insert a new edge
         if ( prefix > 0 ) {
-            e = n->edges[i];
+            e = &n->edges[i];
             break;
         }
     }
@@ -753,7 +754,7 @@ bool r3_node_has_slug_edges(const node *n) {
     bool found = FALSE;
     edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
-        e = n->edges[i];
+        e = &n->edges[i];
         e->has_slug = r3_path_contains_slug_char(e->pattern);
         if (e->has_slug)
             found = TRUE;
@@ -780,7 +781,7 @@ void r3_tree_dump(const node * n, int level) {
     printf("\n");
 
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
-        edge * e = n->edges[i];
+        edge * e = &n->edges[i];
         print_indent(level + 1);
         printf("|-\"%s\"", e->pattern);
 
