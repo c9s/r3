@@ -20,9 +20,10 @@ include_directories(. ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${
 
 link_directories(${LINK_DIRECTORIES} /opt/local/lib)
 find_package(PCRE REQUIRED)
-find_package(Judy REQUIRED)
+# find_package(Judy REQUIRED)
 
-set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} r3)
+# set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} r3)
+set(LIBS ${LIBS} ${PCRE_LIBRARIES} r3)
 
 # set (CMAKE_CXX_FLAGS "-std=c++0x -arch x86_64 -stdlib=libc++ -g3 -Wall -O0")
 enable_testing()

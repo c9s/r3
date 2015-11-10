@@ -15,9 +15,6 @@
 
 // PCRE
 #include <pcre.h>
-
-// Judy array
-// #include <Judy.h>
 #include "r3.h"
 #include "r3_str.h"
 #include "slug.h"
