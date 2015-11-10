@@ -308,14 +308,14 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
             }
             // check match
             if ( (pp - path) > 0) {
-                restlen = pp_end - pp;
                 if (entry) {
                     str_array_append(entry->vars , zstrndup(path, pp - path));
                 }
+                restlen = pp_end - pp;
                 if (restlen == 0) {
                     return e->child && e->child->endpoint > 0 ? e->child : NULL;
                 }
-                return r3_tree_matchl(e->child, pp, pp_end - pp, entry);
+                return r3_tree_matchl(e->child, pp, restlen, entry);
             }
         }
     }
@@ -442,9 +442,9 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
     char firstbyte = *str;
     unsigned int i;
     for (i = n->edge_len; i--; ) {
-        if ( firstbyte == *(n->edges[i]->pattern) ) {
-            info("matching '%s' with '%s'\n", str, r3_node_edge_pattern(n,i) );
-            if ( strncmp( r3_node_edge_pattern(n,i), str, r3_node_edge_pattern_len(n,i) ) == 0 ) {
+        edge *e = n->edges[i];
+        if (firstbyte == e->pattern[0]) {
+            if (strncmp(e->pattern, str, e->pattern_len) == 0 ) {
                 return n->edges[i];
             }
             return NULL;
