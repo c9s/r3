@@ -28,7 +28,7 @@ typedef struct _node node;
 typedef struct _route route;
 
 struct _node {
-    edge  ** edges;
+    edge * edges;
     // edge  ** edge_table;
     char * combined_pattern;
     pcre * pcre_pattern;
@@ -123,7 +123,7 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int strdup, node *c
 
 edge * r3_node_find_edge(const node * n, const char * pat, int pat_len);
 
-void r3_node_append_edge(node *n, edge *child);
+edge * r3_node_append_edge(node *n, edge *child);
 
 
 edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, char **errstr);
@@ -170,6 +170,8 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 bool r3_node_has_slug_edges(const node *n);
 
 edge * r3_edge_createl(const char * pattern, int pattern_len, node * child);
+
+void r3_edge_initl(edge *e, const char * pattern, int pattern_len, node * child);
 
 node * r3_edge_branch(edge *e, int dl);
 
