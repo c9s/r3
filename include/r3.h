@@ -33,9 +33,9 @@ struct _node {
     char * combined_pattern;
     pcre * pcre_pattern;
 
-#ifdef PCRE_STUDY_JIT_COMPILE
+// #ifdef PCRE_STUDY_JIT_COMPILE
     pcre_extra * pcre_extra;
-#endif
+// #endif
 
     // edges are mostly less than 255
     unsigned char    compare_type; // compare_type: pcre, opcode, string
