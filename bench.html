@@ -150,9 +150,8 @@
 
         var lines = data.split(/\n/);
 
-        // keep window size to 30 records
-        lines = lines.splice(-30);
-        // lines = lines.splice(lines.length - 30);
+        // keep window size to 60 records
+        lines = lines.splice(-60);
 
         $(lines).each(function(i,line) {
             if (line == "") {
