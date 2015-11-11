@@ -34,18 +34,22 @@ struct _node {
     pcre_extra * pcre_extra;
 
     // edges are mostly less than 255
-    unsigned int edge_len;
     unsigned int compare_type; // compare_type: pcre, opcode, string
-    unsigned char    endpoint; // endpoint, should be zero for non-endpoint nodes
-    unsigned char    ov_cnt; // capture vector array size for pcre
+    unsigned int edge_len;
+    unsigned int endpoint; // endpoint, should be zero for non-endpoint nodes
+    unsigned int ov_cnt; // capture vector array size for pcre
+
+
+    route ** routes;
+    // the pointer of route data
+    void * data;
 
     // almost less than 255
     unsigned char      edge_cap;
     unsigned char      route_len;
     unsigned char      route_cap;
-    route ** routes;
-    // the pointer of route data
-    void * data;
+
+    char _padding[ 64 - sizeof(unsigned char) * 3];
 };
 
 #define r3_node_edge_pattern(node,i) node->edges[i]->pattern
