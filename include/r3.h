@@ -54,10 +54,10 @@ struct _node {
 struct _edge {
     char * pattern; // 8 bytes
     node * child; // 8 bytes
-    unsigned int   pattern_len; // 1 byte
-    unsigned int   opcode;
-    // unsigned char   opcode:4; // 4 bit
-    unsigned char  has_slug:1; // 1 bit
+    unsigned int pattern_len; // 4byte
+    unsigned int opcode; // 4byte
+    unsigned int has_slug; // 4byte
+    char _padding[ 64 - (sizeof(char*) + sizeof(node*) + sizeof(unsigned int) * 3) ];
 };
 
 struct _route {

@@ -1,5 +1,4 @@
 # set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} judy libr3)
-# set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} judy libr3)
 include_directories("${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}")
 find_package(Check REQUIRED)
 find_package(PCRE REQUIRED)
