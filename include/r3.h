@@ -48,7 +48,7 @@ struct _node  {
     unsigned char      edge_cap;
     unsigned char      route_len;
     unsigned char      route_cap;
-} __attribute((aligned(64)));
+} __attribute__((aligned(64)));
 
 #define r3_node_edge_pattern(node,i) node->edges[i]->pattern
 #define r3_node_edge_pattern_len(node,i) node->edges[i]->pattern_len
@@ -59,7 +59,7 @@ struct _edge {
     unsigned int pattern_len; // 4byte
     unsigned int opcode; // 4byte
     unsigned int has_slug; // 4byte
-} __attribute((aligned(64)));
+} __attribute__((aligned(64)));
 
 struct _route {
     char * path;
@@ -74,7 +74,7 @@ struct _route {
 
     char * remote_addr_pattern;
     int    remote_addr_pattern_len;
-} __attribute((aligned(64)));
+} __attribute__((aligned(64)));
 
 typedef struct {
     str_array * vars;
