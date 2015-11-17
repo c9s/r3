@@ -12,6 +12,7 @@
 #include "r3_slug.h"
 #include "zmalloc.h"
 #include "slug.h"
+#include "r3_debug.h"
 
 START_TEST (test_pattern_to_opcode)
 {
@@ -99,7 +100,7 @@ START_TEST (test_r3_inside_slug)
 {
     char * pattern = "/user/{name:\\s+}/to/{id}";
     char * offset = strchr(pattern, '{') + 2;
-    ck_assert( (int)r3_inside_slug(pattern, strlen(pattern), offset, NULL) );
+    ck_assert( r3_inside_slug(pattern, strlen(pattern), offset, NULL) != NULL );
     ck_assert( *(r3_inside_slug(pattern, strlen(pattern), offset, NULL)) == '{' );
     ck_assert( ! r3_inside_slug(pattern, strlen(pattern), pattern, NULL) );
 }
