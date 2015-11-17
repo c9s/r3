@@ -10,6 +10,8 @@
 
 #define SAFE_FREE(ptr) if(ptr) free(ptr);
 
+#define STR(str) str, sizeof(str)-1
+
 START_TEST (test_find_common_prefix)
 {
     node * n = r3_tree_create(10);
@@ -697,6 +699,25 @@ START_TEST(test_pcre_pattern_more)
 END_TEST
 
 
+START_TEST(test_insert_pathl_before_root)
+{
+    char *errstr = NULL;
+    int   var1 = 22;
+    int   var2 = 33;
+    int   var3 = 44;
+    node * n = r3_tree_create(3);
+    r3_tree_insert_pathl_ex(n, STR("/blog/post"), NULL, &var1, NULL);
+    r3_tree_insert_pathl_ex(n, STR("/blog"), NULL, &var2, NULL);
+    r3_tree_insert_pathl_ex(n, STR("/"), NULL, &var3, NULL);
+
+    errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
+    r3_tree_dump(n, 0);
+
+    r3_tree_free(n);
+}
+END_TEST
 
 
 START_TEST(test_insert_route)
@@ -757,6 +778,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_compile_fail);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
+        tcase_add_test(tcase, test_insert_pathl_before_root);
         suite_add_tcase(suite, tcase);
 
         tcase = tcase_create("pcre_pattern_testcase");

@@ -592,10 +592,19 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 {
     node * n = tree;
 
-
     // common edge
     edge * e = NULL;
 
+    // If there is no path to insert at the node, we just increase the mount
+    // point on the node and append the route.
+    if (path_len == 0) {
+        tree->endpoint++;
+        if (route) {
+            route->data = data;
+            r3_node_append_route(tree, route);
+        }
+        return tree;
+    }
 
     /* length of common prefix */
     int prefix_len = 0;
