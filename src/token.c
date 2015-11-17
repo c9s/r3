@@ -48,12 +48,12 @@ bool str_array_resize(str_array * l, int new_cap) {
 bool str_array_append(str_array * l, char * token) {
     if ( str_array_is_full(l) ) {
         bool ret = str_array_resize(l, l->cap + 20);
-        if (ret == FALSE ) {
-            return FALSE;
+        if (ret == false ) {
+            return false;
         }
     }
     l->tokens[ l->len++ ] = token;
-    return TRUE;
+    return true;
 }
 
 void str_array_dump(const str_array *l) {
