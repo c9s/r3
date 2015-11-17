@@ -20,7 +20,7 @@
 
 unsigned long unixtime() {
     struct timeval tp;
-    if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
+    if (gettimeofday((struct timeval *) &tp, (NULL)) == 0) {
         return tp.tv_sec;
     }
     return 0;
@@ -30,7 +30,7 @@ double microtime() {
     struct timeval tp;
     long sec = 0L;
     double msec = 0.0;
-    if (gettimeofday((struct timeval *) &tp, (NUL)) == 0) {
+    if (gettimeofday((struct timeval *) &tp, (NULL)) == 0) {
         msec = (double) (tp.tv_usec / MICRO_IN_SEC);
         sec = tp.tv_sec;
         if (msec >= 1.0)
