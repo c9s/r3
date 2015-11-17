@@ -4,8 +4,8 @@
  *
  * Distributed under terms of the MIT license.
  */
-#ifndef STR_H
-#define STR_H
+#ifndef R3_STR_H
+#define R3_STR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,5 +56,4 @@ char *strndup(const char *s, int n);
 }
 #endif
 
-#endif /* !STR_H */
-
+#endif /* !R3_STR_H */
