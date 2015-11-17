@@ -11,10 +11,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pcre.h>
+
+
+
+#ifdef HAVE_STDBOOL_H
+
 #include <stdbool.h>
-#include "r3_define.h"
+
+#else
+
+#if !defined(bool) && !defined(__cplusplus)
+typedef unsigned char bool;
+#endif
+#ifndef FALSE
+#    define FALSE 0
+#endif
+#ifndef TRUE
+#    define TRUE 1
+#endif
+
+#endif
+
 #include "str_array.h"
 #include "r3_slug.h"
+
 
 #ifdef __cplusplus
 extern "C" {
