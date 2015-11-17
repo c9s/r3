@@ -10,7 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include "r3.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 #include "str_array.h"
 #include "zmalloc.h"
 

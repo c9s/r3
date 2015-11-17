@@ -10,7 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include "r3.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 #include "str.h"
 #include "slug.h"
 #include "zmalloc.h"
@@ -141,10 +141,10 @@ char * r3_slug_find_pattern(const char *s1, int *len) {
  * given a slug string, duplicate the parameter name string of the slug
  */
 char * r3_slug_find_name(const char *s1, int *len) {
-    char *c;
-    char *s2;
+    char * c;
+    char * s2;
     int cnt = 0;
-    c = s1;
+    c = (char*) s1;
     
     while(1) {
         if(*c == '{') cnt++;

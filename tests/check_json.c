@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <json-c/json.h>
 #include "r3.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 #include "r3_json.h"
 #include "zmalloc.h"
 

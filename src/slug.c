@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "r3.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 #include "slug.h"
 #include "zmalloc.h"
 

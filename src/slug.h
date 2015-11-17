@@ -4,8 +4,8 @@
  *
  * Distributed under terms of the MIT license.
  */
-#ifndef R3_SLUG_H
-#define R3_SLUG_H
+#ifndef SLUG_H
+#define SLUG_H
 
 typedef struct {
     /**

@@ -12,7 +12,7 @@
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
 #include "r3.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 #include "zmalloc.h"
 #include "bench.h"
 

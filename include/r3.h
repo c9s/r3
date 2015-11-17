@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include "r3_define.h"
 #include "str_array.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 
 #ifdef __cplusplus
 extern "C" {

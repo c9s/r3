@@ -10,7 +10,7 @@ puts <<END
 #include <stdlib.h>
 #include <assert.h>
 #include "r3.h"
-#include "r3_str.h"
+#include "r3_slug.h"
 #include "zmalloc.h"
 
 START_TEST (test_routes)

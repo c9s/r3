@@ -4,8 +4,8 @@
  *
  * Distributed under terms of the MIT license.
  */
-#ifndef R3_STR_H
-#define R3_STR_H
+#ifndef R3_SLUG_H
+#define R3_SLUG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,4 +27,4 @@ char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **
 }
 #endif
 
-#endif /* !R3_STR_H */
+#endif /* !R3_SLUG_H */
