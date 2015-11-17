@@ -12,8 +12,6 @@
 #include <string.h>
 #include <pcre.h>
 
-
-
 #ifdef HAVE_STDBOOL_H
 
 #include <stdbool.h>
@@ -23,11 +21,11 @@
 #if !defined(bool) && !defined(__cplusplus)
 typedef unsigned char bool;
 #endif
-#ifndef FALSE
-#    define FALSE 0
+#ifndef false 
+#    define false 0
 #endif
-#ifndef TRUE
-#    define TRUE 1
+#ifndef true
+#    define true 1
 #endif
 
 #endif

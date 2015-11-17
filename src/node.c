@@ -772,13 +772,13 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 }
 
 bool r3_node_has_slug_edges(const node *n) {
-    bool found = FALSE;
+    bool found = false;
     edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = &n->edges[i];
         e->has_slug = r3_path_contains_slug_char(e->pattern);
         if (e->has_slug)
-            found = TRUE;
+            found = true;
     }
     return found;
 }
