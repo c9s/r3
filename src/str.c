@@ -225,12 +225,6 @@ char * ltrim_slash(char* str)
     return zstrdup(p);
 }
 
-void str_repeat(char *s, const char *c, int len) {
-    while(len--) {
-        s[len - 1] = *c;
-    }
-}
-
 void print_indent(int level) {
     int len = level * 2;
     while(len--) {
