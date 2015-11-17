@@ -23,8 +23,6 @@ int r3_slug_count(const char * needle, int len, char **errstr);
 
 char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **errstr);
 
-void print_indent(int level);
-
 #ifdef __cplusplus
 }
 #endif

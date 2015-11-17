@@ -11,6 +11,7 @@
 #include <assert.h>
 #include "r3.h"
 #include "r3_str.h"
+#include "str.h"
 #include "slug.h"
 #include "zmalloc.h"
 
