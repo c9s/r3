@@ -11,6 +11,7 @@
 #include "r3.h"
 #include "r3_slug.h"
 #include "slug.h"
+#include "r3_debug.h"
 #include "zmalloc.h"
 
 

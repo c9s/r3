@@ -8,7 +8,6 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 #include <stdbool.h>
-
 #if !defined(bool) && !defined(__cplusplus)
 typedef unsigned char bool;
 #endif
@@ -18,20 +17,4 @@ typedef unsigned char bool;
 #ifndef TRUE
 #    define TRUE 1
 #endif
-
-// #define DEBUG 1
-#ifdef DEBUG
-
-#define info(fmt, ...) \
-            do { fprintf(stderr, fmt, ##__VA_ARGS__); } while (0)
-
-#define debug(fmt, ...) \
-        do { fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
-                                __LINE__, __func__, __VA_ARGS__); } while (0)
-
-#else
-#define info(...);
-#define debug(...);
-#endif
-
 #endif /* !DEFINE_H */

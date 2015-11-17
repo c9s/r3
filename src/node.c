@@ -12,6 +12,7 @@
 #include "r3_slug.h"
 #include "slug.h"
 #include "str.h"
+#include "r3_debug.h"
 #include "zmalloc.h"
 
 #ifdef __GNUC__
