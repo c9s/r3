@@ -43,7 +43,7 @@ API
 #include <r3/r3.h>
 
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
-node *n = r3_tree_create(10);
+R3Node *n = r3_tree_create(10);
 
 int route_data = 3;
 
@@ -61,7 +61,7 @@ r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), &route_dat
 // if you want to catch error, you may call the extended path function for insertion
 int data = 10;
 char *errstr = NULL;
-node *ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"), NULL, &data, &errstr);
+R3Node *ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"), NULL, &data, &errstr);
 if (ret == NULL) {
     // failed insertion
     printf("error: %s\n", errstr);
@@ -83,7 +83,7 @@ if (err != 0) {
 r3_tree_dump(n, 0);
 
 // match a route
-node *matched_node = r3_tree_matchl(n, "/foo/bar", strlen("/foo/bar"), NULL);
+R3Node *matched_node = r3_tree_matchl(n, "/foo/bar", strlen("/foo/bar"), NULL);
 if (matched_node) {
     int ret = *( (int*) matched_node->data );
 }
@@ -117,7 +117,7 @@ entry->request_method = METHOD_GET | METHOD_POST;
 When using `match_entry`, you may match the route with `r3_tree_match_entry` function:
 
 ```c
-node *matched_node = r3_tree_match_entry(n, entry);
+R3Node * matched_node = r3_tree_match_entry(n, entry);
 ```
 
 
@@ -125,7 +125,7 @@ node *matched_node = r3_tree_match_entry(n, entry);
 
 **Release Memory**
 
-To release the memory, you may call `r3_tree_free(node *tree)` to release the whole tree structure, 
+To release the memory, you may call `r3_tree_free(R3Node *tree)` to release the whole tree structure, 
 `node*`, `edge*`, `route*` objects that were inserted into the tree will be freed.
 
 
@@ -254,7 +254,7 @@ Here is the sample code of generating graph output:
 
 
 ```c
-node * n = r3_tree_create(1);
+R3Node * n = r3_tree_create(1);
 
 r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
 r3_tree_insert_path(n, "/foo/bar/qux",  NULL);
@@ -300,13 +300,13 @@ digraph g {
 ### Graphviz Related Functions
 
 ```c
-int r3_tree_render_file(const node * tree, const char * format, const char * filename);
+int r3_tree_render_file(const R3Node * tree, const char * format, const char * filename);
 
-int r3_tree_render(const node * tree, const char *layout, const char * format, FILE *fp);
+int r3_tree_render(const R3Node * tree, const char *layout, const char * format, FILE *fp);
 
-int r3_tree_render_dot(const node * tree, const char *layout, FILE *fp);
+int r3_tree_render_dot(const R3Node * tree, const char *layout, FILE *fp);
 
-int r3_tree_render_file(const node * tree, const char * format, const char * filename);
+int r3_tree_render_file(const R3Node * tree, const char * format, const char * filename);
 ```
 
 
