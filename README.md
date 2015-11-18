@@ -396,9 +396,16 @@ Binding For Other Languages
 * Python pyr3 by @thedrow <https://github.com/thedrow/pyr3>
 * Haskell r3 by @MnO2 <https://github.com/MnO2/r3>
 * Vala r3-vala by @Ronmi <https://github.com/Ronmi/r3-vala>
-* Node.js node-r3 by @othree <https://github.com/othree/node-r3>
-* Node.js node-libr3 by @caasi <https://github.com/caasi/node-r3>
+
+Node.js
+
+* node-r3 by @othree <https://github.com/othree/node-r3>
+* node-libr3 by @caasi <https://github.com/caasi/node-r3>
+
+Ruby
+
 * Ruby rr3 by @tonytonyjan <https://github.com/tonytonyjan/rr3>
+* mruby r3 <https://github.com/rail44/mruby-r3>
 
 
 License
