@@ -406,6 +406,7 @@ Ruby
 
 * Ruby rr3 by @tonytonyjan <https://github.com/tonytonyjan/rr3>
 * mruby r3 <https://github.com/rail44/mruby-r3>
+* mruby rake r3 <https://github.com/rail44/mruby-rack-r3>
 
 
 License
