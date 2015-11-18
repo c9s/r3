@@ -9,7 +9,7 @@ void example_1() {
     // create a router tree with 10 children capacity (this capacity can grow dynamically)
     r3::Tree tree(10);
 
-    // insert the route path into the router tree
+    // insert the R3Route path into the router tree
     int route_data_1 = 1;
     tree.insert_path("/bar", &route_data_1); // ignore the length of path
 
@@ -65,7 +65,7 @@ void example_2() {
     // create a router tree with 10 children capacity (this capacity can grow dynamically)
     r3::Tree tree(10);
 
-    // insert the route path into the router tree
+    // insert the R3Route path into the router tree
     int route_data = 1;
     tree.insert_routel(METHOD_GET | METHOD_POST, "/blog/post",
         sizeof("/blog/post") - 1, &route_data);

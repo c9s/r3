@@ -6,7 +6,7 @@ R3
 [![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.svg)](https://coveralls.io/r/c9s/r3)
 
 R3 is an URL router library with high performance, thus, it's implemented in C.
-It compiles your route paths into a prefix trie.
+It compiles your R3Route paths into a prefix trie.
 
 By using the prefix tree constructed in the start-up time, you can dispatch
 the path to the controller with high efficiency.
@@ -47,7 +47,7 @@ R3Node *n = r3_tree_create(10);
 
 int route_data = 3;
 
-// insert the route path into the router tree
+// insert the R3Route path into the router tree
 r3_tree_insert_path(n, "/bar", &route_data); // ignore the length of path
 
 r3_tree_insert_pathl(n, "/zoo", strlen("/zoo"), &route_data );
@@ -114,7 +114,7 @@ entry->request_method = METHOD_POST;
 entry->request_method = METHOD_GET | METHOD_POST;
 ```
 
-When using `match_entry`, you may match the route with `r3_tree_match_entry` function:
+When using `match_entry`, you may match the R3Route with `r3_tree_match_entry` function:
 
 ```c
 R3Node * matched_node = r3_tree_match_entry(n, entry);
@@ -141,7 +141,7 @@ n = r3_tree_create(10);
 
 int route_data = 3;
 
-// insert the route path into the router tree
+// insert the R3Route path into the router tree
 r3_tree_insert_routel(n, METHOD_GET | METHOD_POST, "/blog/post", sizeof("/blog/post") - 1, &route_data );
 
 char *errstr = NULL;
@@ -160,7 +160,7 @@ match_entry * entry = match_entry_create("/blog/post");
 entry->request_method = METHOD_GET;
 
 
-route *matched_route = r3_tree_match_route(n, entry);
+R3Route *matched_R3Route = r3_tree_match_route(n, entry);
 matched_route->data; // get the data from matched route
 
 // free the objects at the end
@@ -179,7 +179,7 @@ To specify the pattern of a slug, you may write a colon to separate the slug nam
 
     "/user/{userId:\\d+}"
 
-The above route will use `\d+` as its pattern.
+The above R3Route will use `\d+` as its pattern.
 
 
 Optimization
@@ -206,7 +206,7 @@ And here is the result of the router journey:
 
                  omg     9932.9 (±4.8%) i/s -      49873 in   5.033452s
 
-r3 uses the same route path data for benchmarking, and here is the benchmark:
+r3 uses the same R3Route path data for benchmarking, and here is the benchmark:
 
                 3 runs, 5000000 iterations each run, finished in 1.308894 seconds
                 11460057.83 i/sec
@@ -214,7 +214,7 @@ r3 uses the same route path data for benchmarking, and here is the benchmark:
 
 ### The Route Paths Of Benchmark
 
-The route path generator is from <https://github.com/stevegraham/rails/pull/1>:
+The R3Route path generator is from <https://github.com/stevegraham/rails/pull/1>:
 
 ```ruby
 #!/usr/bin/env ruby
@@ -242,7 +242,7 @@ Function prefix mapping
 Rendering Routes With Graphviz
 ---------------------------------------
 
-The `r3_tree_render_file` API let you render the whole route trie into a image.
+The `r3_tree_render_file` API let you render the whole R3Route trie into a image.
 
 To use graphviz, you need to enable graphviz while you run `configure`:
 
@@ -347,7 +347,7 @@ $ret = r3_dispatch($rs, '/blog/post/3' );
 list($complete, $route, $variables) = $ret;
 
 // matched conditions aren't done yet
-list($error, $message) = r3_validate($route); // validate route conditions
+list($error, $message) = r3_validate($route); // validate R3Route conditions
 if ( $error ) {
     echo $message; // "Method not allowed", "...";
 }

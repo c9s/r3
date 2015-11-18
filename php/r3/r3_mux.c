@@ -81,7 +81,7 @@ zend_class_entry ** get_pattern_compiler_ce(TSRMLS_D) {
     return ce_pattern_compiler;
 }
 
-// Returns compiled route zval
+// Returns compiled R3Route zval
 zval * compile_route_pattern(zval *z_pattern, zval *z_options, zend_class_entry **ce_pattern_compiler TSRMLS_DC)
 {
     // zend_class_entry **ce_pattern_compiler;
@@ -92,10 +92,10 @@ zval * compile_route_pattern(zval *z_pattern, zval *z_options, zend_class_entry 
         }
     }
 
-    zval *z_compiled_route = NULL; // will be an array
+    zval *z_compiled_R3Route = NULL; // will be an array
     zend_call_method( NULL, *ce_pattern_compiler, NULL, "compile", strlen("compile"), &z_compiled_route, 2, z_pattern, z_options TSRMLS_CC );
 
-    if ( z_compiled_route == NULL ) {
+    if ( z_compiled_R3Route == NULL ) {
         return NULL;
     } else if ( Z_TYPE_P(z_compiled_route) == IS_NULL ) {
         zval_ptr_dtor(&z_compiled_route);
@@ -467,7 +467,7 @@ PHP_METHOD(Mux, mount) {
             // zval for new route
             zval *z_new_routes;
 
-            // zval for route item
+            // zval for R3Route item
             zval **z_is_pcre; // route[0]
             zval **z_route_pattern;
             zval **z_route_callback;
@@ -514,10 +514,10 @@ PHP_METHOD(Mux, mount) {
 
                 // $routeArgs = PatternCompiler::compile($newPattern, 
                 //     array_merge_recursive($route[3], $options) );
-                zval *z_compiled_route = compile_route_pattern(z_new_pattern, *z_route_options, ce_pattern_compiler TSRMLS_CC);
+                zval *z_compiled_R3Route = compile_route_pattern(z_new_pattern, *z_route_options, ce_pattern_compiler TSRMLS_CC);
 
 
-                if ( z_compiled_route == NULL || Z_TYPE_P(z_compiled_route) == IS_NULL ) {
+                if ( z_compiled_R3Route == NULL || Z_TYPE_P(z_compiled_route) == IS_NULL ) {
                     php_error( E_ERROR, "Cannot compile pattern: %s", new_pattern);
                 }
 
@@ -535,7 +535,7 @@ PHP_METHOD(Mux, mount) {
                 Z_ADDREF_P(z_compiled_route);
                 Z_ADDREF_P(z_new_routes);
 
-                // create new route and append to mux->routes
+                // create new R3Route and append to mux->routes
                 add_index_bool(z_new_routes, 0 , 1); // pcre flag == false
                 add_index_zval(z_new_routes, 1, *z_compiled_route_pattern);
                 add_index_zval(z_new_routes, 2 , *z_route_callback);
@@ -558,7 +558,7 @@ PHP_METHOD(Mux, mount) {
 
                 int new_pattern_len = pattern_len + Z_STRLEN_PP(z_route_pattern);
 
-                // Merge the mount options with the route options
+                // Merge the mount options with the R3Route options
                 zval *z_new_route_options;
                 MAKE_STD_ZVAL(z_new_route_options);
                 array_init(z_new_route_options);
@@ -681,11 +681,11 @@ PHP_METHOD(Mux, getRoute) {
     }
 
     zval *z_routes_by_id = NULL;
-    zval **z_route = NULL;
+    zval **z_R3Route = NULL;
     z_routes_by_id = zend_read_property( ce_r3_mux , this_ptr, "routesById", sizeof("routesById")-1, 1 TSRMLS_CC);
 
     // php_var_dump(&z_routes_by_id, 1 TSRMLS_CC);
-    if ( zend_hash_find( Z_ARRVAL_P(z_routes_by_id) , route_id, route_id_len + 1, (void**) &z_route ) == SUCCESS ) {
+    if ( zend_hash_find( Z_ARRVAL_P(z_routes_by_id) , route_id, route_id_len + 1, (void**) &z_R3Route ) == SUCCESS ) {
         *return_value = **z_route;
         zval_copy_ctor(return_value);
         return;
@@ -788,7 +788,7 @@ PHP_METHOD(Mux, compile) {
         zend_call_method( NULL, NULL, NULL, "usort", strlen("usort"), &rv, 2, 
                 z_routes, z_sort_callback TSRMLS_CC );
         zval_ptr_dtor(&z_sort_callback); // recycle sort callback zval
-        // php_error(E_ERROR,"route sort failed.");
+        // php_error(E_ERROR,"R3Route sort failed.");
         // zend_update_property(ce_r3_mux, getThis(), "routes", sizeof("routes")-1, z_routes TSRMLS_CC);
     }
 
@@ -843,7 +843,7 @@ PHP_METHOD(Mux, dispatch) {
     int  path_len;
     zval *z_path;
 
-    zval *z_return_route = NULL;
+    zval *z_return_R3Route = NULL;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &path, &path_len) == FAILURE) {
         RETURN_FALSE;
@@ -856,7 +856,7 @@ PHP_METHOD(Mux, dispatch) {
     zend_hash_quick_find( &ce_r3_mux->function_table, "match",    sizeof("match"), zend_inline_hash_func(ZEND_STRS("match")),    (void **) &fe);
     zend_call_method( &this_ptr, ce_r3_mux, &fe, "match", strlen("match"), &z_return_route, 1, z_path, NULL TSRMLS_CC );
 
-    if ( ! z_return_route || Z_TYPE_P(z_return_route) == IS_NULL ) {
+    if ( ! z_return_R3Route || Z_TYPE_P(z_return_route) == IS_NULL ) {
         zval_ptr_dtor(&z_path);
         RETURN_NULL();
     }
@@ -908,11 +908,11 @@ PHP_METHOD(Mux, dispatch) {
             zval *z_substr;
 
             if ( zend_hash_quick_find( Z_ARRVAL_PP(z_options) , "vars", sizeof("vars"), zend_inline_hash_func(ZEND_STRS("vars")), (void**) &z_route_vars ) == FAILURE ) {
-                php_error(E_ERROR, "require route vars");
+                php_error(E_ERROR, "require R3Route vars");
                 RETURN_FALSE;
             }
             if ( zend_hash_index_find( Z_ARRVAL_PP(z_options) , 0 , (void**) &z_route_vars_0 ) == FAILURE ) {
-                php_error(E_ERROR, "require route vars[0]");
+                php_error(E_ERROR, "require R3Route vars[0]");
                 RETURN_FALSE;
             }
 
@@ -955,7 +955,7 @@ PHP_METHOD(Mux, dispatch) {
         }
     }
 
-    if ( z_return_route ) {
+    if ( z_return_R3Route ) {
         *return_value = *z_return_route;
         zval_copy_ctor(return_value);
     }
@@ -972,7 +972,7 @@ PHP_METHOD(Mux, match) {
     }
 
     zval **z_route_pp = NULL;
-    zval *z_route = NULL;
+    zval *z_R3Route = NULL;
     if ( zend_hash_find( Z_ARRVAL_P( zend_read_property(ce_r3_mux, this_ptr, "staticRoutes", sizeof("staticRoutes") - 1, 1 TSRMLS_CC) ), path, path_len, (void**)&z_route_pp) == SUCCESS ) {
         if ( Z_TYPE_PP(z_route_pp) != IS_NULL ) {
             *return_value = **z_route_pp;
@@ -981,8 +981,8 @@ PHP_METHOD(Mux, match) {
             return;
         }
     }
-    z_route = php_r3_match(zend_read_property(ce_r3_mux , this_ptr , "routes", sizeof("routes")-1, 1 TSRMLS_CC), path, path_len TSRMLS_CC);
-    if ( z_route != NULL ) {
+    z_R3Route = php_r3_match(zend_read_property(ce_r3_mux , this_ptr , "routes", sizeof("routes")-1, 1 TSRMLS_CC), path, path_len TSRMLS_CC);
+    if ( z_R3Route != NULL ) {
         *return_value = *z_route;
         zval_copy_ctor(return_value);
         Z_ADDREF_P(z_route);
@@ -1058,7 +1058,7 @@ PHP_METHOD(Mux, appendPCRERoute) {
     zend_call_method( NULL, *ce_pattern_compiler, NULL, "compile", strlen("compile"), &rv, 1, z_pattern, NULL TSRMLS_CC );
 
     if ( rv == NULL || Z_TYPE_P(rv) == IS_NULL ) {
-        zend_throw_exception(ce_r3_exception, "Can not compile route pattern", 0 TSRMLS_CC);
+        zend_throw_exception(ce_r3_exception, "Can not compile R3Route pattern", 0 TSRMLS_CC);
         RETURN_FALSE;
     }
     add_next_index_zval(z_routes, rv);
@@ -1115,9 +1115,9 @@ inline void mux_add_route(INTERNAL_FUNCTION_PARAMETERS)
         MAKE_STD_ZVAL(z_pattern);
         ZVAL_STRINGL(z_pattern, pattern, pattern_len, 1);
 
-        zval *z_compiled_route = compile_route_pattern(z_pattern, z_options, NULL TSRMLS_CC);
-        if ( z_compiled_route == NULL ) {
-            zend_throw_exception(ce_r3_exception, "Unable to compile route pattern.", 0 TSRMLS_CC);
+        zval *z_compiled_R3Route = compile_route_pattern(z_pattern, z_options, NULL TSRMLS_CC);
+        if ( z_compiled_R3Route == NULL ) {
+            zend_throw_exception(ce_r3_exception, "Unable to compile R3Route pattern.", 0 TSRMLS_CC);
             RETURN_FALSE;
         }
         zval_ptr_dtor(&z_pattern);
@@ -1160,7 +1160,7 @@ inline void mux_add_route(INTERNAL_FUNCTION_PARAMETERS)
         add_index_zval( z_new_route, 3 , z_options);
         add_next_index_zval(z_routes, z_new_route);
 
-        // if there is no option specified in z_options, we can add the route to our static route hash
+        // if there is no option specified in z_options, we can add the R3Route to our static R3Route hash
         if ( zend_hash_num_elements(Z_ARRVAL_P(z_options)) ) {
             zval * z_static_routes = zend_read_property(ce_r3_mux, this_ptr, "staticRoutes", sizeof("staticRoutes")-1, 1 TSRMLS_CC);
             if ( z_static_routes ) {
@@ -1173,7 +1173,7 @@ inline void mux_add_route(INTERNAL_FUNCTION_PARAMETERS)
             zval * z_routes_by_id = zend_read_property(ce_r3_mux, this_ptr, "routesById", sizeof("routesById")-1, 1 TSRMLS_CC);
 
             /*
-            zval *id_route = NULL;
+            zval *id_R3Route = NULL;
             ALLOC_ZVAL(id_route);
             ZVAL_COPY_VALUE(id_route, z_new_route);
             zval_copy_ctor(id_route);

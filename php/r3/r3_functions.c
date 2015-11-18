@@ -407,8 +407,8 @@ PHP_FUNCTION(r3_match)
     }
 
     zval *z_route;
-    z_route = php_r3_match(z_routes, path, path_len TSRMLS_CC);
-    if ( z_route != NULL ) {
+    z_R3Route = php_r3_match(z_routes, path, path_len TSRMLS_CC);
+    if ( z_R3Route != NULL ) {
         *return_value = *z_route;
         zval_copy_ctor(return_value);
         return;
@@ -438,7 +438,7 @@ PHP_FUNCTION(r3_persistent_dispatch)
     char *ns, *filename, *path;
     int  ns_len, filename_len, path_len;
     zval *mux = NULL;
-    zval *route = NULL;
+    zval *R3Route = NULL;
     zval *z_path = NULL;
 
     /* parse parameters */
@@ -463,15 +463,15 @@ PHP_FUNCTION(r3_persistent_dispatch)
     ZVAL_STRINGL(z_path, path ,path_len, 1); // no copy
 
     // XXX: pass return_value to the method call, so we don't need to copy
-    route = call_mux_method(mux, "dispatch" , sizeof("dispatch"), 1 , z_path, NULL, NULL TSRMLS_CC);
+    R3Route = call_mux_method(mux, "dispatch" , sizeof("dispatch"), 1 , z_path, NULL, NULL TSRMLS_CC);
     zval_ptr_dtor(&z_path);
 
-    if ( route ) {
+    if ( R3Route ) {
         *return_value = *route;
         zval_copy_ctor(return_value);
         return;
     }
-    // route not found
+    // R3Route not found
     RETURN_FALSE;
 }
 
@@ -649,7 +649,7 @@ inline zval * php_r3_match(zval *z_routes, char *path, int path_len TSRMLS_DC) {
 
             // tell garbage collector to collect it, we need to use pcre_subpats later.
 
-            // check conditions only when route option is provided
+            // check conditions only when R3Route option is provided
             if ( zend_hash_index_find( Z_ARRVAL_PP(z_route_pp), 3, (void**) &z_route_options_pp) == SUCCESS ) {
                 if ( zend_hash_num_elements(Z_ARRVAL_PP(z_route_options_pp)) ) {
                     if ( 0 == validate_request_method( z_route_options_pp, current_request_method TSRMLS_CC) ) {

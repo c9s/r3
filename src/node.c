@@ -434,7 +434,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, int path_len, match
 
 
 
-route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
+R3Route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
     R3Node *n;
     int i;
     n = r3_tree_match_entry(tree, entry);
@@ -483,12 +483,12 @@ R3Node * r3_node_create() {
     return n;
 }
 
-void r3_route_free(route * route) {
+void r3_route_free(R3Route * route) {
     zfree(route);
 }
 
-route * r3_route_createl(const char * path, int path_len) {
-    route * info = zmalloc(sizeof(route));
+R3Route * r3_route_createl(const char * path, int path_len) {
+    R3Route * info = zmalloc(sizeof(R3Route));
     CHECK_PTR(info);
     info->path = (char*) path;
     info->path_len = path_len;
@@ -510,8 +510,8 @@ route * r3_route_createl(const char * path, int path_len) {
  *
  * method (int): METHOD_GET, METHOD_POST, METHOD_PUT, METHOD_DELETE ...
  */
-route * r3_tree_insert_routel_ex(R3Node *tree, int method, const char *path, int path_len, void *data, char **errstr) {
-    route *r = r3_route_createl(path, path_len);
+R3Route * r3_tree_insert_routel_ex(R3Node *tree, int method, const char *path, int path_len, void *data, char **errstr) {
+    R3Route *r = r3_route_createl(path, path_len);
     CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
     R3Node * ret = r3_tree_insert_pathl_ex(tree, path, path_len, r, data, errstr);
@@ -601,7 +601,7 @@ R3Edge * r3_node_find_common_prefix(R3Node *n, const char *path, int path_len, i
 /**
  * Return the last inserted node.
  */
-R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
+R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, int path_len, R3Route * route, void * data, char **errstr)
 {
     R3Node * n = tree;
 
@@ -824,7 +824,7 @@ void r3_tree_dump(const R3Node * n, int level) {
  *
  * -1 == different route
  */
-inline int r3_route_cmp(const route *r1, const match_entry *r2) {
+inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
     if (r1->request_method != 0) {
         if (0 == (r1->request_method & r2->request_method) ) {
             return -1;
@@ -855,14 +855,14 @@ inline int r3_route_cmp(const route *r1, const match_entry *r2) {
 /**
  *
  */
-void r3_node_append_route(R3Node * n, route * r) {
+void r3_node_append_route(R3Node * n, R3Route * r) {
     if (n->routes == NULL) {
         n->route_cap = 3;
-        n->routes = zmalloc(sizeof(route) * n->route_cap);
+        n->routes = zmalloc(sizeof(R3Route) * n->route_cap);
     }
     if (n->route_len >= n->route_cap) {
         n->route_cap *= 2;
-        n->routes = zrealloc(n->routes, sizeof(route) * n->route_cap);
+        n->routes = zrealloc(n->routes, sizeof(R3Route) * n->route_cap);
     }
     n->routes[ n->route_len++ ] = r;
 }

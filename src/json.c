@@ -9,7 +9,7 @@
 #include "r3.h"
 #include "r3_json.h"
 
-json_object * r3_route_to_json_object(const route * r) {
+json_object * r3_route_to_json_object(const R3Route * r) {
     json_object *obj;
 
     obj = json_object_new_object();

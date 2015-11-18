@@ -608,7 +608,7 @@ END_TEST
 
 START_TEST(test_route_cmp)
 {
-    route *r1 = r3_route_create("/blog/post");
+    R3Route *r1 = r3_route_create("/blog/post");
     match_entry * m = match_entry_create("/blog/post");
 
     fail_if( r3_route_cmp(r1, m) == -1, "should match");
@@ -732,7 +732,7 @@ START_TEST(test_insert_route)
     r3_tree_insert_route(n, METHOD_POST, "/blog/post", &var2);
 
     match_entry * entry;
-    route *r;
+    R3Route *r;
 
     entry = match_entry_create("/blog/post");
     entry->request_method = METHOD_GET;

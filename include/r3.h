@@ -43,7 +43,7 @@ struct _node;
 struct _route;
 typedef struct _edge R3Edge;
 typedef struct _node R3Node;
-typedef struct _route route;
+typedef struct _R3Route R3Route;
 
 struct _node  {
     R3Edge * edges;
@@ -58,8 +58,8 @@ struct _node  {
     unsigned int ov_cnt; // capture vector array size for pcre
 
 
-    route ** routes;
-    // the pointer of route data
+    R3Route ** routes;
+    // the pointer of R3Route data
     void * data;
 
     // almost less than 255
@@ -79,7 +79,7 @@ struct _edge {
     unsigned int has_slug; // 4byte
 } __attribute__((aligned(64)));
 
-struct _route {
+struct _R3Route {
     char * path;
     int    path_len;
 
@@ -100,7 +100,7 @@ typedef struct {
     int    path_len; // the length of the current path
     int    request_method;  // current request method
 
-    void * data; // route ptr
+    void * data; // R3Route ptr
 
     char * host; // the request host
     int    host_len;
@@ -138,9 +138,9 @@ R3Node * r3_tree_insert_pathl(R3Node *tree, const char *path, int path_len, void
 
 
 
-route * r3_tree_insert_routel(R3Node * tree, int method, const char *path, int path_len, void *data);
+R3Route * r3_tree_insert_routel(R3Node * tree, int method, const char *path, int path_len, void *data);
 
-route * r3_tree_insert_routel_ex(R3Node * tree, int method, const char *path, int path_len, void *data, char **errstr);
+R3Route * r3_tree_insert_routel_ex(R3Node * tree, int method, const char *path, int path_len, void *data, char **errstr);
 
 #define r3_tree_insert_routel(n, method, path, path_len, data) r3_tree_insert_routel_ex(n, method, path, path_len, data, NULL)
 
@@ -152,7 +152,7 @@ route * r3_tree_insert_routel_ex(R3Node * tree, int method, const char *path, in
 /**
  * The private API to insert a path
  */
-R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, int path_len, route * route, void * data, char ** errstr);
+R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, int path_len, R3Route * route, void * data, char ** errstr);
 
 void r3_tree_dump(const R3Node * n, int level);
 
@@ -185,18 +185,18 @@ void r3_edge_free(R3Edge * edge);
 
 
 
-route * r3_route_create(const char * path);
+R3Route * r3_route_create(const char * path);
 
-route * r3_route_createl(const char * path, int path_len);
+R3Route * r3_route_createl(const char * path, int path_len);
 
 
-void r3_node_append_route(R3Node * n, route * route);
+void r3_node_append_route(R3Node * n, R3Route * route);
 
-void r3_route_free(route * route);
+void r3_route_free(R3Route * route);
 
-int r3_route_cmp(const route *r1, const match_entry *r2);
+int r3_route_cmp(const R3Route *r1, const match_entry *r2);
 
-route * r3_tree_match_route(const R3Node *n, match_entry * entry);
+R3Route * r3_tree_match_route(const R3Node *n, match_entry * entry);
 
 #define r3_route_create(p) r3_route_createl(p, strlen(p))
 

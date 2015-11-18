@@ -38,7 +38,7 @@ namespace r3 {
         T* p_;
     };
     typedef Base<R3Node> Node;
-    typedef Base<route> Route;
+    typedef Base<R3Route> Route;
 
     class MatchEntry : public Base<match_entry> {
     public:
