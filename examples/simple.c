@@ -10,7 +10,7 @@
 
 int main()
 {
-    node * n = r3_tree_create(3);
+    R3Node * n = r3_tree_create(3);
 
     r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
     r3_tree_insert_path(n, "/foo/bar/qux",  NULL);
@@ -44,7 +44,7 @@ int main()
         return 1;
     }
 
-    node *m;
+    R3Node *m;
 
     m = r3_tree_match(n , "/qux/bar/corge", NULL);
 

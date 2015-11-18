@@ -96,7 +96,7 @@ void bench_append_csv(char *filename, int countOfB, ...) {
 
 int main()
 {
-    node * n = r3_tree_create(1);
+    R3Node * n = r3_tree_create(1);
 
     int route_data = 999;
 
@@ -441,7 +441,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     r3_tree_compile(n, NULL);
     END_MEASURE(tree_compile)
 
-    node *m;
+    R3Node * m;
     m = r3_tree_match(n , "/qux/bar/corge", NULL);
     assert(m != NULL);
     assert( *((int*) m->data) == 999 );
@@ -461,7 +461,7 @@ r3_tree_insert_path(n, "/garply/grault/corge",  NULL);
     BENCHMARK_SUMMARY(str_match_entry);
 
 
-    node * tree2 = r3_tree_create(1);
+    R3Node * tree2 = r3_tree_create(1);
     r3_tree_insert_path(tree2, "/post/{year}/{month}",  NULL);
     r3_tree_compile(tree2, NULL);
 

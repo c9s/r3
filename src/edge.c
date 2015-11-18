@@ -25,7 +25,7 @@
 
 
 
-void r3_edge_initl(edge *e, const char * pattern, int pattern_len, node * child)
+void r3_edge_initl(R3Edge *e, const char * pattern, int pattern_len, R3Node * child)
 {
     e->pattern = (char*) pattern;
     e->pattern_len = pattern_len;
@@ -34,9 +34,9 @@ void r3_edge_initl(edge *e, const char * pattern, int pattern_len, node * child)
     e->has_slug = r3_path_contains_slug_char(e->pattern);
 }
 
-edge * r3_edge_createl(const char * pattern, int pattern_len, node * child)
+R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child)
 {
-    edge * e = (edge*) zmalloc( sizeof(edge) );
+    R3Edge * e = (R3Edge*) zmalloc( sizeof(R3Edge) );
     CHECK_PTR(e);
     e->pattern = (char*) pattern;
     e->pattern_len = pattern_len;
@@ -59,9 +59,9 @@ edge * r3_edge_createl(const char * pattern, int pattern_len, node * child)
  * A -> [EDGE: abcd] -> B1 -> [efg] -> B2 (new child with copied data from B)
  *
  */
-node * r3_edge_branch(edge *e, int dl) {
-    node * new_child;
-    edge * new_edge;
+R3Node * r3_edge_branch(R3Edge *e, int dl) {
+    R3Node * new_child;
+    R3Edge * new_edge;
 
     // the rest string
     char * s1 = e->pattern + dl;
@@ -85,7 +85,7 @@ node * r3_edge_branch(edge *e, int dl) {
     return new_child;
 }
 
-void r3_edge_free(edge * e) {
+void r3_edge_free(R3Edge * e) {
     zfree(e->pattern);
     if ( e->child ) {
         r3_tree_free(e->child);

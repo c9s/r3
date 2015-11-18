@@ -52,11 +52,11 @@ static int strdiff(char * d1, char * d2) {
 /**
  * Create a node object
  */
-node * r3_tree_create(int cap) {
-    node * n = (node*) zmalloc( sizeof(node) );
+R3Node * r3_tree_create(int cap) {
+    R3Node * n = (R3Node*) zmalloc( sizeof(R3Node) );
     CHECK_PTR(n);
 
-    n->edges = (edge*) zmalloc(sizeof(edge) * cap);
+    n->edges = (R3Edge*) zmalloc(sizeof(R3Edge) * cap);
     CHECK_PTR(n->edges);
     n->edge_len = 0;
     n->edge_cap = cap;
@@ -73,7 +73,7 @@ node * r3_tree_create(int cap) {
     return n;
 }
 
-void r3_tree_free(node * tree) {
+void r3_tree_free(R3Node * tree) {
     if (tree->edges) {
         zfree(tree->edges);
     }
@@ -96,9 +96,9 @@ void r3_tree_free(node * tree) {
 /**
  * Connect two node objects, and create an edge object between them.
  */
-edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *child) {
+R3Edge * r3_node_connectl(R3Node * n, const char * pat, int len, int dupl, R3Node *child) {
     // find the same sub-pattern, if it does not exist, create one
-    edge * e;
+    R3Edge * e;
 
     e = r3_node_find_edge(n, pat, len);
     if (e) {
@@ -110,20 +110,20 @@ edge * r3_node_connectl(node * n, const char * pat, int len, int dupl, node *chi
     }
     e = r3_edge_createl(pat, len, child);
     CHECK_PTR(e);
-    edge *e2 = r3_node_append_edge(n, e);
+    R3Edge *e2 = r3_node_append_edge(n, e);
     zfree(e);
     return e2;
 }
 
-edge * r3_node_append_edge(node *n, edge *e)
+R3Edge * r3_node_append_edge(R3Node *n, R3Edge *e)
 {
     if (n->edges == NULL) {
         n->edge_cap = 3;
-        n->edges = zmalloc(sizeof(edge) * n->edge_cap);
+        n->edges = zmalloc(sizeof(R3Edge) * n->edge_cap);
     }
     if (n->edge_len >= n->edge_cap) {
         n->edge_cap *= 2;
-        edge * p = zrealloc(n->edges, sizeof(edge) * n->edge_cap);
+        R3Edge * p = zrealloc(n->edges, sizeof(R3Edge) * n->edge_cap);
         if(p) {
             n->edges = p;
         }
@@ -141,8 +141,8 @@ edge * r3_node_append_edge(node *n, edge *e)
  *
  * if "pat" is a slug, we should compare with the specified pattern.
  */
-edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
-    edge * e;
+R3Edge * r3_node_find_edge(const R3Node * n, const char * pat, int pat_len) {
+    R3Edge * e;
     int i;
     for (i = 0 ; i < n->edge_len ; i++ ) {
         e = &n->edges[i];
@@ -155,7 +155,7 @@ edge * r3_node_find_edge(const node * n, const char * pat, int pat_len) {
     return NULL;
 }
 
-int r3_tree_compile(node *n, char **errstr)
+int r3_tree_compile(R3Node *n, char **errstr)
 {
     int i;
     int ret = 0;
@@ -184,8 +184,8 @@ int r3_tree_compile(node *n, char **errstr)
  * Return -1 if error occurs
  * Return 0 if success
  */
-int r3_tree_compile_patterns(node * n, char **errstr) {
-    edge *e = NULL;
+int r3_tree_compile_patterns(R3Node * n, char **errstr) {
+    R3Edge *e = NULL;
     char * p;
     char * cpat = zcalloc(sizeof(char) * 64 * 3); // XXX
     if (!cpat) {
@@ -283,10 +283,10 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-node * r3_tree_matchl(const node * n, const char * path, int path_len, match_entry * entry) {
+R3Node * r3_tree_matchl(const R3Node * n, const char * path, int path_len, match_entry * entry) {
     info("try matching: %s\n", path);
 
-    edge *e;
+    R3Edge *e;
     unsigned int i;
     unsigned int restlen;
 
@@ -434,8 +434,8 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
 
 
 
-route * r3_tree_match_route(const node *tree, match_entry * entry) {
-    node *n;
+route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
+    R3Node *n;
     int i;
     n = r3_tree_match_entry(tree, entry);
     if (n && n->routes && n->route_len > 0) {
@@ -448,8 +448,8 @@ route * r3_tree_match_route(const node *tree, match_entry * entry) {
     return NULL;
 }
 
-inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_len) {
-    edge * e;
+inline R3Edge * r3_node_find_edge_str(const R3Node * n, const char * str, int str_len) {
+    R3Edge * e;
     unsigned int i;
     char firstbyte = *str;
     for (i = n->edge_len; i--; ) {
@@ -464,8 +464,8 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
     return NULL;
 }
 
-node * r3_node_create() {
-    node * n = (node*) zmalloc( sizeof(node) );
+R3Node * r3_node_create() {
+    R3Node * n = (R3Node*) zmalloc( sizeof(R3Node) );
     CHECK_PTR(n);
     n->edges = NULL;
     n->edge_len = 0;
@@ -510,11 +510,11 @@ route * r3_route_createl(const char * path, int path_len) {
  *
  * method (int): METHOD_GET, METHOD_POST, METHOD_PUT, METHOD_DELETE ...
  */
-route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int path_len, void *data, char **errstr) {
+route * r3_tree_insert_routel_ex(R3Node *tree, int method, const char *path, int path_len, void *data, char **errstr) {
     route *r = r3_route_createl(path, path_len);
     CHECK_PTR(r);
     r->request_method = method; // ALLOW GET OR POST METHOD
-    node * ret = r3_tree_insert_pathl_ex(tree, path, path_len, r, data, errstr);
+    R3Node * ret = r3_tree_insert_pathl_ex(tree, path, path_len, r, data, errstr);
     if (!ret) {
         // failed insert
         r3_route_free(r);
@@ -537,11 +537,11 @@ route * r3_tree_insert_routel_ex(node *tree, int method, const char *path, int p
  * 4.  "aaa{slug:xxx}/hate" vs "aab{slug:yyy}/bar"      => common prefix = "aa"
  * 5.  "/foo/{slug}/hate" vs "/fo{slug}/bar"            => common prefix = "/fo"
  */
-edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *prefix_len, char **errstr) {
+R3Edge * r3_node_find_common_prefix(R3Node *n, const char *path, int path_len, int *prefix_len, char **errstr) {
     int i = 0;
     int prefix = 0;
     *prefix_len = 0;
-    edge *e = NULL;
+    R3Edge *e = NULL;
     for(i = 0 ; i < n->edge_len ; i++ ) {
         // ignore all edges with slug
         prefix = strndiff( (char*) path, n->edges[i].pattern, n->edges[i].pattern_len);
@@ -601,12 +601,12 @@ edge * r3_node_find_common_prefix(node *n, const char *path, int path_len, int *
 /**
  * Return the last inserted node.
  */
-node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
+R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, int path_len, route * route, void * data, char **errstr)
 {
-    node * n = tree;
+    R3Node * n = tree;
 
     // common edge
-    edge * e = NULL;
+    R3Edge * e = NULL;
 
     // If there is no path to insert at the node, we just increase the mount
     // point on the node and append the route.
@@ -657,7 +657,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 #endif
 
             // insert the first one edge, and break at "p"
-            node * child = r3_tree_create(3);
+            R3Node * child = r3_tree_create(3);
             CHECK_PTR(child);
 
             r3_node_connect(n, zstrndup(path, (int)(p - path)), child);
@@ -685,7 +685,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
 
                 // if the slug starts after one+ charactor, for example foo{slug}
-                node *c1;
+                R3Node *c1;
                 if (slug_p > path) {
                     c1 = r3_tree_create(3);
                     CHECK_PTR(c1);
@@ -694,10 +694,10 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
                     c1 = n;
                 }
 
-                node * c2 = r3_tree_create(3);
+                R3Node * c2 = r3_tree_create(3);
                 CHECK_PTR(c2);
 
-                edge * op_edge = r3_node_connectl(c1, slug_p, slug_len , 1, c2);
+                R3Edge * op_edge = r3_node_connectl(c1, slug_p, slug_len , 1, c2);
                 if(opcode) {
                     op_edge->opcode = opcode;
                 }
@@ -717,7 +717,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
                 return c2;
             }
             // only one slug
-            node * child = r3_tree_create(3);
+            R3Node * child = r3_tree_create(3);
             CHECK_PTR(child);
             child->endpoint++;
             if (data)
@@ -771,9 +771,9 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
     return n;
 }
 
-bool r3_node_has_slug_edges(const node *n) {
+bool r3_node_has_slug_edges(const R3Node *n) {
     bool found = false;
-    edge *e;
+    R3Edge *e;
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
         e = &n->edges[i];
         e->has_slug = r3_path_contains_slug_char(e->pattern);
@@ -785,7 +785,7 @@ bool r3_node_has_slug_edges(const node *n) {
 
 
 
-void r3_tree_dump(const node * n, int level) {
+void r3_tree_dump(const R3Node * n, int level) {
     print_indent(level);
 
     printf("(o)");
@@ -802,7 +802,7 @@ void r3_tree_dump(const node * n, int level) {
     printf("\n");
 
     for ( int i = 0 ; i < n->edge_len ; i++ ) {
-        edge * e = &n->edges[i];
+        R3Edge * e = &n->edges[i];
         print_indent(level + 1);
         printf("|-\"%s\"", e->pattern);
 
@@ -855,7 +855,7 @@ inline int r3_route_cmp(const route *r1, const match_entry *r2) {
 /**
  *
  */
-void r3_node_append_route(node * n, route * r) {
+void r3_node_append_route(R3Node * n, route * r) {
     if (n->routes == NULL) {
         n->route_cap = 3;
         n->routes = zmalloc(sizeof(route) * n->route_cap);

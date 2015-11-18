@@ -37,7 +37,7 @@ namespace r3 {
     private:
         T* p_;
     };
-    typedef Base<node> Node;
+    typedef Base<R3Node> Node;
     typedef Base<route> Route;
 
     class MatchEntry : public Base<match_entry> {
@@ -69,7 +69,7 @@ namespace r3 {
         MatchEntry& operator =(const MatchEntry&);
     };
 
-    class Tree : public Base<node> {
+    class Tree : public Base<R3Node> {
     public:
         explicit Tree(int cap)
             : Base(r3_tree_create(cap)) {
