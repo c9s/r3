@@ -27,7 +27,7 @@ json_object * r3_route_to_json_object(const R3Route * r) {
 }
 
 
-json_object * r3_edge_to_json_object(const edge * e) {
+json_object * r3_edge_to_json_object(const R3Edge * e) {
     json_object *obj;
 
     obj = json_object_new_object();
@@ -42,7 +42,7 @@ json_object * r3_edge_to_json_object(const edge * e) {
     return obj;
 }
 
-json_object * r3_node_to_json_object(const node * n) {
+json_object * r3_node_to_json_object(const R3Node * n) {
     json_object *obj;
 
     obj = json_object_new_object();
@@ -60,7 +60,7 @@ json_object * r3_node_to_json_object(const node * n) {
         json_object *edges_array = json_object_new_array();
         json_object_object_add(obj, "edges", edges_array);
         for (i = 0 ; i < n->edge_len ; i++ ) {
-            json_object *edge_json_obj = r3_edge_to_json_object(n->edges[i]);
+            json_object *edge_json_obj = r3_edge_to_json_object(&n->edges[i]);
             json_object_array_add(edges_array, edge_json_obj);
         }
     }
@@ -79,17 +79,17 @@ json_object * r3_node_to_json_object(const node * n) {
 }
 
 
-const char * r3_node_to_json_string_ext(const node * n, int options) {
+const char * r3_node_to_json_string_ext(const R3Node * n, int options) {
     json_object *obj = r3_node_to_json_object(n);
     return json_object_to_json_string_ext(obj, options);
 }
 
-const char * r3_node_to_json_pretty_string(const node * n) {
+const char * r3_node_to_json_pretty_string(const R3Node * n) {
     json_object *obj = r3_node_to_json_object(n);
     return json_object_to_json_string_ext(obj, JSON_C_TO_STRING_PRETTY | JSON_C_TO_STRING_SPACED);
 }
 
-const char * r3_node_to_json_string(const node * n) {
+const char * r3_node_to_json_string(const R3Node * n) {
     json_object *obj = r3_node_to_json_object(n);
     return json_object_to_json_string(obj);
 }

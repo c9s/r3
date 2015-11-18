@@ -11,13 +11,13 @@
 #include <json-c/json.h>
 #include "r3.h"
 
-json_object * r3_edge_to_json_object(const edge * e);
-json_object * r3_node_to_json_object(const node * n);
+json_object * r3_edge_to_json_object(const R3Edge * e);
+json_object * r3_node_to_json_object(const R3Node * n);
 json_object * r3_route_to_json_object(const R3Route * r);
 
-const char * r3_node_to_json_string_ext(const node * n, int options);
-const char * r3_node_to_json_pretty_string(const node * n);
-const char * r3_node_to_json_string(const node * n);
+const char * r3_node_to_json_string_ext(const R3Node * n, int options);
+const char * r3_node_to_json_pretty_string(const R3Node * n);
+const char * r3_node_to_json_string(const R3Node * n);
 
 
 

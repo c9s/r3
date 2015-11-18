@@ -16,7 +16,7 @@
 
 START_TEST (test_json_encode)
 {
-    node * n;
+    R3Node * n;
     n = r3_tree_create(10);
 
     ck_assert(n);

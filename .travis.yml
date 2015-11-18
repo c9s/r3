@@ -1,8 +1,5 @@
 language: c
 
-compiler:
-  - gcc
-  
 git:
   depth: 1
 

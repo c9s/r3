@@ -1,6 +1,6 @@
 TESTS =
 
-AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) @CHECK_CFLAGS@ -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/src -I$(top_builddir)/3rdparty  -Wall -std=c99 -ggdb -Wall
+AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) @CHECK_CFLAGS@ -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/src -I$(top_builddir)/3rdparty  -Wall -std=c99 -ggdb
 AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS) @CHECK_LIBS@ $(top_builddir)/libr3.la
 
 if USE_JEMALLOC
@@ -49,4 +49,3 @@ bench_SOURCES = bench.c
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir)/include
 # AM_CFLAGS=$(DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include
 CLEANFILES                  = check_tree.log
-
