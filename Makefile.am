@@ -1,4 +1,8 @@
-SUBDIRS=3rdparty src . tests examples
+SUBDIRS=3rdparty src . examples
+
+if HAVE_CHECK
+SUBDIRS += tests
+endif
 
 lib_LTLIBRARIES = libr3.la
 libr3_la_SOURCES =
@@ -13,6 +17,8 @@ ACLOCAL_AMFLAGS=-I m4
 
 if ENABLE_DEBUG
 AM_CFLAGS += -ggdb -fprofile-arcs -ftest-coverage
+else
+AM_CFLAGS += -O2
 endif
 
 if USE_JEMALLOC
