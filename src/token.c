@@ -19,7 +19,9 @@ str_array * str_array_create(int cap) {
     if (!list)
         return NULL;
     list->len = 0;
+    list->slugs_len = 0;
     list->cap = cap;
+    list->slugs = NULL;
     list->tokens = (char**) zmalloc( sizeof(char*) * cap);
     return list;
 }
@@ -35,18 +37,34 @@ void str_array_free(str_array *l) {
     zfree(l);
 }
 
-bool str_array_is_full(const str_array * l) {
+bool str_array_slugs_full(const str_array * l) {
+    return l->slugs_len >= l->cap;
+}
+
+bool str_array_tokens_full(const str_array * l) {
     return l->len >= l->cap;
 }
 
 bool str_array_resize(str_array * l, int new_cap) {
+    l->slugs = zrealloc(l->slugs, sizeof(char**) * new_cap);
     l->tokens = zrealloc(l->tokens, sizeof(char**) * new_cap);
     l->cap = new_cap;
-    return l->tokens != NULL;
+    return l->tokens != NULL && l->slugs != NULL;
+}
+
+bool str_array_append_slug(str_array * l, char * slug) {
+    if ( str_array_slugs_full(l) ) {
+        bool ret = str_array_resize(l, l->cap + 20);
+        if (ret == false ) {
+            return false;
+        }
+    }
+    l->slugs[ l->slugs_len++ ] = slug;
+    return true;
 }
 
 bool str_array_append(str_array * l, char * token) {
-    if ( str_array_is_full(l) ) {
+    if ( str_array_tokens_full(l) ) {
         bool ret = str_array_resize(l, l->cap + 20);
         if (ret == false ) {
             return false;
@@ -54,6 +72,17 @@ bool str_array_append(str_array * l, char * token) {
     }
     l->tokens[ l->len++ ] = token;
     return true;
+}
+
+void str_array_dump_slugs(const str_array *l) {
+    printf("[");
+    for ( int i = 0; i < l->slugs_len ; i++ ) {
+        printf("\"%s\"", l->slugs[i] );
+        if ( i + 1 != l->slugs_len ) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
 }
 
 void str_array_dump(const str_array *l) {

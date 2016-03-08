@@ -86,11 +86,13 @@ R3Node * r3_edge_branch(R3Edge *e, int dl) {
 }
 
 void r3_edge_free(R3Edge * e) {
-    zfree(e->pattern);
-    if ( e->child ) {
-        r3_tree_free(e->child);
+    if (e) {
+        zfree(e->pattern);
+        if ( e->child ) {
+            r3_tree_free(e->child);
+        }
+        // free itself
+        zfree(e);
     }
-    // free itself
-    zfree(e);
 }
 

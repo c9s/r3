@@ -46,7 +46,7 @@ typedef struct _node R3Node;
 typedef struct _R3Route R3Route;
 
 struct _node  {
-    R3Edge * edges;
+    R3Edge ** edges;
     char * combined_pattern;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
@@ -82,6 +82,10 @@ struct _edge {
 struct _R3Route {
     char * path;
     int    path_len;
+
+    char **slugs;
+    int    slugs_len;
+    int    slugs_cap;
 
     int    request_method; // can be (GET || POST)
 
