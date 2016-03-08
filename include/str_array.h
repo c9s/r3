@@ -9,6 +9,8 @@
 #define STR_ARRAY_H
 
 typedef struct _str_array {
+  char **slugs;
+  int    slugs_len;
   char **tokens;
   int    len;
   int    cap;
@@ -16,13 +18,19 @@ typedef struct _str_array {
 
 str_array * str_array_create(int cap);
 
-bool str_array_is_full(const str_array * l);
+bool str_array_slugs_full(const str_array * l);
+
+bool str_array_tokens_full(const str_array * l);
 
 bool str_array_resize(str_array *l, int new_cap);
+
+bool str_array_append_slug(str_array * l, char * slug);
 
 bool str_array_append(str_array * list, char * token);
 
 void str_array_free(str_array *l);
+
+void str_array_dump_slugs(const str_array *l);
 
 void str_array_dump(const str_array *l);
 
