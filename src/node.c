@@ -450,9 +450,7 @@ R3Route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
         for (i = n->route_len; i--; ) {
             if ( r3_route_cmp(n->routes[i], entry) == 0 ) {
                 // Add slugs from found route to match_entry
-                for (int j = 0; j < n->routes[i]->slugs_len; j++) {
-                    str_array_append_slug(entry->vars , n->routes[i]->slugs[j]);
-                }
+                entry->vars->slugs = n->routes[i]->slugs;
                 return n->routes[i];
             }
         }

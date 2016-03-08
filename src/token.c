@@ -21,7 +21,7 @@ str_array * str_array_create(int cap) {
     list->len = 0;
     list->slugs_len = 0;
     list->cap = cap;
-    list->slugs = (char**) zmalloc( sizeof(char*) * cap);
+    list->slugs = NULL;
     list->tokens = (char**) zmalloc( sizeof(char*) * cap);
     return list;
 }
@@ -33,7 +33,6 @@ void str_array_free(str_array *l) {
             zfree(l->tokens[i]);
         }
     }
-    zfree(l->slugs);
     zfree(l->tokens);
     zfree(l);
 }
