@@ -1,6 +1,6 @@
 SUBDIRS=3rdparty src . examples
 
-if HAVE_CHECK
+if ENABLE_CHECK
 SUBDIRS += tests
 endif
 
