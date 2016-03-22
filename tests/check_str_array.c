@@ -14,23 +14,26 @@
 
 START_TEST (test_str_array)
 {
-    str_array * l = str_array_create(3);
-    ck_assert(l);
+    match_entry * entry = match_entry_create("/foo");
+    ck_assert(entry);
 
-    ck_assert(str_array_append(l, zstrdup("abc")));
-    ck_assert( l->len == 1 );
+    char *test_str = "abc";
+    ck_assert( str_array_append(&entry->vars, test_str, strlen(test_str)));
+    ck_assert( entry->vars.tokens.size == 1 );
 
-    ck_assert(str_array_append(l, zstrdup("foo") ));
-    ck_assert( l->len == 2 );
+    char *test_str1 = "foo";
+    ck_assert( str_array_append(&entry->vars, test_str1, strlen(test_str)));
+    ck_assert( entry->vars.tokens.size == 2 );
 
-    ck_assert( str_array_append(l, zstrdup("bar") ) );
-    ck_assert( l->len == 3 );
+    char *test_str2 = "bar";
+    ck_assert( str_array_append(&entry->vars, test_str2, strlen(test_str)));
+    ck_assert( entry->vars.tokens.size == 3 );
 
-    ck_assert( str_array_append(l, zstrdup("zoo") ) );
-    ck_assert( l->len == 4 );
+    char *test_str3 = "zoo";
+    ck_assert( str_array_append(&entry->vars, test_str3, strlen(test_str)));
+    ck_assert( entry->vars.tokens.size == 4 );
 
-    ck_assert( str_array_resize(l, l->cap * 2) );
-    str_array_free(l);
+    match_entry_free(entry);
 }
 END_TEST
 

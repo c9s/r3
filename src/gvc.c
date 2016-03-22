@@ -16,8 +16,8 @@ void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node 
     if (!n)
         return;
 
-    for ( int i = 0 ; i < n->edge_len ; i++ ) {
-        edge * e = n->edges[i];
+    for ( int i = 0 ; i < n->edges.size ; i++ ) {
+        edge * e = n->edges.entries + i;
         (*node_cnt)++;
 
         Agnode_t *agn_child = NULL;

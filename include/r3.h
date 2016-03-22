@@ -32,6 +32,7 @@ typedef unsigned char bool;
 
 #include "str_array.h"
 #include "r3_slug.h"
+#include "memory.h"
 
 
 #ifdef __cplusplus
@@ -46,83 +47,61 @@ typedef struct _node R3Node;
 typedef struct _R3Route R3Route;
 
 struct _node  {
-    R3Edge ** edges;
+    R3_VECTOR(R3Edge) edges;
+    R3_VECTOR(R3Route) routes;
     char * combined_pattern;
     pcre * pcre_pattern;
     pcre_extra * pcre_extra;
 
     // edges are mostly less than 255
     unsigned int compare_type; // compare_type: pcre, opcode, string
-    unsigned int edge_len;
     unsigned int endpoint; // endpoint, should be zero for non-endpoint nodes
     unsigned int ov_cnt; // capture vector array size for pcre
 
-
-    R3Route ** routes;
     // the pointer of R3Route data
     void * data;
 
     // almost less than 255
-    unsigned char      edge_cap;
-    unsigned char      route_len;
-    unsigned char      route_cap;
 } __attribute__((aligned(64)));
 
-#define r3_node_edge_pattern(node,i) node->edges[i]->pattern
-#define r3_node_edge_pattern_len(node,i) node->edges[i]->pattern_len
+#define r3_node_edge_pattern(node,i) node->edges.entries[i].pattern.base
+#define r3_node_edge_pattern_len(node,i) node->edges.entries[i].pattern.len
 
 struct _edge {
-    char * pattern; // 8 bytes
+    r3_iovec_t pattern; // 8 bytes
     R3Node * child; // 8 bytes
-    unsigned int pattern_len; // 4byte
+    // unsigned int pattern_len; // 4byte
     unsigned int opcode; // 4byte
     unsigned int has_slug; // 4byte
 } __attribute__((aligned(64)));
 
 struct _R3Route {
-    char * path;
-    int    path_len;
-
-    char **slugs;
-    int    slugs_len;
-    int    slugs_cap;
-
-    int    request_method; // can be (GET || POST)
-
-    char * host; // required host name
-    int    host_len;
+    r3_iovec_t path;
+    R3_VECTOR(r3_iovec_t) slugs;
+    int request_method; // can be (GET || POST)
+    r3_iovec_t host; // required host name
 
     void * data;
 
-    char * remote_addr_pattern;
-    int    remote_addr_pattern_len;
+    r3_iovec_t remote_addr_pattern;
 } __attribute__((aligned(64)));
 
-typedef struct {
-    str_array * vars;
-    const char * path; // current path to dispatch
-    int    path_len; // the length of the current path
-    int    request_method;  // current request method
+typedef struct _R3Entry match_entry;
+struct _R3Entry {
+    str_array vars;
+    r3_iovec_t path; // current path to dispatch
+    int request_method;  // current request method
 
     void * data; // R3Route ptr
 
-    char * host; // the request host
-    int    host_len;
-
-    char * remote_addr;
-    int    remote_addr_len;
-} match_entry;
-
-
-
-
-
-
+    r3_iovec_t host; // the request host
+    r3_iovec_t remote_addr;
+} __attribute__((aligned(64)));
 
 
 R3Node * r3_tree_create(int cap);
 
-R3Node * r3_node_create();
+// R3Node * r3_node_create();
 
 void r3_tree_free(R3Node * tree);
 
@@ -130,15 +109,15 @@ R3Edge * r3_node_connectl(R3Node * n, const char * pat, int len, int strdup, R3N
 
 #define r3_node_connect(n, pat, child) r3_node_connectl(n, pat, strlen(pat), 0, child)
 
-R3Edge * r3_node_find_edge(const R3Node * n, const char * pat, int pat_len);
+R3Edge * r3_node_find_edge(const R3Node * n, const char * pat, unsigned int pat_len);
 
-R3Edge * r3_node_append_edge(R3Node *n, R3Edge *child);
+R3Edge * r3_node_append_edge(R3Node *n);
 
 R3Edge * r3_node_find_common_prefix(R3Node *n, const char *path, int path_len, int *prefix_len, char **errstr);
 
 R3Node * r3_tree_insert_pathl(R3Node *tree, const char *path, int path_len, void * data);
 
-#define r3_tree_insert_pathl(tree, path, path_len, data) r3_tree_insert_pathl_ex(tree, path, path_len, NULL , data, NULL)
+#define r3_tree_insert_pathl(tree, path, path_len, data) r3_tree_insert_pathl_ex(tree, path, path_len, 0, 0, data, NULL)
 
 
 
@@ -148,7 +127,7 @@ R3Route * r3_tree_insert_routel_ex(R3Node * tree, int method, const char *path, 
 
 #define r3_tree_insert_routel(n, method, path, path_len, data) r3_tree_insert_routel_ex(n, method, path, path_len, data, NULL)
 
-#define r3_tree_insert_path(n,p,d) r3_tree_insert_pathl_ex(n,p,strlen(p), NULL, d, NULL)
+#define r3_tree_insert_path(n,p,d) r3_tree_insert_pathl_ex(n,p,strlen(p), 0, 0, d, NULL)
 
 #define r3_tree_insert_route(n,method,path,data) r3_tree_insert_routel(n, method, path, strlen(path), data)
 
@@ -156,7 +135,7 @@ R3Route * r3_tree_insert_routel_ex(R3Node * tree, int method, const char *path, 
 /**
  * The private API to insert a path
  */
-R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, int path_len, R3Route * route, void * data, char ** errstr);
+R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int path_len, int method, unsigned int router, void * data, char **errstr);
 
 void r3_tree_dump(const R3Node * n, int level);
 
@@ -168,16 +147,16 @@ int r3_tree_compile(R3Node *n, char** errstr);
 
 int r3_tree_compile_patterns(R3Node * n, char** errstr);
 
-R3Node * r3_tree_matchl(const R3Node * n, const char * path, int path_len, match_entry * entry);
+R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry);
 
 #define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
 
 // R3Node * r3_tree_match_entry(R3Node * n, match_entry * entry);
-#define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path, entry->path_len, entry)
+#define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path.base, entry->path.len, entry)
 
 bool r3_node_has_slug_edges(const R3Node *n);
 
-R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child);
+// R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child);
 
 void r3_edge_initl(R3Edge *e, const char * pattern, int pattern_len, R3Node * child);
 
@@ -191,10 +170,10 @@ void r3_edge_free(R3Edge * edge);
 
 R3Route * r3_route_create(const char * path);
 
-R3Route * r3_route_createl(const char * path, int path_len);
+// R3Route * r3_route_createl(const char * path, int path_len);
 
 
-void r3_node_append_route(R3Node * n, R3Route * route);
+R3Route * r3_node_append_route(R3Node *tree, const char * path, int path_len, int method, void *data);
 
 void r3_route_free(R3Route * route);
 
@@ -215,7 +194,7 @@ R3Route * r3_tree_match_route(const R3Node *n, match_entry * entry);
 
 
 
-int r3_pattern_to_opcode(const char * pattern, int pattern_len);
+int r3_pattern_to_opcode(const char * pattern, unsigned int len);
 
 enum { NODE_COMPARE_STR, NODE_COMPARE_PCRE, NODE_COMPARE_OPCODE };
 

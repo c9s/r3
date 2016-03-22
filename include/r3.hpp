@@ -90,13 +90,13 @@ namespace r3 {
         }
 
         Node insert_path(const char* path, void* data, char** errstr = NULL) {
-            return r3_tree_insert_pathl_ex(get(), path, std::strlen(path), NULL,
+            return r3_tree_insert_pathl_ex(get(), path, std::strlen(path), 0, 0,
                 data, errstr);
         }
 
         Node insert_pathl(const char* path, int path_len, void* data,
             char** errstr = NULL) {
-            return r3_tree_insert_pathl_ex(get(), path, path_len, NULL, data,
+            return r3_tree_insert_pathl_ex(get(), path, path_len, 0, 0, data,
                 errstr);
         }
 

@@ -27,24 +27,24 @@
 
 void r3_edge_initl(R3Edge *e, const char * pattern, int pattern_len, R3Node * child)
 {
-    e->pattern = (char*) pattern;
-    e->pattern_len = pattern_len;
-    e->opcode = 0;
+    e->pattern.base = (char*) pattern;
+    e->pattern.len = (unsigned int)pattern_len;
+    // e->opcode = 0;
     e->child = child;
-    e->has_slug = r3_path_contains_slug_char(e->pattern);
+    e->has_slug = r3_path_contains_slug_char(e->pattern.base, e->pattern.len);
 }
 
-R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child)
-{
-    R3Edge * e = (R3Edge*) zmalloc( sizeof(R3Edge) );
-    CHECK_PTR(e);
-    e->pattern = (char*) pattern;
-    e->pattern_len = pattern_len;
-    e->opcode = 0;
-    e->child = child;
-    e->has_slug = r3_path_contains_slug_char(e->pattern);
-    return e;
-}
+// R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child)
+// {
+//     R3Edge * e = (R3Edge*) zmalloc( sizeof(R3Edge) );
+//     CHECK_PTR(e);
+//     e->pattern = (char*) pattern;
+//     e->pattern_len = pattern_len;
+//     e->opcode = 0;
+//     e->child = child;
+//     e->has_slug = r3_path_contains_slug_char(e->pattern);
+//     return e;
+// }
 
 
 
@@ -64,35 +64,28 @@ R3Node * r3_edge_branch(R3Edge *e, int dl) {
     R3Edge * new_edge;
 
     // the rest string
-    char * s1 = e->pattern + dl;
-    int s1_len = e->pattern_len - dl;
+    char * s1 = e->pattern.base + dl;
+    int s1_len = e->pattern.len - dl;
 
     // the suffix edge of the leaf
     new_child = r3_tree_create(3);
-    new_edge = r3_edge_createl(zstrndup(s1, s1_len), s1_len, new_child);
 
-    // Move child node to the new edge
-    new_edge->child = e->child;
+    new_edge = r3_node_append_edge(new_child);
+    r3_edge_initl(new_edge, s1, s1_len, e->child);
     e->child = new_child;
-
-    r3_node_append_edge(new_child, new_edge);
-
+    
     // truncate the original edge pattern
-    char *oldpattern = e->pattern;
-    e->pattern = zstrndup(e->pattern, dl);
-    e->pattern_len = dl;
-    zfree(oldpattern);
+    e->pattern.len = dl;
     return new_child;
 }
 
 void r3_edge_free(R3Edge * e) {
     if (e) {
-        zfree(e->pattern);
         if ( e->child ) {
             r3_tree_free(e->child);
         }
         // free itself
-        zfree(e);
+        // zfree(e);
     }
 }
 

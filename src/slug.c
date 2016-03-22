@@ -86,7 +86,7 @@ int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *
     }
 
     // there is no slug
-    if (!r3_path_contains_slug_char(offset)) {
+    if (!r3_path_contains_slug_char(offset, needle_len)) {
         return 0;
     }
 

@@ -46,14 +46,16 @@ END_TEST
 
 START_TEST (test_contains_slug)
 {
-    ck_assert( r3_path_contains_slug_char("/user/{id}/{name}") );
+    char *test_str = "/user/{id}/{name}";
+    ck_assert( r3_path_contains_slug_char(test_str, strlen(test_str)) );
 }
 END_TEST
 
 START_TEST (test_r3_slug_find_pattern)
 {
     int len;
-    char * namerex = r3_slug_find_pattern("{name:\\s+}", &len);
+    char *test_str = "{name:\\s+}";
+    char * namerex = r3_slug_find_pattern(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "\\s+", len) == 0 );
 }
 END_TEST
@@ -61,7 +63,8 @@ END_TEST
 START_TEST (test_r3_slug_find_name)
 {
     int len;
-    char * namerex = r3_slug_find_name("{name:\\s+}", &len);
+    char *test_str = "{name:\\s+}";
+    char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
 }
 END_TEST
@@ -69,7 +72,8 @@ END_TEST
 START_TEST (test_r3_slug_find_name_without_pattern)
 {
     int len;
-    char * namerex = r3_slug_find_name("{name}", &len);
+    char *test_str = "{name}";
+    char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
 }
 END_TEST
@@ -77,7 +81,8 @@ END_TEST
 START_TEST (test_r3_slug_find_name_with_multiple_slug)
 {
     int len;
-    char * namerex = r3_slug_find_name("{name}/{name2}", &len);
+    char *test_str = "{name}/{name2}";
+    char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
 }
 END_TEST
@@ -86,11 +91,12 @@ START_TEST (test_r3_slug_find_placeholder)
 {
     int slug_len = 0;
     char * slug;
-    slug = r3_slug_find_placeholder("/user/{name:\\s+}/to/{id}", &slug_len);
+    char *test_str = "/user/{name:\\s+}/to/{id}";
+    slug = r3_slug_find_placeholder(test_str, strlen(test_str), &slug_len);
     ck_assert( strncmp(slug, "{name:\\s+}", slug_len) == 0 );
 
-
-    slug = r3_slug_find_placeholder("/user/{idx:\\d{3}}/to/{idy:\\d{3}}", &slug_len);
+    test_str = "/user/{idx:\\d{3}}/to/{idy:\\d{3}}";
+    slug = r3_slug_find_placeholder(test_str, strlen(test_str), &slug_len);
     ck_assert( slug_len == strlen("{idx:\\d{3}}") );
     ck_assert( strncmp(slug, "{idx:\\d{3}}", slug_len) == 0 );
 }
@@ -186,7 +192,8 @@ END_TEST
 START_TEST (test_r3_slug_find_placeholder_with_broken_slug)
 {
     int slug_len = 0;
-    char * slug = r3_slug_find_placeholder("/user/{name:\\s+/to/{id", &slug_len);
+    char *sl_test = "/user/{name:\\s+/to/{id";
+    char * slug = r3_slug_find_placeholder(sl_test, strlen(sl_test), &slug_len);
     ck_assert(slug == 0);
 }
 END_TEST
