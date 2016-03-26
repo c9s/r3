@@ -438,8 +438,8 @@ R3Route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
     R3Node *n;
     R3Route *r;
     n = r3_tree_match_entry(tree, entry);
-    unsigned int i, irs = n->routes.size;
-    if (n && irs) {
+    unsigned int i, irs;
+    if (n && (irs = n->routes.size)) {
         r = n->routes.entries;
         for (i = 0; irs - i; i++) {
             if ( r3_route_cmp(r, entry) == 0 ) {
