@@ -350,7 +350,7 @@ void r3_dump_memory(FILE *fp, const char *buf, unsigned int len)
     unsigned int i, j;
 
     for (i = 0; i < len; i += 16) {
-        fprintf(fp, "%08zx", i);
+        fprintf(fp, "%08x", i);
         for (j = 0; j != 16; ++j) {
             if (i + j < len)
                 fprintf(fp, " %02x", (int)(unsigned char)buf[i + j]);
