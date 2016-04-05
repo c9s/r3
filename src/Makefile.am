@@ -4,7 +4,7 @@ MAYBE_COVERAGE=--coverage
 
 noinst_LTLIBRARIES = libr3core.la
 # lib_LIBRARIES = libr3.a
-libr3core_la_SOURCES = node.c edge.c str.c token.c match_entry.c slug.c
+libr3core_la_SOURCES = node.c edge.c str.c token.c match_entry.c slug.c memory.c
 
 if ENABLE_JSON
 libr3core_la_SOURCES += json.c

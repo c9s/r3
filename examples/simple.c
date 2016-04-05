@@ -54,5 +54,6 @@ int main()
         printf("Matched! %s\n", e->path);
     }
     match_entry_free(e);
+    r3_tree_free(n);
     return 0;
 }

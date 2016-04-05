@@ -16,20 +16,16 @@
 #include "zmalloc.h"
 
 match_entry * match_entry_createl(const char * path, int path_len) {
-    match_entry * entry = zmalloc(sizeof(match_entry));
-    if(!entry)
-        return NULL;
-    entry->vars = str_array_create(3);
-    entry->path = path;
-    entry->path_len = path_len;
-    entry->data = NULL;
+    match_entry * entry = r3_mem_alloc( sizeof(match_entry) );
+    memset(entry, 0, sizeof(*entry));
+    r3_vector_reserve(NULL, &entry->vars.tokens, 3);
+    entry->path.base = path;
+    entry->path.len = path_len;
     return entry;
 }
 
 void match_entry_free(match_entry * entry) {
     assert(entry);
-    if (entry->vars) {
-        str_array_free(entry->vars);
-    }
-    zfree(entry);
+    free(entry->vars.tokens.entries);
+    free(entry);
 }

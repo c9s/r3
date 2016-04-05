@@ -15,7 +15,14 @@
 #include "slug.h"
 #include "zmalloc.h"
 
-int r3_pattern_to_opcode(const char * pattern, int len) {
+static char * strnchr(const char* str, unsigned int len, int ch) {
+    for (unsigned int i = 0; i < len; i++) {
+        if (str[i] == ch) return str + i;
+    }
+    return NULL;
+}
+
+int r3_pattern_to_opcode(const char * pattern, unsigned int len) {
     if ( strncmp(pattern, "\\w+",len) == 0 ) {
         return OP_EXPECT_MORE_WORDS;
     }
@@ -79,14 +86,15 @@ char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **
     return NULL;
 }
 
-char * r3_slug_find_placeholder(const char *s1, int *len) {
+char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsigned int *len) {
     char *c;
     char *s2;
     int cnt = 0;
-    if ( NULL != (c = strchr(s1, '{')) ) {
+    if (c = strnchr(s1, str_len, '{')) {
         // find closing '}'
         s2 = c;
-        while(*s2) {
+        unsigned int j = str_len - (c - s1);
+        for (unsigned int i = 0; i < j; i++) {
             if (*s2 == '{' )
                 cnt++;
             else if (*s2 == '}' )
@@ -111,15 +119,16 @@ char * r3_slug_find_placeholder(const char *s1, int *len) {
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * r3_slug_find_pattern(const char *s1, int *len) {
+char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned int *len) {
     char *c;
     char *s2;
-    int cnt = 1;
-    if ( NULL != (c = strchr(s1, ':')) ) {
+    unsigned int cnt = 1;
+    if ( (c = strnchr(s1, str_len, ':')) ) {
         c++;
         // find closing '}'
         s2 = c;
-        while(s2) {
+        unsigned int j = str_len - (c - s1);
+        for (unsigned int i = 0; i < j; i++) {
             if (*s2 == '{' )
                 cnt++;
             else if (*s2 == '}' )
@@ -132,6 +141,9 @@ char * r3_slug_find_pattern(const char *s1, int *len) {
     } else {
         return NULL;
     }
+    if (cnt!=0) {
+        return NULL;
+    }
     *len = s2 - c;
     return c;
 }
@@ -140,38 +152,30 @@ char * r3_slug_find_pattern(const char *s1, int *len) {
 /**
  * given a slug string, duplicate the parameter name string of the slug
  */
-char * r3_slug_find_name(const char *s1, int *len) {
+char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len) {
     char * c;
     char * s2;
     int cnt = 0;
-    c = (char*) s1;
-    
-    while(1) {
-        if(*c == '{') cnt++;
-        if(*c == '}') cnt--;
-        if(*c == ':') break;
-        if(*c == '\0') return NULL;
-        if(cnt == 0) break;
-        c++;        
+    unsigned int plholder;
+    if (c = r3_slug_find_placeholder(s1, str_len, &plholder)) {
+        c++;
+        if ( s2 = strnchr(c, plholder, ':') ) {
+            *len = s2 - c;
+            return c;
+        } else {
+            *len = plholder - 2;
+            return c;
+        }
+    } else {
+        return NULL;
     }
-    
-    // find starting '{'
-    s2 = c;
-    while(1) {
-        if ( *s2 == '{' )
-            break;
-        s2--;
-    }
-    s2++;
-    *len = c - s2;
-    return s2;
 }
 
 
 /**
  * @param char * sep separator
  */
-char * r3_slug_compile(const char * str, int len)
+char * r3_slug_compile(const char * str, unsigned int len)
 {
     char *s1 = NULL, *o = NULL;
     char *pat = NULL;
@@ -179,15 +183,15 @@ char * r3_slug_compile(const char * str, int len)
 
 
     // append prefix
-    int s1_len;
-    s1 = r3_slug_find_placeholder(str, &s1_len);
+    unsigned int s1_len;
+    s1 = r3_slug_find_placeholder(str, len, &s1_len);
 
-    if ( s1 == NULL ) {
-        return zstrdup(str);
+    if ( !s1 ) {
+        return zstrndup(str,len);
     }
 
     char * out = NULL;
-    if ((out = zcalloc(sizeof(char) * 200)) == NULL) {
+    if (!(out = zcalloc(sizeof(char) * 200))) {
         return (NULL);
     }
 
@@ -199,8 +203,8 @@ char * r3_slug_compile(const char * str, int len)
     o += (s1 - str);
 
 
-    int pat_len;
-    pat = r3_slug_find_pattern(s1, &pat_len);
+    unsigned int pat_len;
+    pat = r3_slug_find_pattern(s1, s1_len, &pat_len);
 
     if (pat) {
         *o = '(';
@@ -214,7 +218,7 @@ char * r3_slug_compile(const char * str, int len)
         o+= strlen("([^*]+)");
     }
     s1 += s1_len;
-    strncat(o, s1, strlen(s1));
+    strncat(o, s1, len - (s1 - str)); // string after slug
     return out;
 }
 

@@ -13,54 +13,44 @@
 #include "r3_slug.h"
 #include "str_array.h"
 #include "zmalloc.h"
-
-str_array * str_array_create(int cap) {
-    str_array * list = (str_array*) zmalloc( sizeof(str_array) );
-    if (!list)
-        return NULL;
-    list->len = 0;
-    list->cap = cap;
-    list->tokens = (char**) zmalloc( sizeof(char*) * cap);
-    return list;
-}
+#include "memory.h"
 
 void str_array_free(str_array *l) {
     assert(l);
-    for ( int i = 0; i < l->len ; i++ ) {
-        if (l->tokens[ i ]) {
-            zfree(l->tokens[i]);
-        }
-    }
-    zfree(l->tokens);
-    zfree(l);
+    free(l->tokens.entries);
 }
 
-bool str_array_is_full(const str_array * l) {
-    return l->len >= l->cap;
-}
-
-bool str_array_resize(str_array * l, int new_cap) {
-    l->tokens = zrealloc(l->tokens, sizeof(char**) * new_cap);
-    l->cap = new_cap;
-    return l->tokens != NULL;
-}
-
-bool str_array_append(str_array * l, char * token) {
-    if ( str_array_is_full(l) ) {
-        bool ret = str_array_resize(l, l->cap + 20);
-        if (ret == false ) {
-            return false;
-        }
-    }
-    l->tokens[ l->len++ ] = token;
+bool str_array_append(str_array * l, char * token, unsigned int len) {
+    R3_VECTOR(r3_iovec_t) *tks = &l->tokens;
+    r3_vector_reserve(NULL, tks, tks->size + 1);
+    r3_iovec_t *temp = tks->entries + tks->size++;
+    memset(temp, 0, sizeof(*temp));
+    temp->base = token;
+    temp->len = len;
     return true;
+}
+
+void str_array_dump_slugs(const str_array *l) {
+    if (l->tokens.size) {
+        printf("[");
+        for ( int i = 0; i < l->tokens.size ; i++ ) {
+            printf("\"%*.*s\"", l->slugs.entries[i].len,l->slugs.entries[i].len,l->slugs.entries[i].base );
+            if ( i + 1 != l->tokens.size ) {
+                printf(", ");
+            }
+        }
+        printf("]\n");
+    } else {
+        printf("[]\n");
+    }
 }
 
 void str_array_dump(const str_array *l) {
     printf("[");
-    for ( int i = 0; i < l->len ; i++ ) {
-        printf("\"%s\"", l->tokens[i] );
-        if ( i + 1 != l->len ) {
+    for ( int i = 0; i < l->tokens.size ; i++ ) {
+        printf("\"%*.*s\"", l->tokens.entries[i].len,l->tokens.entries[i].len,l->tokens.entries[i].base );
+        // printf("\"%s\"", l->tokens.entries[i] );
+        if ( i + 1 != l->tokens.size ) {
             printf(", ");
         }
     }

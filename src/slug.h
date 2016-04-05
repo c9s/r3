@@ -49,8 +49,11 @@ char * r3_slug_to_str(const r3_slug_t *s);
 
 void r3_slug_free(r3_slug_t * s);
 
-static inline int r3_path_contains_slug_char(const char * str) {
-    return strchr(str, '{') != NULL ? 1 : 0;
+static inline int r3_path_contains_slug_char(const char *str, unsigned int len) {
+    for (unsigned int i = 0; i < len; i++) {
+        if (str[i] == '{') return 1;
+    }
+    return 0;
 }
 
 #endif /* !SLUG_H */
