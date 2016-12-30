@@ -22,7 +22,7 @@ END
 
 
 arr    = ["foo", "bar", "baz", "qux", "quux", "corge", "grault", "garply"]
-paths  = arr.permutation(3).map { |a| "/#{a.join '/'}" }
+paths  = ["/"] + arr.permutation(3).map { |a| "/#{a.join '/'}" }
 paths.each_index do |idx|
     path = paths.fetch(idx)
     puts "    char *data#{idx} = \"#{path}\";"
