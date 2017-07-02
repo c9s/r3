@@ -27,6 +27,7 @@ endif
 
 r3_includedir = $(includedir)/r3
 r3_include_HEADERS = \
+	include/memory.h \
 	include/r3.h \
 	include/r3_list.h \
 	include/r3_slug.h \
