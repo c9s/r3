@@ -51,7 +51,7 @@ if test "x$found_jemalloc" == "xyes" ; then
 
 AC_MSG_CHECKING([Checking jemalloc version])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <jemalloc/jemalloc.h>]],
-                                    [[   
+                                    [[
                                      #ifdef JEMALLOC_VERSION_MAJOR > 2
                                      return 0;
                                      #endif
@@ -123,7 +123,8 @@ if test "x$enable_check" != "xunset" ; then
 PKG_CHECK_MODULES(CHECK,[check >= 0.9.4],:,[
   ifdef([AM_PATH_CHECK],
     [AM_PATH_CHECK(,[have_check="yes"])],
-    AC_MSG_WARN([Check not found; cannot run unit tests!]) [have_check="no"]
+    AC_MSG_WARN([Check not found; cannot run unit tests!])
+    [have_check="no"]
   )]
 ])
 fi
