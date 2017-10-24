@@ -196,6 +196,7 @@ int r3_tree_compile_patterns(node * n, char **errstr) {
             // compile "foo/{slug}" to "foo/[^/]+"
             char * slug_pat = r3_slug_compile(e->pattern, e->pattern_len);
             strcat(p, slug_pat);
+            zfree(slug_pat);
         } else {
             strncat(p,"^(", 2);
             p += 2;
@@ -622,7 +623,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 
         if ( slug_cnt > 1 ) {
             int   slug_len;
-            char *p = r3_slug_find_placeholder(path, &slug_len);
+            char *z, *p = r3_slug_find_placeholder(path, &slug_len);
 
 #ifdef DEBUG
             assert(p);
@@ -640,7 +641,8 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
             node * child = r3_tree_create(3);
             CHECK_PTR(child);
 
-            r3_node_connect(n, zstrndup(path, (int)(p - path)), child);
+            z = zstrndup(path, (int)(p - path));
+            r3_node_connectl(n, z, strlen(z), 0, child);
 
             // and insert the rest part to the child
             return r3_tree_insert_pathl_ex(child, p, path_len - (int)(p - path),  route, data, errstr);

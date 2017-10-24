@@ -10,7 +10,9 @@
 #include <stdbool.h>
 
 #ifndef bool
+#ifndef __cplusplus
 typedef unsigned char bool;
+#endif
 #endif
 #ifndef FALSE
 #    define FALSE 0
