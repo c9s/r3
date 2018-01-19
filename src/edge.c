@@ -15,9 +15,6 @@
 
 // PCRE
 #include <pcre.h>
-
-// Judy array
-// #include <Judy.h>
 #include "r3.h"
 #include "r3_str.h"
 #include "slug.h"
@@ -43,56 +40,39 @@ edge * r3_edge_createl(const char * pattern, int pattern_len, node * child) {
 
 
 /**
+ * r3_edge_branch splits the edge and append the rest part as the child of the
+ * first level child
+ *
  * branch the edge pattern at "dl" offset,
- * insert a dummy child between the edges.
+ * and insert a dummy child between the edges.
  *
- *
- * A -> [prefix..suffix] -> B
- * A -> [prefix] -> B -> [suffix] -> New Child (Copy Data, Edges from B)
+ * A -> [EDGE: abcdefg] -> B -> [EDGE:branch1], [EDGE:branch2]
+ * A -> [EDGE: abcd] -> B1 -> [efg] -> B2 (new child with copied data from B)
  *
  */
 node * r3_edge_branch(edge *e, int dl) {
-    node *new_child;
-    edge *e1;
+    node * new_child;
+    edge * new_edge;
+
+    // the rest string
     char * s1 = e->pattern + dl;
-    int s1_len = 0;
+    int s1_len = e->pattern_len - dl;
 
     // the suffix edge of the leaf
     new_child = r3_tree_create(3);
-    s1_len = e->pattern_len - dl;
-    e1 = r3_edge_createl(zstrndup(s1, s1_len), s1_len, new_child);
+    new_edge = r3_edge_createl(zstrndup(s1, s1_len), s1_len, new_child);
 
-    // Migrate the child edges to the new edge we just created.
-    for ( int i = 0 ; i < e->child->edge_len ; i++ ) {
-        r3_node_append_edge(new_child, e->child->edges[i]);
-        e->child->edges[i] = NULL;
-    }
-    e->child->edge_len = 0;
+    // Move child node to the new edge
+    new_edge->child = e->child;
+    e->child = new_child;
 
-
-    // Migrate the child routes
-    for ( int i = 0 ; i < e->child->route_len ; i++ ) {
-        r3_node_append_route(new_child, e->child->routes[i]);
-        e->child->routes[i] = NULL;
-    }
-    e->child->route_len = 0;
-
-    // Migrate the endpoint
-    new_child->endpoint = e->child->endpoint;
-    e->child->endpoint = 0; // reset endpoint
-
-    // Migrate the data
-    new_child->data = e->child->data; // copy data pointer
-    e->child->data = NULL;
-
-    r3_node_append_edge(e->child, e1);
+    r3_node_append_edge(new_child, new_edge);
 
     // truncate the original edge pattern
     char *oldpattern = e->pattern;
     e->pattern = zstrndup(e->pattern, dl);
     e->pattern_len = dl;
     zfree(oldpattern);
-
     return new_child;
 }
 

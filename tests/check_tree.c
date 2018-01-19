@@ -10,6 +10,8 @@
 
 #define SAFE_FREE(ptr) if(ptr) free(ptr);
 
+#define STR(str) str, sizeof(str)-1
+
 START_TEST (test_find_common_prefix)
 {
     node * n = r3_tree_create(10);
@@ -258,7 +260,7 @@ START_TEST (test_compile)
     r3_tree_insert_path(n, "/{id}", NULL);
     r3_tree_compile(n, NULL);
     r3_tree_compile(n, NULL); // test double compile
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     match_entry * entry;
 
     entry = match_entry_createl( "foo" , strlen("/foo") );
@@ -328,7 +330,7 @@ START_TEST (test_incomplete_slug_path)
     r3_tree_compile(n, &errstr);
     ck_assert(errstr == NULL); // no error
 
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
 
     r3_tree_free(n);
 }
@@ -385,6 +387,45 @@ END_TEST
 
 
 /**
+ * Test for root '/'
+ */
+START_TEST (test_root_match)
+{
+    node * n = r3_tree_create(10);
+
+    int a = 10;
+    int b = 20;
+    int c = 30;
+    r3_tree_insert_path(n, "/", &a);
+    r3_tree_insert_path(n, "/foo", &b);
+    r3_tree_insert_path(n, "/bar", &c);
+
+    char *errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
+    // r3_tree_dump(n, 0);
+    node *matched;
+    matched = r3_tree_match(n, "/", NULL);
+    ck_assert(matched);
+    ck_assert(matched->data == &a);
+    ck_assert(matched->endpoint > 0);
+
+    matched = r3_tree_match(n, "/foo", NULL);
+    ck_assert(matched);
+    ck_assert(matched->data == &b);
+    ck_assert(matched->endpoint > 0);
+
+    matched = r3_tree_match(n, "/bar", NULL);
+    ck_assert(matched);
+    ck_assert(matched->data == &c);
+    ck_assert(matched->endpoint > 0);
+}
+END_TEST
+
+
+
+
+/**
  * Test for \d{2}/\d{2}
  */
 START_TEST (test_pcre_patterns_insert_2)
@@ -398,7 +439,7 @@ START_TEST (test_pcre_patterns_insert_2)
     char *errstr = NULL;
     r3_tree_compile(n, &errstr);
 
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     node *matched;
     matched = r3_tree_match(n, "/post/11/22", NULL);
     ck_assert((int)matched);
@@ -414,11 +455,11 @@ START_TEST (test_pcre_patterns_insert_3)
     node * n = r3_tree_create(10);
     printf("Inserting /post/{idx:\\d{2}}/{idy}\n");
     r3_tree_insert_path(n, "/post/{idx:\\d{2}}/{idy}", NULL);
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
 
     printf("Inserting /zoo\n");
     r3_tree_insert_path(n, "/zoo", NULL);
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
 
     r3_tree_insert_path(n, "/foo", NULL);
     r3_tree_insert_path(n, "/bar", NULL);
@@ -426,7 +467,7 @@ START_TEST (test_pcre_patterns_insert_3)
     char *errstr = NULL;
     r3_tree_compile(n, &errstr);
 
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     node *matched;
 
 
@@ -512,8 +553,7 @@ START_TEST (test_insert_pathl)
     char * errstr = NULL;
     r3_tree_compile(n, &errstr);
     ck_assert(errstr == NULL);
-
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     r3_tree_free(n);
 }
 END_TEST
@@ -538,7 +578,7 @@ START_TEST (test_compile_fail)
     fprintf(stderr, "Compile failed: %s\n", errstr);
     free(errstr);
 
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     r3_tree_free(n);
 }
 END_TEST
@@ -630,7 +670,7 @@ START_TEST(test_pcre_pattern_more)
     r3_tree_insert_path(n, "/user3/{id:\\d{3}}", &var3);
     r3_tree_insert_path(n, "/user", &var0);
     r3_tree_compile(n, NULL);
-    r3_tree_dump(n, 0);
+    // r3_tree_dump(n, 0);
     node *matched;
 
     matched = r3_tree_matchl(n, "/user/123", strlen("/user/123"), entry);
@@ -659,6 +699,25 @@ START_TEST(test_pcre_pattern_more)
 END_TEST
 
 
+START_TEST(test_insert_pathl_before_root)
+{
+    char *errstr = NULL;
+    int   var1 = 22;
+    int   var2 = 33;
+    int   var3 = 44;
+    node * n = r3_tree_create(3);
+    r3_tree_insert_pathl_ex(n, STR("/blog/post"), NULL, &var1, NULL);
+    r3_tree_insert_pathl_ex(n, STR("/blog"), NULL, &var2, NULL);
+    r3_tree_insert_pathl_ex(n, STR("/"), NULL, &var3, NULL);
+
+    errstr = NULL;
+    r3_tree_compile(n, &errstr);
+
+    r3_tree_dump(n, 0);
+
+    r3_tree_free(n);
+}
+END_TEST
 
 
 START_TEST(test_insert_route)
@@ -697,29 +756,37 @@ START_TEST(test_insert_route)
 }
 END_TEST
 
-
 Suite* r3_suite (void) {
         Suite *suite = suite_create("r3 core tests");
-
-        TCase *tcase = tcase_create("testcase");
-
+        TCase *tcase = tcase_create("common_prefix_testcase");
         tcase_add_test(tcase, test_find_common_prefix);
         tcase_add_test(tcase, test_find_common_prefix_after);
         tcase_add_test(tcase, test_find_common_prefix_double_middle);
         tcase_add_test(tcase, test_find_common_prefix_middle);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern2);
+        suite_add_tcase(suite, tcase);
+
+        tcase = tcase_create("insert_testcase");
         tcase_add_test(tcase, test_insert_pathl);
         tcase_add_test(tcase, test_insert_pathl_fail);
         tcase_add_test(tcase, test_node_construct_and_free);
+        suite_add_tcase(suite, tcase);
+
+        tcase = tcase_create("compile_testcase");
         tcase_add_test(tcase, test_compile);
         tcase_add_test(tcase, test_compile_fail);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
+        tcase_add_test(tcase, test_insert_pathl_before_root);
+        suite_add_tcase(suite, tcase);
+
+        tcase = tcase_create("pcre_pattern_testcase");
         tcase_add_test(tcase, test_pcre_pattern_simple);
         tcase_add_test(tcase, test_pcre_pattern_more);
         tcase_add_test(tcase, test_pcre_patterns_insert);
         tcase_add_test(tcase, test_pcre_patterns_insert_2);
+        tcase_add_test(tcase, test_root_match);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
         suite_add_tcase(suite, tcase);

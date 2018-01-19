@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include "r3_define.h"
 #include "str_array.h"
+#include "r3_str.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,10 +30,16 @@ typedef struct _route route;
 struct _node {
     edge  ** edges;
     // edge  ** edge_table;
+    char * combined_pattern;
+    pcre * pcre_pattern;
+
+// #ifdef PCRE_STUDY_JIT_COMPILE
+    pcre_extra * pcre_extra;
+// #endif
 
     // edges are mostly less than 255
-    unsigned char    compare_type; // compare_type: pcre, opcode, string
-    unsigned char    edge_len;
+    unsigned int edge_len;
+    unsigned int compare_type; // compare_type: pcre, opcode, string
     unsigned char    endpoint; // endpoint, should be zero for non-endpoint nodes
     unsigned char    ov_cnt; // capture vector array size for pcre
 
@@ -46,12 +53,8 @@ struct _node {
     /** compile-time variables here.... **/
 
     /* the combined regexp pattern string from pattern_tokens */
-    pcre * pcre_pattern;
-    pcre_extra * pcre_extra;
 
     route ** routes;
-
-    char * combined_pattern;
 
     /**
      * the pointer of route data
@@ -65,8 +68,9 @@ struct _node {
 struct _edge {
     char * pattern; // 8 bytes
     node * child; // 8 bytes
-    unsigned char  pattern_len; // 1 byte
-    unsigned char  opcode:4; // 4 bit
+    unsigned int   pattern_len; // 1 byte
+    unsigned int   opcode;
+    // unsigned char   opcode:4; // 4 bit
     unsigned char  has_slug:1; // 1 bit
 };
 

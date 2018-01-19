@@ -4,17 +4,22 @@
  *
  * Distributed under terms of the MIT license.
  */
-#ifndef STR_H
-#define STR_H
+#ifndef R3_STR_H
+#define R3_STR_H
 
-#include "r3.h"
-#include "config.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 char * r3_slug_compile(const char * str, int len);
 
 char * r3_slug_find_pattern(const char *s1, int *len);
 
+char * r3_slug_find_name(const char *s1, int *len);
+
 char * r3_slug_find_placeholder(const char *s1, int *len);
+
+int r3_slug_count(const char * needle, int len, char **errstr);
 
 char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **errstr);
 
@@ -47,6 +52,8 @@ char *strdup(const char *s);
 char *strndup(const char *s, int n);
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
-#endif /* !STR_H */
-
+#endif /* !R3_STR_H */

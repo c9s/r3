@@ -11,6 +11,8 @@
         <script>
         $.get('bench_str.csv', function(data) {
 
+
+
         var options = {
             chart: {
                 zoomType: 'x',
@@ -147,6 +149,11 @@
         };
 
         var lines = data.split(/\n/);
+
+        // keep window size to 30 records
+        lines.splice(-30);
+        lines = lines.splice(lines.length - 30);
+
         $(lines).each(function(i,line) {
             var columns = line.split(/,/);
             var a;

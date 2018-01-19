@@ -20,7 +20,7 @@ vim:fdm=marker:et:sw=4:ts=4:sts=4:
 
 // #include "r3_persistent.h"
 // #include "php_expandable_mux.h"
-// #include "hash.h"
+#include "hash.h"
 
 /**
  * new_dst = ht_copy_fun_t(NULL, src);

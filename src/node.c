@@ -173,26 +173,24 @@ int r3_tree_compile(node *n, char **errstr)
  * Return 0 if success
  */
 int r3_tree_compile_patterns(node * n, char **errstr) {
-    char * cpat;
+    edge * e = NULL;
     char * p;
-
-    cpat = zcalloc(sizeof(char) * 220); // XXX
+    char * cpat = zcalloc(sizeof(char) * 64 * 3); // XXX
     if (!cpat) {
         asprintf(errstr, "Can not allocate memory");
         return -1;
     }
 
     p = cpat;
-
-    edge *e = NULL;
-    int opcode_cnt =  0;
-    for ( int i = 0 ; i < n->edge_len ; i++ ) {
+    int opcode_cnt = 0;
+    int i = 0;
+    for (; i < n->edge_len ; i++) {
         e = n->edges[i];
-
-        if ( e->opcode )
+        if (e->opcode) {
             opcode_cnt++;
+        }
 
-        if ( e->has_slug ) {
+        if (e->has_slug) {
             // compile "foo/{slug}" to "foo/[^/]+"
             char * slug_pat = r3_slug_compile(e->pattern, e->pattern_len);
             strcat(p, slug_pat);
@@ -278,8 +276,8 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
     info("try matching: %s\n", path);
 
     edge *e;
-    unsigned short i;
-    unsigned short restlen;
+    unsigned int i;
+    unsigned int restlen;
 
     const char *pp;
     const char *pp_end;
@@ -309,14 +307,14 @@ node * r3_tree_matchl(const node * n, const char * path, int path_len, match_ent
             }
             // check match
             if ( (pp - path) > 0) {
-                restlen = pp_end - pp;
                 if (entry) {
                     str_array_append(entry->vars , zstrndup(path, pp - path));
                 }
+                restlen = pp_end - pp;
                 if (restlen == 0) {
                     return e->child && e->child->endpoint > 0 ? e->child : NULL;
                 }
-                return r3_tree_matchl(e->child, pp, pp_end - pp, entry);
+                return r3_tree_matchl(e->child, pp, restlen, entry);
             }
         }
     }
@@ -443,9 +441,9 @@ inline edge * r3_node_find_edge_str(const node * n, const char * str, int str_le
     char firstbyte = *str;
     unsigned int i;
     for (i = n->edge_len; i--; ) {
-        if ( firstbyte == *(n->edges[i]->pattern) ) {
-            info("matching '%s' with '%s'\n", str, r3_node_edge_pattern(n,i) );
-            if ( strncmp( r3_node_edge_pattern(n,i), str, r3_node_edge_pattern_len(n,i) ) == 0 ) {
+        edge *e = n->edges[i];
+        if (firstbyte == e->pattern[0]) {
+            if (strncmp(e->pattern, str, e->pattern_len) == 0 ) {
                 return n->edges[i];
             }
             return NULL;
@@ -595,10 +593,19 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
 {
     node * n = tree;
 
-
     // common edge
     edge * e = NULL;
 
+    // If there is no path to insert at the node, we just increase the mount
+    // point on the node and append the route.
+    if (path_len == 0) {
+        tree->endpoint++;
+        if (route) {
+            route->data = data;
+            r3_node_append_route(tree, route);
+        }
+        return tree;
+    }
 
     /* length of common prefix */
     int prefix_len = 0;
@@ -616,7 +623,7 @@ node * r3_tree_insert_pathl_ex(node *tree, const char *path, int path_len, route
     // common prefix not found, insert a new edge for this pattern
     if ( prefix_len == 0 ) {
         // there are two more slugs, we should break them into several parts
-        int slug_cnt = slug_count(path, path_len, errstr);
+        int slug_cnt = r3_slug_count(path, path_len, errstr);
         if (slug_cnt == -1) {
             return NULL;
         }

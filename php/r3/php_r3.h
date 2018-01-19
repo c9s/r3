@@ -82,8 +82,8 @@ zval * call_mux_method(zval * object , char * method_name , int method_name_len,
 
 zend_class_entry ** get_pattern_compiler_ce(TSRMLS_D);
 
-extern zend_class_entry *ce_r3_exception;
 */
+extern zend_class_entry *ce_r3_exception;
 
 extern zend_module_entry r3_module_entry;
 
@@ -91,7 +91,7 @@ void r3_init_exception(TSRMLS_D);
 
 void r3_mux_le_hash_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC);
 
-PHP_FUNCTION(r3_match);
+// PHP_FUNCTION(r3_match);
 
 #define phpext_r3_ptr &r3_module_entry
 

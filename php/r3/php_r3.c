@@ -14,7 +14,7 @@
 
 #include "php_r3.h"
 // #include "ct_helper.h"
-// #include "r3_functions.h"
+#include "r3_functions.h"
 // #include "r3_mux.h"
 // #include "php_expandable_mux.h"
 // #include "r3_controller.h"
@@ -104,33 +104,3 @@ PHP_MSHUTDOWN_FUNCTION(r3) {
 PHP_RINIT_FUNCTION(r3) {
   return SUCCESS;
 }
-
-
-/*
- * r3_compile(array $routes, string $path);
- */
-PHP_FUNCTION(r3_match)
-{
-    zval *z_routes;
-    char *path;
-    int  path_len;
-
-    /* parse parameters */
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "as", 
-                    &z_routes, 
-                    &path, &path_len ) == FAILURE) {
-        RETURN_FALSE;
-    }
-
-    /*
-    zval *z_route;
-    z_route = php_r3_match(z_routes, path, path_len TSRMLS_CC);
-    if ( z_route != NULL ) {
-        *return_value = *z_route;
-        zval_copy_ctor(return_value);
-        return;
-    }
-    */
-    RETURN_NULL();
-}
-

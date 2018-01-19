@@ -3,7 +3,7 @@ R3
 
 [![Build Status](https://travis-ci.org/c9s/r3.svg?branch=master)](https://travis-ci.org/c9s/r3)
 
-[![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.png)](https://coveralls.io/r/c9s/r3)
+[![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.svg)](https://coveralls.io/r/c9s/r3)
 
 R3 is an URL router library with high performance, thus, it's implemented in C.
 It compiles your route paths into a prefix trie.
@@ -123,7 +123,7 @@ node *matched_node = r3_tree_match_entry(n, entry);
 
 
 
-**Release Memroy**
+**Release Memory**
 
 To release the memory, you may call `r3_tree_free(node *tree)` to release the whole tree structure, 
 `node*`, `edge*`, `route*` objects that were inserted into the tree will be freed.
