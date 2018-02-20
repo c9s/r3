@@ -64,7 +64,7 @@ R3Node * r3_edge_branch(R3Edge *e, int dl) {
     R3Edge * new_edge;
 
     // the rest string
-    char * s1 = e->pattern.base + dl;
+    const char * s1 = e->pattern.base + dl;
     int s1_len = e->pattern.len - dl;
 
     // the suffix edge of the leaf

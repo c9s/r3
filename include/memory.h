@@ -74,7 +74,7 @@ typedef struct st_r3_buffer_prototype_t r3_buffer_prototype_t;
  * buffer structure compatible with iovec
  */
 typedef struct st_r3_iovec_t {
-    char *base;
+    const char *base;
     unsigned int len;
 } r3_iovec_t;
 
