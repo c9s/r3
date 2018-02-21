@@ -697,7 +697,6 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
 
             // insert the first one edge, and break at "p"
             R3Node * child = r3_tree_create(3);
-            unsigned int paln = p - path;
             r3_node_connectl(n, path, p - path, 0, child); // no duplicate
 
             // and insert the rest part to the child

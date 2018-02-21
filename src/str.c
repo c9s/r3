@@ -155,7 +155,6 @@ const char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned
 const char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len) {
     const char * c;
     const char * s2;
-    int cnt = 0;
     unsigned int plholder;
     if ((c = r3_slug_find_placeholder(s1, str_len, &plholder))) {
         c++;
