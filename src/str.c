@@ -15,7 +15,7 @@
 #include "slug.h"
 #include "zmalloc.h"
 
-static char * strnchr(const char* str, unsigned int len, int ch) {
+static const char * strnchr(const char* str, unsigned int len, int ch) {
     for (unsigned int i = 0; i < len; i++) {
         if (str[i] == ch) return str + i;
     }
@@ -86,11 +86,11 @@ char * r3_inside_slug(const char * needle, int needle_len, char *offset, char **
     return NULL;
 }
 
-char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsigned int *len) {
-    char *c;
-    char *s2;
+const char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsigned int *len) {
+    const char *c;
+    const char *s2;
     int cnt = 0;
-    if (c = strnchr(s1, str_len, '{')) {
+    if ((c = strnchr(s1, str_len, '{'))) {
         // find closing '}'
         s2 = c;
         unsigned int j = str_len - (c - s1);
@@ -119,9 +119,9 @@ char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsigned i
 /**
  * given a slug string, duplicate the pattern string of the slug
  */
-char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned int *len) {
-    char *c;
-    char *s2;
+const char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned int *len) {
+    const char *c;
+    const char *s2;
     unsigned int cnt = 1;
     if ( (c = strnchr(s1, str_len, ':')) ) {
         c++;
@@ -152,14 +152,13 @@ char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned int *
 /**
  * given a slug string, duplicate the parameter name string of the slug
  */
-char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len) {
-    char * c;
-    char * s2;
-    int cnt = 0;
+const char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len) {
+    const char * c;
+    const char * s2;
     unsigned int plholder;
-    if (c = r3_slug_find_placeholder(s1, str_len, &plholder)) {
+    if ((c = r3_slug_find_placeholder(s1, str_len, &plholder))) {
         c++;
-        if ( s2 = strnchr(c, plholder, ':') ) {
+        if (( s2 = strnchr(c, plholder, ':') )) {
             *len = s2 - c;
             return c;
         } else {
@@ -177,8 +176,9 @@ char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len
  */
 char * r3_slug_compile(const char * str, unsigned int len)
 {
-    char *s1 = NULL, *o = NULL;
-    char *pat = NULL;
+    const char *s1 = NULL;
+    char *o = NULL;
+    const char *pat = NULL;
     char sep = '/';
 
 

@@ -26,7 +26,7 @@ bool str_array_slugs_full(const str_array * l);
 
 // bool str_array_append_slug(str_array * l, char * slug);
 
-bool str_array_append(str_array * l, char * token, unsigned int len);
+bool str_array_append(str_array * l, const char * token, unsigned int len);
 
 void str_array_free(str_array *l);
 

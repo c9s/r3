@@ -51,7 +51,7 @@ int main()
     match_entry * e = match_entry_createl("/garply/baz/grault", strlen("/garply/baz/grault") );
     m = r3_tree_match_entry(n , e);
     if (m) {
-        printf("Matched! %s\n", e->path);
+        printf("Matched! %s\n", e->path.base);
     }
     match_entry_free(e);
     r3_tree_free(n);

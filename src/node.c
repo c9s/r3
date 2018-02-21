@@ -28,8 +28,8 @@
 // String value as the index http://judy.sourceforge.net/doc/JudySL_3x.htm
 
 
-static int strndiff(char * d1, char * d2, unsigned int n) {
-    char * o = d1;
+static int strndiff(const char * d1, const char * d2, unsigned int n) {
+    const char * o = d1;
     while ( *d1 == *d2 && n-- > 0 ) {
         d1++;
         d2++;
@@ -144,7 +144,7 @@ int r3_tree_compile(R3Node *n, char **errstr)
     int ret = 0;
     // bool use_slug = r3_node_has_slug_edges(n);
     if ( r3_node_has_slug_edges(n) ) {
-        if ( ret = r3_tree_compile_patterns(n, errstr) ) {
+        if (( ret = r3_tree_compile_patterns(n, errstr) )) {
             return ret;
         }
     } else {
@@ -422,7 +422,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
 
     info("COMPARE COMPARE_STR\n");
 
-    if (e = r3_node_find_edge_str(n, path, path_len)) {
+    if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (!restlen) {
             return e->child && e->child->endpoint ? e->child : NULL;
@@ -505,7 +505,7 @@ void r3_route_free(R3Route * route) {
 //     return route->slugs != NULL;
 // }
 
-static r3_iovec_t* router_append_slug(R3Route * route, char * slug, unsigned int len) {
+static r3_iovec_t* router_append_slug(R3Route * route, const char * slug, unsigned int len) {
     r3_iovec_t *temp;
     r3_vector_reserve(NULL, &route->slugs, route->slugs.size + 1);
     temp = route->slugs.entries + route->slugs.size++;
@@ -515,10 +515,10 @@ static r3_iovec_t* router_append_slug(R3Route * route, char * slug, unsigned int
 }
 
 static void get_slugs(R3Route * route, const char * path, int path_len) {
-    char *plh = (char*)path;
+    const char *plh = path;
     unsigned int l, namel;
     l = 0;
-    char *name;
+    const char *name;
     while (plh < (path + path_len)) {
         plh = r3_slug_find_placeholder(plh+l, path_len, &l);
         if (!plh) break;
@@ -681,7 +681,7 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
         info("slug_cnt: %d\n",slug_cnt);
         if ( slug_cnt > 1 ) {
             unsigned int   slug_len;
-            char *p = r3_slug_find_placeholder(path, path_len, &slug_len);
+            const char *p = r3_slug_find_placeholder(path, path_len, &slug_len);
 
 #ifdef DEBUG
             assert(p);
@@ -697,7 +697,6 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
 
             // insert the first one edge, and break at "p"
             R3Node * child = r3_tree_create(3);
-            unsigned int paln = p - path;
             r3_node_connectl(n, path, p - path, 0, child); // no duplicate
 
             // and insert the rest part to the child
@@ -707,9 +706,9 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
             if (slug_cnt == 1) {
                 // there is one slug, let's see if it's optimiz-able by opcode
                 unsigned int   slug_len = 0;
-                char *slug_p = r3_slug_find_placeholder(path, path_len, &slug_len);
+                const char *slug_p = r3_slug_find_placeholder(path, path_len, &slug_len);
                 unsigned int   slug_pattern_len = 0;
-                char *slug_pattern = r3_slug_find_pattern(slug_p, slug_len, &slug_pattern_len);
+                const char *slug_pattern = r3_slug_find_pattern(slug_p, slug_len, &slug_pattern_len);
 
                 int opcode = 0;
                 // if there is a pattern defined.

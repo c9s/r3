@@ -13,11 +13,11 @@ extern "C" {
 
 char * r3_slug_compile(const char * str, unsigned int len);
 
-char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned int *len);
+const char * r3_slug_find_pattern(const char *s1, unsigned int str_len, unsigned int *len);
 
-char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len);
+const char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned int *len);
 
-char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsigned int *len);
+const char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsigned int *len);
 
 int r3_slug_count(const char * needle, int len, char **errstr);
 
