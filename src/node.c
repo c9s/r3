@@ -144,7 +144,7 @@ int r3_tree_compile(R3Node *n, char **errstr)
     int ret = 0;
     // bool use_slug = r3_node_has_slug_edges(n);
     if ( r3_node_has_slug_edges(n) ) {
-        if ( ret = r3_tree_compile_patterns(n, errstr) ) {
+        if (( ret = r3_tree_compile_patterns(n, errstr) )) {
             return ret;
         }
     } else {
@@ -422,7 +422,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
 
     info("COMPARE COMPARE_STR\n");
 
-    if (e = r3_node_find_edge_str(n, path, path_len)) {
+    if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (!restlen) {
             return e->child && e->child->endpoint ? e->child : NULL;

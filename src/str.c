@@ -90,7 +90,7 @@ const char * r3_slug_find_placeholder(const char *s1, unsigned int str_len, unsi
     const char *c;
     const char *s2;
     int cnt = 0;
-    if (c = strnchr(s1, str_len, '{')) {
+    if ((c = strnchr(s1, str_len, '{'))) {
         // find closing '}'
         s2 = c;
         unsigned int j = str_len - (c - s1);
@@ -157,9 +157,9 @@ const char * r3_slug_find_name(const char *s1, unsigned int str_len, unsigned in
     const char * s2;
     int cnt = 0;
     unsigned int plholder;
-    if (c = r3_slug_find_placeholder(s1, str_len, &plholder)) {
+    if ((c = r3_slug_find_placeholder(s1, str_len, &plholder))) {
         c++;
-        if ( s2 = strnchr(c, plholder, ':') ) {
+        if (( s2 = strnchr(c, plholder, ':') )) {
             *len = s2 - c;
             return c;
         } else {
