@@ -55,7 +55,7 @@ struct st_r3_mem_pool_shared_ref_t {
     struct st_r3_mem_pool_shared_entry_t *entry;
 };
 
-void *(*r3_mem__set_secure)(void *, int, unsigned int) = memset;
+void *(*r3_mem__set_secure)(void *, int, size_t) = memset;
 
 static __thread r3_mem_recycle_t mempool_allocator = {16};
 

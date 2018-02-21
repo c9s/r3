@@ -147,7 +147,7 @@ struct st_r3_buffer_prototype_t {
 
 typedef R3_VECTOR(void) r3_vector_t;
 
-extern void *(*r3_mem__set_secure)(void *, int, unsigned int);
+extern void *(*r3_mem__set_secure)(void *, int, size_t);
 
 /**
  * prints an error message and aborts
