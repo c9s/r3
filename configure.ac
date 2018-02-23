@@ -1,4 +1,4 @@
-AC_INIT([r3], 1.3.3)
+AC_INIT([r3], 2.0.0)
 AC_PREREQ([2.64])
 AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_HEADERS(config.h)
@@ -23,8 +23,6 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 
 # Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
 AC_CHECK_FUNCS([gettimeofday memset strchr strdup strndup strstr])
 PKG_PROG_PKG_CONFIG
 
