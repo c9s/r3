@@ -48,16 +48,12 @@ CHECK_TYPE_SIZE(_Bool   _BOOL)
 # generate the configuration file
 configure_file("${PROJECT_SOURCE_DIR}/config.h.cmake" "${PROJECT_BINARY_DIR}/config.h")
 
-include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/3rdparty ${PROJECT_BINARY_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/3rdparty ${PROJECT_BINARY_DIR})
 
-# link_directories(${LINK_DIRECTORIES} /opt/local/lib)
 find_package(PCRE REQUIRED)
-# find_package(Judy REQUIRED)
 
-# set(LIBS ${LIBS} ${PCRE_LIBRARIES} ${Judy_LIBRARIES} r3)
-set(LIBS ${LIBS} ${PCRE_LIBRARIES} r3)
+set(LIBS ${PCRE_LIBRARIES} r3)
 
-# set (CMAKE_CXX_FLAGS "-std=c++0x -arch x86_64 -stdlib=libc++ -g3 -Wall -O0")
 enable_testing()
 
 add_subdirectory(3rdparty)

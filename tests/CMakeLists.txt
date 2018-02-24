@@ -12,7 +12,7 @@ else (NOT CHECK_FOUND)
     include_directories(${CHECK_INCLUDE_DIRS})
     # include_directories("${PROJECT_SOURCE_DIR}/include/r2")
     add_executable(check_tree check_tree.c)
-    target_link_libraries(check_tree ${TEST_LIBS})
+    target_link_libraries(check_tree ${TEST_LIBS} ${CHECK_LDFLAGS_OTHER})
 
     add_custom_command(
         TARGET check_tree POST_BUILD
