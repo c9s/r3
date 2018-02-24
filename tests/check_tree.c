@@ -7,7 +7,7 @@
 #include "r3_slug.h"
 #include "zmalloc.h"
 #include "bench.h"
-#include "r3_debug.h"
+#include "../src/r3_debug.h"
 
 #define SAFE_FREE(ptr) if(ptr) free(ptr);
 

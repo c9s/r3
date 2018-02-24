@@ -1,6 +1,6 @@
 {
   "name": "r3",
-  "version": "1.3.3",
+  "version": "2.0.0",
   "repo": "brendanashworth/r3",
   "description": "high-performance path dispatching library",
   "keywords": ["path", "dispatch", "performance", "r3", "c9s"],
