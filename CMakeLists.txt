@@ -52,7 +52,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/3rdparty
 
 find_package(PCRE REQUIRED)
 
-set(LIBS ${PCRE_LIBRARIES} r3)
+set(LIBS ${PCRE_LIBRARIES} r3 lib3rdparty)
 
 enable_testing()
 

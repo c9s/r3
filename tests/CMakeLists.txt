@@ -7,7 +7,7 @@ find_package(PCRE REQUIRED)
 if (NOT CHECK_FOUND)
     message(STATUS "Skipping unit tests, Check library not found!")
 else (NOT CHECK_FOUND)
-    set(TEST_LIBS ${LIBS} ${CHECK_LIBRARIES} ${PCRE_LIBRARIES} r3 lib3rdparty)
+    set(TEST_LIBS ${LIBS} ${CHECK_LIBRARIES} ${PCRE_LIBRARIES} r3)
 
     include_directories(${CHECK_INCLUDE_DIRS})
     # include_directories("${PROJECT_SOURCE_DIR}/include/r2")
