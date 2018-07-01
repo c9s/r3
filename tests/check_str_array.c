@@ -10,7 +10,6 @@
 #include <check.h>
 #include "r3.h"
 #include "r3_slug.h"
-#include "zmalloc.h"
 
 START_TEST (test_str_array)
 {

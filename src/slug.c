@@ -12,12 +12,11 @@
 #include "r3_slug.h"
 #include "slug.h"
 #include "r3_debug.h"
-#include "zmalloc.h"
 
 
 
 r3_slug_t * r3_slug_new(const char * path, int path_len) {
-    r3_slug_t * s = zmalloc(sizeof(r3_slug_t));
+    r3_slug_t * s = malloc(sizeof(r3_slug_t));
     if (!s)
         return NULL;
     s->path = (char*) path;
@@ -33,7 +32,7 @@ r3_slug_t * r3_slug_new(const char * path, int path_len) {
 }
 
 void r3_slug_free(r3_slug_t * s) {
-    zfree(s);
+    free(s);
 }
 
 

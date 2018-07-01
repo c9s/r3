@@ -5,7 +5,6 @@
 #include <assert.h>
 #include "r3.h"
 #include "r3_slug.h"
-#include "zmalloc.h"
 #include "bench.h"
 #include "../src/r3_debug.h"
 

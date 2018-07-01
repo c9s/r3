@@ -131,7 +131,6 @@ AM_CONDITIONAL(ENABLE_CHECK, test "x$enable_check" = "xyes")
 AC_CONFIG_FILES([
   r3.pc
   Makefile
-  3rdparty/Makefile
   src/Makefile
   tests/Makefile
   examples/Makefile

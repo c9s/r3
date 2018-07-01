@@ -13,7 +13,6 @@
 #include "slug.h"
 #include "str.h"
 #include "r3_debug.h"
-#include "zmalloc.h"
 
 #ifdef __GNUC__
 #	define likely(x)   __builtin_expect(!!(x), 1)
@@ -81,7 +80,7 @@ void r3_tree_free(R3Node * tree) {
         pcre_free_study(tree->pcre_extra);
     }
 #endif
-    zfree(tree->combined_pattern);
+    free(tree->combined_pattern);
     free(tree);
     tree = NULL;
 }
@@ -99,7 +98,7 @@ R3Edge * r3_node_connectl(R3Node * n, const char * pat, int len, int dupl, R3Nod
         return e;
     }
     if (dupl) {
-        pat = zstrndup(pat, len);
+        pat = strndup(pat, len);
     }
     // e = r3_edge_createl(pat, len, child);
     e = r3_node_append_edge(n);
@@ -170,7 +169,7 @@ int r3_tree_compile(R3Node *n, char **errstr)
 int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     R3Edge *e;
     char * p;
-    char * cpat = zcalloc(sizeof(char) * 64 * 3); // XXX
+    char * cpat = calloc(1, sizeof(char) * 64 * 3); // XXX
     if (!cpat) {
         asprintf(errstr, "Can not allocate memory");
         return -1;
@@ -190,7 +189,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
             char * slug_pat = r3_slug_compile(e->pattern.base, e->pattern.len);
             info("slug_pat for pattern: %s\n",slug_pat);
             strcat(p, slug_pat);
-            zfree(slug_pat);
+            free(slug_pat);
             info("temp pattern: %s\n",cpat);
         } else {
             strncat(p,"^(", 2);
@@ -211,14 +210,14 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
 
     // if all edges use opcode, we should skip the combined_pattern.
     if ( opcode_cnt == n->edges.size ) {
-        // zfree(cpat);
+        // free(cpat);
         n->compare_type = NODE_COMPARE_OPCODE;
     } else {
         n->compare_type = NODE_COMPARE_PCRE;
     }
     info("COMPARE_TYPE: %d\n",n->compare_type);
 
-    zfree(n->combined_pattern);
+    free(n->combined_pattern);
     n->combined_pattern = cpat;
 
     const char *pcre_error;
@@ -473,7 +472,7 @@ inline R3Edge * r3_node_find_edge_str(const R3Node * n, const char * str, int st
 }
 
 // R3Node * r3_node_create() {
-//     R3Node * n = (R3Node*) zmalloc( sizeof(R3Node) );
+//     R3Node * n = (R3Node*) malloc( sizeof(R3Node) );
 //     CHECK_PTR(n);
 //     n->edges = NULL;
 //     n->edge_len = 0;
@@ -501,7 +500,7 @@ void r3_route_free(R3Route * route) {
 // }
 
 // static bool router_slugs_resize(R3Route * route, int new_cap) {
-//     route->slugs = zrealloc(route->slugs, sizeof(char**) * new_cap);
+//     route->slugs = realloc(route->slugs, sizeof(char**) * new_cap);
 //     route->slugs_cap = new_cap;
 //     return route->slugs != NULL;
 // }
@@ -718,7 +717,7 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
                     info("cpattern: %s\n", cpattern);
                     opcode = r3_pattern_to_opcode(cpattern, strlen(cpattern));
                     info("opcode: %d\n", opcode);
-                    zfree(cpattern);
+                    free(cpattern);
                 } else {
                     opcode = OP_EXPECT_NOSLASH;
                 }
@@ -915,11 +914,11 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
 
 //     if (n->routes == NULL) {
 //         n->route_cap = 3;
-//         n->routes = zmalloc(sizeof(R3Route) * n->route_cap);
+//         n->routes = malloc(sizeof(R3Route) * n->route_cap);
 //     }
 //     if (n->route_len >= n->route_cap) {
 //         n->route_cap *= 2;
-//         n->routes = zrealloc(n->routes, sizeof(R3Route) * n->route_cap);
+//         n->routes = realloc(n->routes, sizeof(R3Route) * n->route_cap);
 //     }
 //     n->routes[ n->route_len++ ] = r;
 // }

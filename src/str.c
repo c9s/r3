@@ -13,7 +13,6 @@
 #include "r3_slug.h"
 #include "str.h"
 #include "slug.h"
-#include "zmalloc.h"
 
 static const char * strnchr(const char* str, unsigned int len, int ch) {
     for (unsigned int i = 0; i < len; i++) {
@@ -187,11 +186,11 @@ char * r3_slug_compile(const char * str, unsigned int len)
     s1 = r3_slug_find_placeholder(str, len, &s1_len);
 
     if ( !s1 ) {
-        return zstrndup(str,len);
+        return strndup(str,len);
     }
 
     char * out = NULL;
-    if (!(out = zcalloc(sizeof(char) * 200))) {
+    if (!(out = calloc(1, sizeof(char) * 200))) {
         return (NULL);
     }
 
@@ -227,7 +226,7 @@ char * ltrim_slash(char* str)
 {
     char * p = str;
     while (*p == '/') p++;
-    return zstrdup(p);
+    return strdup(p);
 }
 
 void print_indent(int level) {
@@ -240,13 +239,13 @@ void print_indent(int level) {
 
 
 #ifndef HAVE_STRDUP
-char *zstrdup(const char *s) {
+char *strdup(const char *s) {
     char *out;
     int count = 0;
     while( s[count] )
         ++count;
     ++count;
-    out = zmalloc(sizeof(char) * count);
+    out = malloc(sizeof(char) * count);
     out[--count] = 0;
     while( --count >= 0 )
         out[count] = s[count];
@@ -257,13 +256,13 @@ char *zstrdup(const char *s) {
 
 
 #ifndef HAVE_STRNDUP
-char *zstrndup(const char *s, int n) {
+char *strndup(const char *s, int n) {
     char *out;
     int count = 0;
     while( count < n && s[count] )
         ++count;
     ++count;
-    out = zmalloc(sizeof(char) * count);
+    out = malloc(sizeof(char) * count);
     out[--count] = 0;
     while( --count >= 0 )
         out[count] = s[count];

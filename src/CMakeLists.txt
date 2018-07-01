@@ -1,5 +1,4 @@
 add_library(r3 STATIC
-  ${PROJECT_SOURCE_DIR}/3rdparty/zmalloc.c
   edge.c
   match_entry.c
   memory.c
