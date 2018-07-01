@@ -55,7 +55,7 @@ START_TEST (test_r3_slug_find_pattern)
 {
     int len;
     char *test_str = "{name:\\s+}";
-    char * namerex = r3_slug_find_pattern(test_str, strlen(test_str), &len);
+    const char * namerex = r3_slug_find_pattern(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "\\s+", len) == 0 );
 }
 END_TEST
@@ -64,7 +64,7 @@ START_TEST (test_r3_slug_find_name)
 {
     int len;
     char *test_str = "{name:\\s+}";
-    char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
+    const char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
 }
 END_TEST
@@ -73,7 +73,7 @@ START_TEST (test_r3_slug_find_name_without_pattern)
 {
     int len;
     char *test_str = "{name}";
-    char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
+    const char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
 }
 END_TEST
@@ -82,7 +82,7 @@ START_TEST (test_r3_slug_find_name_with_multiple_slug)
 {
     int len;
     char *test_str = "{name}/{name2}";
-    char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
+    const char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
 }
 END_TEST
@@ -90,7 +90,7 @@ END_TEST
 START_TEST (test_r3_slug_find_placeholder)
 {
     int slug_len = 0;
-    char * slug;
+    const char * slug;
     char *test_str = "/user/{name:\\s+}/to/{id}";
     slug = r3_slug_find_placeholder(test_str, strlen(test_str), &slug_len);
     ck_assert( strncmp(slug, "{name:\\s+}", slug_len) == 0 );
@@ -193,7 +193,7 @@ START_TEST (test_r3_slug_find_placeholder_with_broken_slug)
 {
     int slug_len = 0;
     char *sl_test = "/user/{name:\\s+/to/{id";
-    char * slug = r3_slug_find_placeholder(sl_test, strlen(sl_test), &slug_len);
+    const char * slug = r3_slug_find_placeholder(sl_test, strlen(sl_test), &slug_len);
     ck_assert(slug == 0);
 }
 END_TEST
