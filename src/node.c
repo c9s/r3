@@ -218,6 +218,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     }
     info("COMPARE_TYPE: %d\n",n->compare_type);
 
+    zfree(n->combined_pattern);
     n->combined_pattern = cpat;
 
     const char *pcre_error;
