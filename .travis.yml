@@ -11,6 +11,7 @@ matrix:
   include:
   - compiler: gcc
     env:
+    - TYPE=autotools
     - CONFIGURE_OPTION='--enable-debug --enable-gcov --with-malloc=jemalloc'
     - COVERALLS=yes
     - VALGRIND=no
@@ -19,6 +20,7 @@ matrix:
     - CXX=g++
   - compiler: gcc
     env:
+    - TYPE=autotools
     - CONFIGURE_OPTION='--enable-debug --enable-gcov'
     - COVERALLS=yes
     - VALGRIND=yes
@@ -27,12 +29,22 @@ matrix:
     - CXX=g++
   - compiler: clang
     env:
+    - TYPE=autotools
     - CONFIGURE_OPTION='--enable-debug --enable-gcov'
     - COVERALLS=yes
     - VALGRIND=yes
     - DEBUG=yes
     - CC=clang
     - CXX=clang++
+  - compiler: gcc
+    env:
+    - TYPE=cmake
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov'
+    - COVERALLS=yes
+    - VALGRIND=yes
+    - DEBUG=yes
+    - CC=gcc
+    - CXX=g++
 
 before_install:
   - docker run -d
@@ -52,7 +64,7 @@ install:
   - docker exec -t build bash -c "cd /travis && .travis-ci/install.sh"
 
 script:
-  - docker exec -t build bash -c "cd /travis && .travis-ci/script.sh"
+  - docker exec -t build bash -c "cd /travis && .travis-ci/script-$TYPE.sh"
 
 after_success:
   - docker exec -t build bash -c "cd /travis && .travis-ci/after_success.sh"

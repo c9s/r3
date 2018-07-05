@@ -7,10 +7,12 @@ apt-get install -qq \
     build-essential \
     check \
     clang \
+    cmake \
     graphviz-dev \
     libjemalloc-dev \
     libpcre3-dev \
     libtool \
+    ninja-build \
     pkg-config
 
 if [ x$COVERALLS == xyes ]; then
