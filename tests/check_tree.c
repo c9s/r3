@@ -286,26 +286,34 @@ START_TEST (test_compile)
     entry = match_entry_createl( "foo" , strlen("/foo") );
     m = r3_tree_matchl( n , "/foo", strlen("/foo"), entry);
     ck_assert( m );
+    match_entry_free(entry);
 
     entry = match_entry_createl( "/zoo" , strlen("/zoo") );
     m = r3_tree_matchl( n , "/zoo", strlen("/zoo"), entry);
     ck_assert( m );
+    match_entry_free(entry);
 
     entry = match_entry_createl( "/bar" , strlen("/bar") );
     m = r3_tree_matchl( n , "/bar", strlen("/bar"), entry);
     ck_assert( m );
+    match_entry_free(entry);
 
     entry = match_entry_createl( "/xxx" , strlen("/xxx") );
     m = r3_tree_matchl( n , "/xxx", strlen("/xxx"), entry);
     ck_assert( m );
+    match_entry_free(entry);
 
     entry = match_entry_createl( "/foo/xxx" , strlen("/foo/xxx") );
     m = r3_tree_matchl( n , "/foo/xxx", strlen("/foo/xxx"), entry);
     ck_assert( m );
+    match_entry_free(entry);
 
     entry = match_entry_createl( "/some_id" , strlen("/some_id") );
     m = r3_tree_matchl( n , "/some_id", strlen("/some_id"), entry);
     ck_assert( m );
+    match_entry_free(entry);
+
+    r3_tree_free(n);
 }
 END_TEST
 
@@ -439,6 +447,8 @@ START_TEST (test_root_match)
     ck_assert(matched);
     ck_assert(matched->data == &c);
     ck_assert(matched->endpoint > 0);
+
+    r3_tree_free(n);
 }
 END_TEST
 
@@ -464,6 +474,8 @@ START_TEST (test_pcre_patterns_insert_2)
     matched = r3_tree_match(n, "/post/11/22", NULL);
     ck_assert(matched);
     ck_assert(matched->endpoint > 0);
+
+    r3_tree_free(n);
 }
 END_TEST
 
@@ -504,6 +516,8 @@ START_TEST (test_pcre_patterns_insert_3)
     matched = r3_tree_match(n, "/post/113", NULL);
     ck_assert(!matched);
     */
+
+    r3_tree_free(n);
 }
 END_TEST
 
@@ -646,7 +660,6 @@ START_TEST(test_route_cmp)
     m->request_method = METHOD_POST | METHOD_GET;
     fail_if( r3_route_cmp(r1, m) == -1, "should match");
 
-    r3_route_free(r1);
     match_entry_free(m);
     r3_tree_free(n);
 }
@@ -667,6 +680,7 @@ START_TEST(test_pcre_pattern_simple)
     ck_assert(matched);
     ck_assert(entry->vars.tokens.size > 0);
     ck_assert_str_eq(entry->vars.tokens.entries[0].base,"123");
+    match_entry_free(entry);
     r3_tree_free(n);
 }
 END_TEST
@@ -719,6 +733,7 @@ START_TEST(test_pcre_pattern_more)
     info("matched %p\n", matched->data);
     ck_assert_int_eq( *((int*)matched->data), var3);
 
+    match_entry_free(entry);
     r3_tree_free(n);
 }
 END_TEST

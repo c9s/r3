@@ -1,4 +1,8 @@
 language: c
+sudo: required
+
+services:
+  - docker
 
 git:
   depth: 1
@@ -6,35 +10,49 @@ git:
 matrix:
   include:
   - compiler: gcc
-    env: CONFIGURE_OPTION='--enable-debug --enable-gcov --with-malloc=jemalloc' COVERALLS=yes VALGRIND=no DEBUG=yes
+    env:
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov --with-malloc=jemalloc'
+    - COVERALLS=yes
+    - VALGRIND=no
+    - DEBUG=yes
+    - CC=gcc
+    - CXX=g++
   - compiler: gcc
-    env: CONFIGURE_OPTION='--enable-debug --enable-gcov' COVERALLS=yes VALGRIND=yes DEBUG=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+    env:
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov'
+    - COVERALLS=yes
+    - VALGRIND=yes
+    - DEBUG=yes
+    - CC=gcc
+    - CXX=g++
   - compiler: clang
-    env: CONFIGURE_OPTION='--enable-debug --enable-gcov' COVERALLS=yes VALGRIND=yes DEBUG=yes LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-  allow_failures:
-  - compiler: clang
-    env: ASAN_OPTIONS=symbolize=1 ASAN_SYMBOLIZER_PATH=/usr/local/clang-3.4/bin/llvm-symbolizer CFLAGS='-fsanitize=address -g -O1 -D_BSD_SOURCE=1' CXX=clang++ CXXFLAGS='-fsanitize=address -g -O1 -D_BSD_SOURCE=1'
-install:
-- sudo apt-get update -qq
-- sudo apt-get install -qq automake pkg-config build-essential libtool automake autoconf m4 gnulib
-- sudo apt-get install -qq check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1
-- sudo apt-get install -qq graphviz-dev graphviz
-- if [ "x$COVERALLS" == xyes ]; then sudo pip install cpp-coveralls; fi
-- if [ "x$VALGRIND" == xyes ]; then sudo apt-get install valgrind; fi
+    env:
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov'
+    - COVERALLS=yes
+    - VALGRIND=yes
+    - DEBUG=yes
+    - CC=clang
+    - CXX=clang++
 
-before_script:
-  - sudo ldconfig
+before_install:
+  - docker run -d
+    --name build
+    -v $(pwd):/travis
+    -e "CONFIGURE_OPTION=$CONFIGURE_OPTION"
+    -e "COVERALLS=$COVERALLS"
+    -e "VALGRIND=$VALGRIND"
+    -e "DEBUG=$DEBUG"
+    -e "CC=$CC"
+    -e "CXX=$CXX"
+    ubuntu:16.04
+    tail -f /dev/null
+  - docker ps
+
+install:
+  - docker exec -t build bash -c "cd /travis && .travis-ci/install.sh"
+
 script:
-  - ./autogen.sh
-  - ./configure --enable-check $CONFIGURE_OPTION
-  - make V=1
-  - sudo make install
-  - if [ "x$VALGRIND" == xyes ]; then make check ; else make check V=1; fi
-  # XXX: tracing memory leak, disabled for some mystery reason for automake...
-  # - if [ "x$VALGRIND" == xyes && "x$DEBUG" == xyes ]; then valgrind ./tests/check_* -v --trace-children=yes --show-leak-kinds=full --leak-check=full; fi
+  - docker exec -t build bash -c "cd /travis && .travis-ci/script.sh"
 
 after_success:
-  - if [ x$COVERALLS == xyes ]; then coveralls --exclude php --exclude 3rdparty; fi
-
-cache:
-  apt: true
+  - docker exec -t build bash -c "cd /travis && .travis-ci/after_success.sh"
