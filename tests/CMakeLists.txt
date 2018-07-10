@@ -1,24 +1,23 @@
-# set(TEST_LIBS ${TEST_LIBS} ${CHECK_LIBRARIES} judy libr3)
-include_directories("${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}")
-find_package(Check REQUIRED)
-find_package(PCRE REQUIRED)
-# find_package(Judy REQUIRED)
+function(add_r3_test NAME)
+  add_executable(${NAME} ${ARGN})
 
-if (NOT CHECK_FOUND)
-    message(STATUS "Skipping unit tests, Check library not found!")
-else (NOT CHECK_FOUND)
-    set(TEST_LIBS ${LIBS} ${CHECK_LIBRARIES} ${PCRE_LIBRARIES} r3)
+  target_include_directories(${NAME}
+    PRIVATE
+      ${CHECK_INCLUDE_DIRS}
+      ${PROJECT_BINARY_DIR}
+      ${PROJECT_SOURCE_DIR}/src)
 
-    include_directories(${CHECK_INCLUDE_DIRS})
-    # include_directories("${PROJECT_SOURCE_DIR}/include/r2")
-    add_executable(check_tree check_tree.c)
-    target_link_libraries(check_tree ${TEST_LIBS} ${CHECK_LDFLAGS_OTHER})
+  target_link_libraries(${NAME}
+    ${CHECK_LDFLAGS}
+    r3)
 
-    add_custom_command(
-        TARGET check_tree POST_BUILD
-        COMMENT "Running unit tests"
-        COMMAND check_tree
-    )
-endif (NOT CHECK_FOUND)
+  add_test(NAME ${NAME} COMMAND ${NAME})
+endfunction()
 
+add_r3_test(check_tree check_tree.c)
+add_r3_test(check_slug check_slug.c)
+add_r3_test(check_routes check_routes.c)
+add_r3_test(check_str_array check_str_array.c)
 
+add_executable(bench bench.c)
+target_link_libraries(bench r3)
