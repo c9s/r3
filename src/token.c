@@ -12,7 +12,6 @@
 #include "r3.h"
 #include "r3_slug.h"
 #include "str_array.h"
-#include "zmalloc.h"
 #include "memory.h"
 
 void str_array_free(str_array *l) {

@@ -5,14 +5,13 @@
  */
 #include <stdlib.h>
 #include "r3_list.h"
-#include "zmalloc.h"
 
 /* Naive linked list implementation */
 
 list           *
 list_create()
 {
-    list           *l = (list *) zmalloc(sizeof(list));
+    list           *l = (list *) malloc(sizeof(list));
     l->count = 0;
     l->head = NULL;
     l->tail = NULL;
@@ -38,7 +37,7 @@ list_free(l)
         }
         pthread_mutex_unlock(&(l->mutex));
         pthread_mutex_destroy(&(l->mutex));
-        zfree(l);
+        free(l);
     }
 }
 
@@ -48,7 +47,7 @@ list_item * list_add_element(list * l, void * ptr)
 
     pthread_mutex_lock(&(l->mutex));
 
-    li = (list_item *) zmalloc(sizeof(list_item));
+    li = (list_item *) malloc(sizeof(list_item));
     li->value = ptr;
     li->next = NULL;
     li->prev = l->tail;
@@ -89,7 +88,7 @@ list_remove_element(l, ptr)
                 li->next->prev = li->prev;
             }
             l->count--;
-            zfree(li);
+            free(li);
             result = 1;
             break;
         }

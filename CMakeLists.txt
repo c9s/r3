@@ -26,6 +26,8 @@ install(
     include/r3.hpp
   DESTINATION include)
 
+# Configure substitutions for r3.pc. The variables set here must match the
+# @<values>@ in r3.pc.in.
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix ${prefix})
 set(includedir ${prefix}/include)

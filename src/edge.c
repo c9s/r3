@@ -18,7 +18,6 @@
 #include "r3.h"
 #include "r3_slug.h"
 #include "slug.h"
-#include "zmalloc.h"
 
 
 #define CHECK_PTR(ptr) if (ptr == NULL) return NULL;
@@ -36,7 +35,7 @@ void r3_edge_initl(R3Edge *e, const char * pattern, int pattern_len, R3Node * ch
 
 // R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child)
 // {
-//     R3Edge * e = (R3Edge*) zmalloc( sizeof(R3Edge) );
+//     R3Edge * e = (R3Edge*) malloc( sizeof(R3Edge) );
 //     CHECK_PTR(e);
 //     e->pattern = (char*) pattern;
 //     e->pattern_len = pattern_len;
@@ -85,7 +84,7 @@ void r3_edge_free(R3Edge * e) {
             r3_tree_free(e->child);
         }
         // free itself
-        // zfree(e);
+        // free(e);
     }
 }
 

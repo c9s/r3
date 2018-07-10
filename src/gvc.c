@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include "r3.h"
 #include "r3_gvc.h"
-#include "zmalloc.h"
 
 void r3_tree_build_ag_nodes(Agraph_t * g, Agnode_t * ag_parent_node, const node * n, int * node_cnt) {
     if (!n)
