@@ -1,6 +1,13 @@
 function(add_r3_test NAME)
   add_executable(${NAME} ${ARGN})
 
+  if(WIN32)
+    target_compile_definitions(${NAME}
+      PRIVATE
+      _CRT_SECURE_NO_WARNINGS
+    )
+  endif(WIN32)
+
   target_include_directories(${NAME}
     PRIVATE
       ${CHECK_INCLUDE_DIRS}
