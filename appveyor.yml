@@ -1,0 +1,76 @@
+# This is the configuration file for AppVeyor builds.
+# Look at the following for reference:
+# https://www.appveyor.com/docs/appveyor-yml
+
+environment:
+  vsversion: none
+  arch: default
+  matrix:
+  - platform: vs
+    vsversion: 2015
+    arch: x86
+  - platform: vs
+    vsversion: 2017
+    arch: x86
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  - platform: vs
+    vsversion: 2015
+    arch: x64
+  - platform: vs
+    vsversion: 2017
+    arch: x64
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+
+
+cache: c:\tools\vcpkg\installed\
+
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Release
+
+
+#---------------------------------#
+#   scripts that are called at    #
+#   the very beginning, before    #
+#   repo cloning                  #
+#---------------------------------#
+
+init:
+  - git config --global core.autocrlf input
+
+
+#---------------------------------#
+#   scripts to run before build   #
+#---------------------------------#
+
+before_build:
+  - cd c:\tools\vcpkg\
+  - git pull
+  - bootstrap-vcpkg.bat
+  - vcpkg integrate install
+  - vcpkg install check:x86-windows check:x64-windows pcre:x86-windows pcre:x64-windows
+  - set VCPKG_HOME=c:/tools/vcpkg/
+
+#---------------------------------#
+#   build code and unit tests     #
+#---------------------------------#
+
+build_script:
+  - cd c:\projects\generic-array
+  - win-build %configuration% %arch%
+ 
+
+#---------------------------------#
+#   run unit test for all x86     #
+#   and x64 architecture builds   #
+#---------------------------------#
+
+# test_script:
+#   - echo Project directory before running test step...
+
+
+#---------------------------------#
+#   build and test completed      #
+#---------------------------------#
+
+# on_finish:
+#   - echo Project directory after running tests...

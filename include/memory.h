@@ -30,7 +30,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifndef _WIN32
 #include <alloca.h>
+#endif
+
 
 #ifdef __cplusplus
 extern "C" {

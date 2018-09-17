@@ -13,6 +13,10 @@
 #include "slug.h"
 #include "r3_debug.h"
 
+#ifndef HAVE_ASPRINTF
+#include "str.h"
+#endif
+
 
 
 r3_slug_t * r3_slug_new(const char * path, int path_len) {

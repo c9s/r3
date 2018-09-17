@@ -8,7 +8,7 @@ function(add_r3_test NAME)
       ${PROJECT_SOURCE_DIR}/src)
 
   target_link_libraries(${NAME}
-    ${CHECK_LDFLAGS}
+    ${CHECK_LIBRARIES}
     r3)
 
   add_test(NAME ${NAME} COMMAND ${NAME})

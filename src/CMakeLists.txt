@@ -7,19 +7,43 @@ add_library(r3 STATIC
   str.c
   token.c)
 
-target_compile_definitions(r3
-  PRIVATE
-    _GNU_SOURCE)
+
+set(R3_INCLUDE_DIRS "")  
+
+if(WIN32)
+  target_compile_definitions(r3
+    PRIVATE
+    _CRT_SECURE_NO_WARNINGS
+  )
+  list(APPEND 
+    R3_INCLUDE_DIRS     
+    ${PROJECT_BINARY_DIR}
+    ${PCRE_INCLUDE_DIR}
+    ${PROJECT_SOURCE_DIR}/include
+  )  
+else()
+  target_compile_definitions(r3
+    PRIVATE
+    _GNU_SOURCE
+  )
+  list(APPEND
+    R3_INCLUDE_DIRS     
+    ${PROJECT_BINARY_DIR}
+    ${PCRE_INCLUDE_DIR}
+    ${PROJECT_SOURCE_DIR}/3rdparty
+    ${PROJECT_SOURCE_DIR}/include
+  )
+endif()
 
 target_include_directories(r3
   PUBLIC
-    ${PROJECT_BINARY_DIR}
-    ${PROJECT_SOURCE_DIR}/3rdparty
-    ${PROJECT_SOURCE_DIR}/include)
+    ${R3_INCLUDE_DIRS}
+)
 
 target_link_libraries(r3
   PUBLIC
-    ${PCRE_LIBRARIES})
+    ${PCRE_LIBRARIES}
+)
 
 install(
   TARGETS r3

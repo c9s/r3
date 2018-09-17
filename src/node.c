@@ -329,7 +329,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
         info("COMPARE PCRE_PATTERN\n");
         const char *substring_start = 0;
         int   substring_length = 0;
-        int   ov[ n->ov_cnt ];
+        int   *ov = malloc(sizeof(int) * n->ov_cnt);
         int   rc;
 
         info("pcre matching %s on %s\n", n->combined_pattern, path);
@@ -360,6 +360,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                     break;
             }
 #endif
+            free(ov);
             return NULL;
         }
 
@@ -387,6 +388,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                     str_array_append(&entry->vars, substring_start, substring_length);
                 }
 
+                free(ov);
                 // since restlen == 0 return the edge quickly.
                 return e->child && e->child->endpoint ? e->child : NULL;
             }
@@ -413,10 +415,12 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                 str_array_append(&entry->vars , substring_start, substring_length);
             }
 
+            free(ov);
             // get the length of orginal string: $0
             return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
         }
         // does not match
+        free(ov);
         return NULL;
     }
 
@@ -425,7 +429,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (!restlen) {
-            return e->child && e->child->endpoint ? e->child : NULL;
+             return e->child && e->child->endpoint ? e->child : NULL;
         }
         return r3_tree_matchl(e->child, path + e->pattern.len, restlen, entry);
     }
