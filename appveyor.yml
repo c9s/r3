@@ -55,7 +55,7 @@ before_build:
 #---------------------------------#
 
 build_script:
-  - cd c:\projects\generic-array
+  - cd c:\projects\r3
   - win-build %configuration% %arch%
  
 
