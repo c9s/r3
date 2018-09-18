@@ -2,6 +2,7 @@ function(add_r3_test NAME)
   add_executable(${NAME} ${ARGN})
 
   if(WIN32)
+    set(CHECK_LDFLAGS ${CHECK_LIBRARIES})
     target_compile_definitions(${NAME}
       PRIVATE
       _CRT_SECURE_NO_WARNINGS
@@ -15,7 +16,7 @@ function(add_r3_test NAME)
       ${PROJECT_SOURCE_DIR}/src)
 
   target_link_libraries(${NAME}
-    ${CHECK_LIBRARIES}
+    ${CHECK_LDFLAGS}
     r3)
 
   add_test(NAME ${NAME} COMMAND ${NAME})
