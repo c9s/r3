@@ -55,3 +55,6 @@ tests/bench_str.csv
 config.h.in
 examples/simple
 examples/simple_cpp
+
+build/
+.vscode/

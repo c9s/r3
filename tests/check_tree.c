@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <check.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <assert.h>
 #include "r3.h"
 #include "r3_slug.h"

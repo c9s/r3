@@ -39,6 +39,11 @@ typedef unsigned char bool;
 extern "C" {
 #endif
 
+#ifdef _WIN32
+#define __attribute__(A)
+#endif
+
+
 struct _edge;
 struct _node;
 struct _route;

@@ -29,9 +29,19 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifndef _WIN32
 #include <sys/mman.h>
 #include <unistd.h>
+#endif
 #include "memory.h"
+
+
+#ifdef _WIN32
+#define R3_MEMORY_THREAD __declspec(thread)
+#else
+#define R3_MEMORY_THREAD __thread
+#endif
 
 struct st_r3_mem_recycle_chunk_t {
     struct st_r3_mem_recycle_chunk_t *next;
@@ -56,7 +66,7 @@ struct st_r3_mem_pool_shared_ref_t {
 
 void *(*r3_mem__set_secure)(void *, int, size_t) = memset;
 
-static __thread r3_mem_recycle_t mempool_allocator = {16};
+static R3_MEMORY_THREAD r3_mem_recycle_t mempool_allocator = {16};
 
 void r3_fatal(const char *msg)
 {
@@ -178,24 +188,30 @@ void r3_mem_link_shared(r3_mem_pool_t *pool, void *p)
     link_shared(pool, R3_STRUCT_FROM_MEMBER(struct st_r3_mem_pool_shared_entry_t, bytes, p));
 }
 
+#ifndef WIN32
 static unsigned int topagesize(unsigned int capacity)
 {
     unsigned int pagesize = getpagesize();
     return (offsetof(r3_buffer_t, _buf) + capacity + pagesize - 1) / pagesize * pagesize;
 }
+#endif
 
 void r3_buffer__do_free(r3_buffer_t *buffer)
 {
     /* caller should assert that the buffer is not part of the prototype */
     if (buffer->capacity == buffer->_prototype->_initial_buf.capacity) {
         r3_mem_free_recycle(&buffer->_prototype->allocator, buffer);
+#ifndef _WIN32
     } else if (buffer->_fd != -1) {
         close(buffer->_fd);
         munmap((void *)buffer, topagesize(buffer->capacity));
+#endif
     } else {
         free(buffer);
     }
 }
+
+#ifndef _WIN32
 
 r3_iovec_t r3_buffer_reserve(r3_buffer_t **_inbuf, unsigned int min_guarantee)
 {
@@ -293,6 +309,8 @@ MapError:
     ret.len = 0;
     return ret;
 }
+
+#endif
 
 void r3_buffer_consume(r3_buffer_t **_inbuf, unsigned int delta)
 {

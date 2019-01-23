@@ -8,6 +8,8 @@
 // PCRE
 #include <pcre.h>
 
+#define MAX_SUBSTRINGS 30
+
 #include "r3.h"
 #include "r3_slug.h"
 #include "slug.h"
@@ -329,7 +331,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
         info("COMPARE PCRE_PATTERN\n");
         const char *substring_start = 0;
         int   substring_length = 0;
-        int   ov[ n->ov_cnt ];
+        int   ov[MAX_SUBSTRINGS];
         int   rc;
 
         info("pcre matching %s on %s\n", n->combined_pattern, path);
@@ -425,7 +427,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (!restlen) {
-            return e->child && e->child->endpoint ? e->child : NULL;
+             return e->child && e->child->endpoint ? e->child : NULL;
         }
         return r3_tree_matchl(e->child, path + e->pattern.len, restlen, entry);
     }

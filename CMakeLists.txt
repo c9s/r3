@@ -10,7 +10,23 @@ find_package(PCRE REQUIRED)
 include(CheckSymbolExists)
 check_symbol_exists(strdup string.h HAVE_STRDUP)
 check_symbol_exists(strndup string.h HAVE_STRNDUP)
+check_symbol_exists(asprintf stdio.h HAVE_ASPRINTF)
 configure_file(config.h.cmake config.h)
+
+if (NOT WIN32)
+  # Configure substitutions for r3.pc. The variables set here must match the
+  # @<values>@ in r3.pc.in.
+  set(prefix ${CMAKE_INSTALL_PREFIX})
+  set(exec_prefix ${prefix})
+  set(includedir ${prefix}/include)
+  set(libdir ${prefix}/lib)
+  set(PACKAGE_VERSION ${PROJECT_VERSION})
+  configure_file(r3.pc.in r3.pc @ONLY)
+  install(
+    FILES
+      ${PROJECT_BINARY_DIR}/r3.pc
+    DESTINATION lib/pkgconfig)
+endif()
 
 add_subdirectory(src)
 
@@ -26,18 +42,6 @@ install(
     include/r3.hpp
   DESTINATION include)
 
-# Configure substitutions for r3.pc. The variables set here must match the
-# @<values>@ in r3.pc.in.
-set(prefix ${CMAKE_INSTALL_PREFIX})
-set(exec_prefix ${prefix})
-set(includedir ${prefix}/include)
-set(libdir ${prefix}/lib)
-set(PACKAGE_VERSION ${PROJECT_VERSION})
-configure_file(r3.pc.in r3.pc @ONLY)
-install(
-  FILES
-    ${PROJECT_BINARY_DIR}/r3.pc
-  DESTINATION lib/pkgconfig)
 
 if(CHECK_FOUND)
   enable_testing()

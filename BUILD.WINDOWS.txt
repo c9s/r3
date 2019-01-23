@@ -1,0 +1,25 @@
+Building with CMAKE on Windows using VCPKG
+=======================================
+
+   This document describes how to compile, build and install libr3 on Windows using CMake, MSVC compiler and VCPKG
+
+   VCPKG can be installed from
+   
+     https://github.com/Microsoft/vcpkg
+
+   Once VCPKG is installed you must install libcheck and pcre before running the folloiwing command to configure build
+
+    cmake -H"." -B"<BUILD_DIRECTORY>" -G"<GENERATOR_NAME>" -DCMAKE_TOOLCHAIN_FILE=<VCPKG_TOOLCHAIN_FILE> -DVCPKG_TARGET_TRIPLET=<VCPKG_TARGET_TRIPLET>
+
+   Then to perform build
+
+    cmake --build -B"<BUILD_DIRECTORY>" --target ALL_BUILD --config "<CMAKE_BUILD_TYPE>"
+
+   Then to run tests, you must copy pcre.dll and pcre.pdb file to output directory prior to running tests
+
+    cmake --build -B"<BUILD_DIRECTORY>" --target RUN_TESTS --config "<CMAKE_BUILD_TYPE>"
+
+   Window build is currently WIP.
+
+
+

@@ -3,6 +3,8 @@ R3
 
 [![Build Status](https://travis-ci.org/c9s/r3.svg?branch=2.0)](https://travis-ci.org/c9s/r3)
 
+[![Windows Build Status](https://img.shields.io/appveyor/ci/simon-p-r/r3/master.svg?label=windows&style=flat-square&maxAge=2592000)](https://ci.appveyor.com/project/simon-p-r/r3)
+
 [![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.svg)](https://coveralls.io/r/c9s/r3)
 
 R3 is an URL router library with high performance, thus, it's implemented in C.
