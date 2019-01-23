@@ -8,7 +8,7 @@
 #define R3_HPP
 
 #include <cstring>
-#include <r3.h>
+#include "r3.h"
 
 namespace r3 {
     template <typename T>
