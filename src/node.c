@@ -270,7 +270,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
  */
-R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry) {
+R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry, int match_early) {
     info("try matching: %s\n", path);
 
     R3Edge *e;
@@ -314,6 +314,13 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                     str_array_append(&entry->vars , path, pp - path);
                 }
                 restlen = pp_end - pp;
+                
+                if (match_early) {
+                    if (e->child && e->child->endpoint) {
+                        return e->child;
+                    }
+                }
+                
                 if (!restlen) {
                     return e->child && e->child->endpoint ? e->child : NULL;
                 }
@@ -424,6 +431,12 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
 
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
+        if (match_early) {
+            if (e->child && e->child->endpoint) {
+                return e->child;
+            }
+        }
+
         if (!restlen) {
             return e->child && e->child->endpoint ? e->child : NULL;
         }

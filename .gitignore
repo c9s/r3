@@ -55,3 +55,9 @@ tests/bench_str.csv
 config.h.in
 examples/simple
 examples/simple_cpp
+
+tests/bench
+tests/check_routes
+tests/check_slug
+tests/check_str_array
+tests/check_tree
