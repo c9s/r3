@@ -315,10 +315,8 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
                 }
                 restlen = pp_end - pp;
                 
-                if (match_early) {
-                    if (e->child && e->child->endpoint) {
-                        return e->child;
-                    }
+                if (match_early && e->child && e->child->endpoint) {
+                    return e->child;
                 }
                 
                 if (!restlen) {
@@ -374,7 +372,8 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
 
         restlen = path_len - ov[1]; // if it's fully matched to the end (rest string length)
         int *inv = ov + 2;
-        if (!restlen) {
+
+        if (match_early || !restlen) {
             // Check the substring to decide we should go deeper on which edge 
             for (i = 1; i < rc; i++)
             {
@@ -389,13 +388,24 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
                 substring_start = path + *inv;
                 e = n->edges.entries + i - 1;
 
-                if (entry && e->has_slug) {
-                    // append captured token to entry
-                    str_array_append(&entry->vars, substring_start, substring_length);
-                }
+                if (match_early && e->child && e->child->endpoint) {
+                    if (entry && e->has_slug) {
+                        // append captured token to entry
+                        str_array_append(&entry->vars, substring_start, substring_length);
+                    }
 
-                // since restlen == 0 return the edge quickly.
-                return e->child && e->child->endpoint ? e->child : NULL;
+                    return e->child;
+                }   
+
+                if (!restlen) {
+                    if (entry && e->has_slug) {
+                        // append captured token to entry
+                        str_array_append(&entry->vars, substring_start, substring_length);
+                    }
+
+                    // since restlen == 0 return the edge quickly.
+                    return e->child && e->child->endpoint ? e->child : NULL;
+                }
             }
         }
 
@@ -431,11 +441,9 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
 
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
-        if (match_early) {
-            if (e->child && e->child->endpoint) {
+        if (match_early && e->child && e->child->endpoint) {
                 return e->child;
             }
-        }
 
         if (!restlen) {
             return e->child && e->child->endpoint ? e->child : NULL;
