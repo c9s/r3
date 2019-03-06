@@ -128,8 +128,8 @@ R3Edge * r3_node_find_edge(const R3Node * n, const char * pat, unsigned int pat_
     for (i = 0 ; i < n->edges.size ; i++ ) {
         e = edge_entries + i;
         // there is a case: "{foo}" vs "{foo:xxx}",
-        // we should return the match result: full-match or partial-match 
-        if (e->pattern.len == pat_len && 
+        // we should return the match result: full-match or partial-match
+        if (e->pattern.len == pat_len &&
             !strncmp(e->pattern.base, pat, e->pattern.len)) {
             return e;
         }
@@ -314,15 +314,15 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
                     str_array_append(&entry->vars , path, pp - path);
                 }
                 restlen = pp_end - pp;
-                
+
                 if (match_early && e->child && e->child->endpoint) {
                     return e->child;
                 }
-                
+
                 if (!restlen) {
                     return e->child && e->child->endpoint ? e->child : NULL;
                 }
-                return r3_tree_matchl(e->child, pp, restlen, entry);
+                return r3_tree_matchl_ex(e->child, pp, restlen, entry, match_early);
             }
             e++;
         }
@@ -374,7 +374,7 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
         int *inv = ov + 2;
 
         if (match_early || !restlen) {
-            // Check the substring to decide we should go deeper on which edge 
+            // Check the substring to decide we should go deeper on which edge
             for (i = 1; i < rc; i++)
             {
                 substring_length = *(inv+1) - *inv;
@@ -395,7 +395,7 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
                     }
 
                     return e->child;
-                }   
+                }
 
                 if (!restlen) {
                     if (entry && e->has_slug) {
@@ -410,7 +410,7 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
         }
 
 
-        // Check the substring to decide we should go deeper on which edge 
+        // Check the substring to decide we should go deeper on which edge
         inv = ov + 2;
         for (i = 1; i < rc; i++)
         {
@@ -431,7 +431,7 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
             }
 
             // get the length of orginal string: $0
-            return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
+            return r3_tree_matchl_ex( e->child, path + (ov[1] - ov[0]), restlen, entry, match_early);
         }
         // does not match
         return NULL;
@@ -442,13 +442,13 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (match_early && e->child && e->child->endpoint) {
-                return e->child;
-            }
+            return e->child;
+        }
 
         if (!restlen) {
             return e->child && e->child->endpoint ? e->child : NULL;
         }
-        return r3_tree_matchl(e->child, path + e->pattern.len, restlen, entry);
+        return r3_tree_matchl_ex(e->child, path + e->pattern.len, restlen, entry, match_early);
     }
     return NULL;
 }
@@ -579,7 +579,7 @@ R3Route * r3_tree_insert_routel_ex(R3Node *tree, int method, const char *path, i
     R3Node * ret = r3_tree_insert_pathl_ex(tree, path, path_len, method, 1, data, errstr);
     R3Route *router = ret->routes.entries + (ret->routes.size - 1);
     get_slugs(router, path, path_len);
-    
+
     return router;
 }
 
@@ -754,7 +754,7 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
                 }
 
                 R3Node * c2 = r3_tree_create(3);
-                
+
                 R3Edge * op_edge = r3_node_connectl(c1, slug_p, slug_len , 0, c2);
                 if(opcode) {
                     op_edge->opcode = opcode;
@@ -876,7 +876,7 @@ void r3_tree_dump(const R3Node * n, int level) {
 
         print_indent(level + 1);
         printf("||-routes num: |%d|", n->routes.size);
-            
+
         for ( int j = 0 ; j < n->routes.size ; j++ ) {
             R3Route * rr = n->routes.entries + j;
             printf(" route path: |%*.*s|", rr->path.len,rr->path.len,rr->path.base);
@@ -928,7 +928,7 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
 /**
  *
  */
-// void r3_node_append_route(R3Node * n, R3Route * r) 
+// void r3_node_append_route(R3Node * n, R3Route * r)
 // {
 //     r3_vector_reserve(NULL, &n->routes, n->routes.size + 1);
 //     memset(n->routes.entries + 1, 0, sizeof(*n->routes.entries));
