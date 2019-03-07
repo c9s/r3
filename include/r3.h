@@ -97,7 +97,7 @@ struct _R3Entry {
     r3_iovec_t host; // the request host
     r3_iovec_t remote_addr;
 
-    const char *unmatched_path;
+    const char * unmatched_path;
 } __attribute__((aligned(64)));
 
 
@@ -151,7 +151,8 @@ int r3_tree_compile_patterns(R3Node * n, char** errstr);
 
 R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry);
 
-R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry, int match_early, const char **unmatched_path);
+R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, 
+    match_entry * entry, int match_early, const char **unmatched_path);
 
 #define r3_tree_matchl(n,p,l,e) r3_tree_matchl_ex(n, p, l, e, 0, NULL)
 

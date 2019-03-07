@@ -795,7 +795,7 @@ START_TEST(test_insert_route)
 }
 END_TEST
 
-START_TEST(test_insert_route_match_2_time)
+START_TEST(test_insert_route_match_2_times)
 {
     int   var1 = 22;
     int   var2 = 33;
@@ -803,6 +803,7 @@ START_TEST(test_insert_route_match_2_time)
     R3Node * n = r3_tree_create(2);
     r3_tree_insert_route(n, METHOD_GET, "/blog", &var1);
     r3_tree_insert_route(n, METHOD_GET, "/blog/post", &var2);
+    r3_tree_compile(n, NULL);
 
     match_entry * entry;
     R3Route *r;
@@ -832,6 +833,55 @@ START_TEST(test_insert_route_match_2_time)
 }
 END_TEST
 
+START_TEST(test_pcre_pattern_match_more_times)
+{
+    int   var1 = 11;
+    int   var2 = 22;
+    int   var3 = 33;
+    int   var4 = 44;
+
+    R3Node * n = r3_tree_create(5);
+    r3_tree_insert_route(n, METHOD_GET, "/blog", &var1);
+    r3_tree_insert_route(n, METHOD_GET, "/blog/{id:\\d+}", &var2);
+    r3_tree_insert_route(n, METHOD_GET, "/blog2/{id:\\d+}", &var3);
+    r3_tree_insert_route(n, METHOD_GET, "/blog/{id:\\d+}/{val}", &var4);
+    r3_tree_compile(n, NULL);
+
+    match_entry * entry;
+    R3Route *r;
+    char *unmatched_path;
+
+    // r3_tree_dump(n, 10);
+
+    entry = match_entry_create("/blog/234/abc");
+    entry->request_method = METHOD_GET;
+    R3Node * n_1 = r3_tree_match_entry_early(n, entry);
+    r = r3_node_match_route(n_1, entry);
+    ck_assert(r != NULL);
+    ck_assert(r->request_method & METHOD_GET );
+    ck_assert(*((int*)r->data) == 11);
+    printf("unmatched path: %s\n", entry->unmatched_path);
+
+    R3Node * n_2 = r3_tree_match_entry_early(n_1, entry);
+    r = r3_node_match_route(n_2, entry);
+    ck_assert(r != NULL);
+    ck_assert(r->request_method & METHOD_GET );
+    ck_assert(*((int*)r->data) == 22);
+
+    R3Node * n_3 = r3_tree_match_entry_early(n_2, entry);
+    r = r3_node_match_route(n_3, entry);
+    ck_assert(r != NULL);
+    ck_assert(r->request_method & METHOD_GET );
+    ck_assert(*((int*)r->data) == 44);
+
+    R3Node * n_4 = r3_tree_match_entry_early(n_3, entry);
+    ck_assert(n_4 == NULL);
+
+    match_entry_free(entry);
+    r3_tree_free(n);
+}
+END_TEST
+
 Suite* r3_suite (void) {
         Suite *suite = suite_create("r3 core tests");
         TCase *tcase = tcase_create("common_prefix_testcase");
@@ -855,7 +905,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
         tcase_add_test(tcase, test_insert_pathl_before_root);
-        tcase_add_test(tcase, test_insert_route_match_2_time);
+        tcase_add_test(tcase, test_insert_route_match_2_times);
         suite_add_tcase(suite, tcase);
 
         tcase = tcase_create("pcre_pattern_testcase");
@@ -866,6 +916,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_root_match);
         tcase_add_test(tcase, test_pcre_patterns_insert_3);
         tcase_add_test(tcase, test_incomplete_slug_path);
+        tcase_add_test(tcase, test_pcre_pattern_match_more_times);
         suite_add_tcase(suite, tcase);
 
         return suite;
