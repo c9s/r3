@@ -795,6 +795,43 @@ START_TEST(test_insert_route)
 }
 END_TEST
 
+START_TEST(test_insert_route_match_2_time)
+{
+    int   var1 = 22;
+    int   var2 = 33;
+
+    R3Node * n = r3_tree_create(2);
+    r3_tree_insert_route(n, METHOD_GET, "/blog", &var1);
+    r3_tree_insert_route(n, METHOD_GET, "/blog/post", &var2);
+
+    match_entry * entry;
+    R3Route *r;
+    char *unmatched_path;
+
+    entry = match_entry_create("/blog/post");
+    entry->request_method = METHOD_GET;
+    R3Node * n_1 = r3_tree_match_entry_early(n, entry);
+    r = r3_node_match_route(n_1, entry);
+    ck_assert(r != NULL);
+    ck_assert(r->request_method & METHOD_GET );
+    ck_assert(*((int*)r->data) == 22);
+    printf("unmatched path: %s\n", entry->unmatched_path);
+
+    R3Node * n_2 = r3_tree_match_entry_early(n_1, entry);
+    r = r3_node_match_route(n_2, entry);
+    ck_assert(r != NULL);
+    ck_assert(r->request_method & METHOD_GET );
+    ck_assert(*((int*)r->data) == 33);
+
+    R3Node * n_3 = r3_tree_match_entry_early(n_2, entry);
+    ck_assert(n_3 == NULL);
+
+    match_entry_free(entry);
+
+    r3_tree_free(n);
+}
+END_TEST
+
 Suite* r3_suite (void) {
         Suite *suite = suite_create("r3 core tests");
         TCase *tcase = tcase_create("common_prefix_testcase");
@@ -818,6 +855,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);
         tcase_add_test(tcase, test_insert_pathl_before_root);
+        tcase_add_test(tcase, test_insert_route_match_2_time);
         suite_add_tcase(suite, tcase);
 
         tcase = tcase_create("pcre_pattern_testcase");

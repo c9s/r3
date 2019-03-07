@@ -96,6 +96,8 @@ struct _R3Entry {
 
     r3_iovec_t host; // the request host
     r3_iovec_t remote_addr;
+
+    const char *unmatched_path;
 } __attribute__((aligned(64)));
 
 
@@ -149,14 +151,18 @@ int r3_tree_compile_patterns(R3Node * n, char** errstr);
 
 R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry);
 
-R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry, int match_mode);
+R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry, int match_early, const char **unmatched_path);
 
-#define r3_tree_matchl(n,p,l,e) r3_tree_matchl_ex(n, p, l, e, 0)
+#define r3_tree_matchl(n,p,l,e) r3_tree_matchl_ex(n, p, l, e, 0, NULL)
 
 #define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
 
 // R3Node * r3_tree_match_entry(R3Node * n, match_entry * entry);
 #define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path.base, entry->path.len, entry)
+#define r3_tree_match_entry_early(n, entry) \
+            r3_tree_matchl_ex(n, entry->unmatched_path, \
+                entry->path.base + entry->path.len - entry->unmatched_path, \
+                entry, 1, &(entry->unmatched_path))
 
 bool r3_node_has_slug_edges(const R3Node *n);
 
@@ -182,6 +188,8 @@ R3Route * r3_node_append_route(R3Node *tree, const char * path, int path_len, in
 void r3_route_free(R3Route * route);
 
 int r3_route_cmp(const R3Route *r1, const match_entry *r2);
+
+R3Route * r3_node_match_route(const R3Node *n, match_entry * entry);
 
 R3Route * r3_tree_match_route(const R3Node *n, match_entry * entry);
 

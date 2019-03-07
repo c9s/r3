@@ -54,9 +54,9 @@ static int strdiff(char * d1, char * d2) {
 R3Node * r3_tree_create(int cap) {
     R3Node * n = r3_mem_alloc( sizeof(R3Node) );
     memset(n, 0, sizeof(*n));
-    
+
     r3_vector_reserve(NULL, &n->edges, n->edges.size + cap);
-    
+
     r3_vector_reserve(NULL, &n->routes, n->routes.size + 1);
 
     n->compare_type = NODE_COMPARE_PCRE;
@@ -269,8 +269,10 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
  * @param char*        path     the URL path to dispatch
  * @param int          path_len the length of the URL path.
  * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
+ * @param match_early  0: default mode 1: return to the matching node immediately
+ * @param unmatched_path  unmatched path
  */
-R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry, int match_early) {
+R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry, int match_early, const char **unmatched_path) {
     info("try matching: %s\n", path);
 
     R3Edge *e;
@@ -316,13 +318,16 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
                 restlen = pp_end - pp;
 
                 if (match_early && e->child && e->child->endpoint) {
+                    if (unmatched_path)
+                        *unmatched_path = pp;
+
                     return e->child;
                 }
 
                 if (!restlen) {
                     return e->child && e->child->endpoint ? e->child : NULL;
                 }
-                return r3_tree_matchl_ex(e->child, pp, restlen, entry, match_early);
+                return r3_tree_matchl_ex(e->child, pp, restlen, entry, match_early, unmatched_path);
             }
             e++;
         }
@@ -394,6 +399,9 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
                         str_array_append(&entry->vars, substring_start, substring_length);
                     }
 
+                    if (unmatched_path)
+                        *unmatched_path = substring_start;
+
                     return e->child;
                 }
 
@@ -431,7 +439,7 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
             }
 
             // get the length of orginal string: $0
-            return r3_tree_matchl_ex( e->child, path + (ov[1] - ov[0]), restlen, entry, match_early);
+            return r3_tree_matchl_ex( e->child, path + (ov[1] - ov[0]), restlen, entry, match_early, unmatched_path);
         }
         // does not match
         return NULL;
@@ -442,24 +450,27 @@ R3Node * r3_tree_matchl_ex(const R3Node * n, const char * path, unsigned int pat
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (match_early && e->child && e->child->endpoint) {
+            if (unmatched_path) {
+                *unmatched_path = path + e->pattern.len;
+            }
+                
+
             return e->child;
         }
 
         if (!restlen) {
             return e->child && e->child->endpoint ? e->child : NULL;
         }
-        return r3_tree_matchl_ex(e->child, path + e->pattern.len, restlen, entry, match_early);
+
+        return r3_tree_matchl_ex(e->child, path + e->pattern.len, restlen, entry, match_early, unmatched_path);
     }
     return NULL;
 }
 
-
-
-R3Route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
-    R3Node *n;
+R3Route * r3_node_match_route(const R3Node *n, match_entry * entry) {
+    int    i, irs;
     R3Route *r;
-    n = r3_tree_match_entry(tree, entry);
-    unsigned int i, irs;
+
     if (n && (irs = n->routes.size)) {
         r = n->routes.entries;
         for (i = 0; irs - i; i++) {
@@ -473,6 +484,13 @@ R3Route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
         }
     }
     return NULL;
+}
+
+R3Route * r3_tree_match_route(const R3Node *tree, match_entry * entry) {
+    R3Node *n;
+    n = r3_tree_match_entry(tree, entry);
+
+    return r3_node_match_route(n, entry);
 }
 
 inline R3Edge * r3_node_find_edge_str(const R3Node * n, const char * str, int str_len) {

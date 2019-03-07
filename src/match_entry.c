@@ -20,6 +20,7 @@ match_entry * match_entry_createl(const char * path, int path_len) {
     r3_vector_reserve(NULL, &entry->vars.tokens, 3);
     entry->path.base = path;
     entry->path.len = path_len;
+    entry->unmatched_path = path;
     return entry;
 }
 
