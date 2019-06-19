@@ -51,6 +51,7 @@ autoscan.log
 r3.pc
 stamp-h1
 tests/bench_str.csv
+tests/check_host
 
 config.h.in
 examples/simple

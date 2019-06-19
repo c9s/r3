@@ -27,6 +27,9 @@ check_routes_SOURCES = check_routes.c
 TESTS += check_str_array
 check_str_array_SOURCES = check_str_array.c
 
+TESTS += check_host
+check_host_SOURCES = check_host.c
+
 
 if ENABLE_JSON
 TESTS += check_json

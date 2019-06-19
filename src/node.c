@@ -884,8 +884,20 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
     }
 
     if ( r1->host.len && r2->host.len ) {
-        if (strncmp(r1->host.base, r2->host.base, r2->host.len)) {
+        if (r1->host.len > r2->host.len) {
             return -1;
+        }
+
+        int r1_i = r1->host.len - 1;
+        int r2_i = r2->host.len - 1;
+        for(; r1_i >= 0 ; r1_i--, r2_i--) {
+            if (r1_i == 0 && r1->host.base[0] == '*') {
+                break;
+            }
+
+            if (r2->host.base[r2_i] != r1->host.base[r1_i]) {
+                return -1;
+            }
         }
     }
 
