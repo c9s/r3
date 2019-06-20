@@ -84,6 +84,10 @@ struct _R3Route {
     void * data;
 
     r3_iovec_t remote_addr_pattern;
+
+    unsigned int remote_addr_v4;
+    int          remote_addr_v4_bits;
+
 } __attribute__((aligned(64)));
 
 typedef struct _R3Entry match_entry;
