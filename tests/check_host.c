@@ -1,6 +1,3 @@
-
-/** DO NOT MODIFY THIS FILE, THIS TEST FILE IS AUTO-GENERATED. **/
-
 #include "config.h"
 #include <stdio.h>
 #include <check.h>
