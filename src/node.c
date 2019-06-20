@@ -4,6 +4,8 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 // PCRE
 #include <pcre.h>
@@ -902,16 +904,23 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
     }
 
     if (r1->remote_addr_pattern.len && r2->remote_addr.len) {
-        /*
-         * XXX: consider "netinet/in.h"
-        if (r2->remote_addr) {
-            inet_addr(r2->remote_addr);
-        }
-        */
         if ( strncmp(r1->remote_addr_pattern.base, r2->remote_addr.base, r2->remote_addr.len) ) {
             return -1;
         }
     }
+
+    if (r1->remote_addr_v4 > 0 && r1->remote_addr_v4_bits > 0) {
+        if (!r2->remote_addr.base) {
+            return -1;
+        }
+
+        unsigned int r2_addr2 = inet_network(r2->remote_addr.base);
+        int bits = 32 - r1->remote_addr_v4_bits;
+        if (r1->remote_addr_v4 >> bits != r2_addr2 >> bits) {
+            return -1;
+        }
+    }
+
     return 0;
 }
 
