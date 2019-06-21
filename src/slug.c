@@ -60,7 +60,8 @@ int r3_slug_check(r3_slug_t *s) {
 
 char * r3_slug_to_str(const r3_slug_t *s) {
     char *str = NULL;
-    asprintf(&str, "slug: '%.*s', pattern: '%.*s', path: '%.*s'", s->len, s->begin, s->pattern_len, s->pattern, s->path_len, s->path);
+    int r = asprintf(&str, "slug: '%.*s', pattern: '%.*s', path: '%.*s'", s->len, s->begin, s->pattern_len, s->pattern, s->path_len, s->path);
+    if (r) {};
     return str;
 }
 
@@ -139,7 +140,8 @@ int r3_slug_parse(r3_slug_t *s, const char *needle, int needle_len, const char *
     if (state != 0) {
         if (errstr) {
             char *err = NULL;
-            asprintf(&err, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
+            int r = asprintf(&err, "Incomplete slug pattern. PATH (%d): '%s', OFFSET: %ld, STATE: %d", needle_len, needle, p - needle, state);
+            if (r) {};
             *errstr = err;
         }
         return -1;
@@ -177,7 +179,8 @@ int r3_slug_count(const char * needle, int len, char **errstr) {
     if (state != 0) {
         if (errstr) {
             char *err = NULL;
-            asprintf(&err, "Incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
+            int r = asprintf(&err, "Incomplete slug pattern. PATTERN (%d): '%s', OFFSET: %ld, STATE: %d", len, needle, p - needle, state);
+            if (r) {};
             *errstr = err;
         }
         return -1;
