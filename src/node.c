@@ -888,6 +888,12 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
         }
     }
 
+    if (r1->http_scheme) {
+        if (0 == (r1->http_scheme & r2->http_scheme) ) {
+            return -1;
+        }
+    }
+
     if ( r1->host.len && r2->host.len ) {
         if (r1->host.len > r2->host.len) {
             return -1;
