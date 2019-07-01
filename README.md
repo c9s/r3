@@ -125,7 +125,7 @@ R3Node * matched_node = r3_tree_match_entry(n, entry);
 
 **Release Memory**
 
-To release the memory, you may call `r3_tree_free(R3Node *tree)` to release the whole tree structure, 
+To release the memory, you may call `r3_tree_free(R3Node *tree)` to release the whole tree structure,
 `node*`, `edge*`, `route*` objects that were inserted into the tree will be freed.
 
 
@@ -189,7 +189,7 @@ translator, which translates simple patterns into small & fast scanners.
 
 By using this method, r3 reduces the matching overhead of pcre library.
 
-Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+` or `[^-]+`
+Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+`, `[^-]+` or `.*`.
 
 Slugs without specified regular expression will be compiled into the `[^/]+` pattern. therefore, it's optimized too.
 
@@ -337,10 +337,10 @@ Use case in PHP
 ```php
 // Here is the paths data structure
 $paths = [
-    '/blog/post/{id}' => [ 'controller' => 'PostController' , 'action' => 'item'   , 'method'   => 'GET' ] , 
-    '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'list'   , 'method'   => 'GET' ] , 
-    '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'create' , 'method' => 'POST' ]  , 
-    '/blog'           => [ 'controller' => 'BlogController' , 'action' => 'list'   , 'method'   => 'GET' ] , 
+    '/blog/post/{id}' => [ 'controller' => 'PostController' , 'action' => 'item'   , 'method'   => 'GET' ] ,
+    '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'list'   , 'method'   => 'GET' ] ,
+    '/blog/post'      => [ 'controller' => 'PostController' , 'action' => 'create' , 'method' => 'POST' ]  ,
+    '/blog'           => [ 'controller' => 'BlogController' , 'action' => 'list'   , 'method'   => 'GET' ] ,
 ];
 $rs = r3_compile($paths, 'persisten-table-id');
 $ret = r3_dispatch($rs, '/blog/post/3' );

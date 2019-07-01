@@ -43,6 +43,9 @@ int r3_pattern_to_opcode(const char * pattern, unsigned int len) {
     if ( strncmp(pattern, "[^-]+", len) == 0 ) {
         return OP_EXPECT_NODASH;
     }
+    if ( strncmp(pattern, ".*", len) == 0 ) {
+        return OP_EXPECT_NOLINEBREAKS;
+    }
     return 0;
 }
 

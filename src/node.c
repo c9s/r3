@@ -223,7 +223,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     free(n->combined_pattern);
     n->combined_pattern = cpat;
 
-    const char *pcre_error;
+    const char *pcre_error = NULL;
     int pcre_erroffset;
     unsigned int option_bits = 0;
 
@@ -250,7 +250,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
         pcre_free_study(n->pcre_extra);
     }
     n->pcre_extra = pcre_study(n->pcre_pattern, 0, &pcre_error);
-    if (!n->pcre_extra) {
+    if (!n->pcre_extra && pcre_error) {
         if (errstr) {
             int r = asprintf(errstr, "PCRE study failed at offset %s, pattern: %s", pcre_error, n->combined_pattern);
             if (r) {};
@@ -312,18 +312,32 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                 case OP_EXPECT_NODASH:
                     while (*pp != '-' && pp < pp_end) pp++;
                     break;
+                case OP_EXPECT_NOLINEBREAKS:
+                    while (*pp != '\n' && pp < pp_end) pp++;
+                    break;
             }
+
             // check match
-            if ((pp - path) > 0) {
+            if (e->opcode != OP_EXPECT_NOLINEBREAKS) {
+                if ((pp - path) > 0) {
+                    if (entry) {
+                        str_array_append(&entry->vars , path, pp - path);
+                    }
+                    restlen = pp_end - pp;
+                    if (!restlen) {
+                        return e->child && e->child->endpoint ? e->child : NULL;
+                    }
+                    return r3_tree_matchl(e->child, pp, restlen, entry);
+                }
+
+            } else {
                 if (entry) {
                     str_array_append(&entry->vars , path, pp - path);
                 }
-                restlen = pp_end - pp;
-                if (!restlen) {
-                    return e->child && e->child->endpoint ? e->child : NULL;
-                }
-                return r3_tree_matchl(e->child, pp, restlen, entry);
+
+                return e->child && e->child->endpoint ? e->child : NULL;
             }
+
             e++;
         }
     }
