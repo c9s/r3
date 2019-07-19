@@ -285,8 +285,8 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
     const char *pp;
     const char *pp_end;
 
-    info("n->compare_type: %d\n",n->compare_type);
-    info("n->pcre_pattern: %s\n",n->pcre_pattern);
+    info("n->compare_type: %d\n", n->compare_type);
+    info("n->pcre_pattern: %s\n", (char *)n->pcre_pattern);
 
     if (n->compare_type == NODE_COMPARE_OPCODE) {
         info("NODE_COMPARE_OPCODE\n");
