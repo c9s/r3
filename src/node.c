@@ -223,7 +223,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     free(n->combined_pattern);
     n->combined_pattern = cpat;
 
-    const char *pcre_error = NULL ;
+    const char *pcre_error = NULL;
     int pcre_erroffset;
     unsigned int option_bits = 0;
 

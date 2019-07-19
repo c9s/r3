@@ -24,12 +24,10 @@ START_TEST (greedy_pattern)
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri0);
 
-    // fixme: should match
-
-    // entry = match_entry_create("/foo");
-    // matched_route = r3_tree_match_route(n, entry);
-    // ck_assert(matched_route != NULL);
-    // ck_assert(matched_route->data == &uri0);
+    entry = match_entry_create("/foo");
+    matched_route = r3_tree_match_route(n, entry);
+    ck_assert(matched_route != NULL);
+    ck_assert(matched_route->data == &uri0);
 
     entry = match_entry_create("/foo/");
     matched_route = r3_tree_match_route(n, entry);
@@ -62,4 +60,3 @@ int main (int argc, char *argv[]) {
     srunner_free(runner);
     return number_failed;
 }
-

@@ -23,6 +23,5 @@ add_r3_test(check_http_scheme check_http_scheme.c)
 add_r3_test(check_remote_addr check_remote_addr.c)
 add_r3_test(check_routes2 check_routes2.c)
 
-
 add_executable(bench bench.c)
 target_link_libraries(bench r3)
