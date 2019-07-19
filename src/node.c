@@ -223,7 +223,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     free(n->combined_pattern);
     n->combined_pattern = cpat;
 
-    const char *pcre_error = NULL;
+    const char *pcre_error = NULL ;
     int pcre_erroffset;
     unsigned int option_bits = 0;
 
@@ -262,20 +262,8 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
 }
 
 
-
-
-
-/**
- * This function matches the URL path and return the left node
- *
- * r3_tree_matchl returns NULL when the path does not match. returns *node when the path matches.
- *
- * @param node         n        the root of the tree
- * @param char*        path     the URL path to dispatch
- * @param int          path_len the length of the URL path.
- * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
- */
-R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_len, match_entry * entry) {
+static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
+    unsigned int path_len, match_entry * entry, int is_end) {
     info("try matching: %s\n", path);
 
     R3Edge *e;
@@ -334,8 +322,11 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                 if (entry) {
                     str_array_append(&entry->vars , path, pp - path);
                 }
-
-                return e->child && e->child->endpoint ? e->child : NULL;
+                restlen = pp_end - pp;
+                if (!restlen) {
+                    return e->child && e->child->endpoint ? e->child : NULL;
+                }
+                return r3_tree_matchl_base(e->child, pp, restlen, entry, is_end);
             }
 
             e++;
@@ -351,7 +342,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
         int   ov[ n->ov_cnt ];
         int   rc;
 
-        info("pcre matching %s on %s\n", n->combined_pattern, path);
+        info("pcre matching %s on [%s]\n", n->combined_pattern, path);
 
         rc = pcre_exec(
                 n->pcre_pattern, /* the compiled pattern */
@@ -393,7 +384,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                 substring_length = *(inv+1) - *inv;
 
                 // if it's not matched for this edge, just skip them quickly
-                if ( !substring_length ) {
+                if (!is_end && !substring_length) {
                     inv += 2;
                     continue;
                 }
@@ -419,7 +410,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
             substring_length = *(inv+1) - *inv;
 
             // if it's not matched for this edge, just skip them quickly
-            if ( !substring_length ) {
+            if (!is_end && !substring_length) {
                 inv += 2;
                 continue;
             }
@@ -433,7 +424,7 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
             }
 
             // get the length of orginal string: $0
-            return r3_tree_matchl( e->child, path + (ov[1] - ov[0]), restlen, entry);
+            return r3_tree_matchl_base( e->child, path + (ov[1] - ov[0]), restlen, entry, is_end);
         }
         // does not match
         return NULL;
@@ -444,11 +435,31 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
     if ((e = r3_node_find_edge_str(n, path, path_len))) {
         restlen = path_len - e->pattern.len;
         if (!restlen) {
-            return e->child && e->child->endpoint ? e->child : NULL;
+            if (is_end) {
+                return e->child && e->child->endpoint ? e->child : NULL;
+            }
+
+            is_end = 1;
         }
-        return r3_tree_matchl(e->child, path + e->pattern.len, restlen, entry);
+        return r3_tree_matchl_base(e->child, path + e->pattern.len, restlen, entry, is_end);
     }
     return NULL;
+}
+
+
+/**
+ * This function matches the URL path and return the left node
+ *
+ * r3_tree_matchl returns NULL when the path does not match. returns *node when the path matches.
+ *
+ * @param node         n        the root of the tree
+ * @param char*        path     the URL path to dispatch
+ * @param int          path_len the length of the URL path.
+ * @param match_entry* entry match_entry is used for saving the captured dynamic strings from pcre result.
+ */
+R3Node * r3_tree_matchl(const R3Node * n, const char * path,
+    unsigned int path_len, match_entry * entry) {
+    return r3_tree_matchl_base(n, path, path_len, entry, 0);
 }
 
 
