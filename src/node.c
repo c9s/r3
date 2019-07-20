@@ -312,13 +312,13 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
                 case OP_EXPECT_NODASH:
                     while (*pp != '-' && pp < pp_end) pp++;
                     break;
-                case OP_EXPECT_NOLINEBREAKS:
+                case OP_GREEDY_ANY:
                     while (*pp != '\n' && pp < pp_end) pp++;
                     break;
             }
 
             // check match
-            if (e->opcode != OP_EXPECT_NOLINEBREAKS) {
+            if (e->opcode != OP_GREEDY_ANY) {
                 if ((pp - path) > 0) {
                     if (entry) {
                         str_array_append(&entry->vars , path, pp - path);
