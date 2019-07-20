@@ -439,7 +439,12 @@ static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
                 return e->child && e->child->endpoint ? e->child : NULL;
             }
 
-            is_end = 1;
+            R3Node *n = r3_tree_matchl_base(e->child, path + e->pattern.len, restlen, entry, 1);
+            if (n == NULL) {
+                return e->child && e->child->endpoint ? e->child : NULL;
+            }
+
+            return n;
         }
         return r3_tree_matchl_base(e->child, path + e->pattern.len, restlen, entry, is_end);
     }
