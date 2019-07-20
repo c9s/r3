@@ -6,7 +6,7 @@
 #include "r3.h"
 #include "r3_slug.h"
 
-START_TEST (test_routes2s)
+START_TEST (greedy_pattern)
 {
     R3Node * n      = r3_tree_create(10);
     match_entry * entry;
@@ -48,7 +48,7 @@ END_TEST
 Suite* r3_suite (void) {
     Suite *suite = suite_create("r3 routes2 tests");
     TCase *tcase = tcase_create("testcase");
-    tcase_add_test(tcase, test_routes2s);
+    tcase_add_test(tcase, greedy_pattern);
     suite_add_tcase(suite, tcase);
     return suite;
 }
