@@ -20,6 +20,8 @@ add_r3_test(check_routes check_routes.c)
 add_r3_test(check_str_array check_str_array.c)
 add_r3_test(check_host check_host.c)
 add_r3_test(check_http_scheme check_http_scheme.c)
+add_r3_test(check_remote_addr check_remote_addr.c)
+
 
 add_executable(bench bench.c)
 target_link_libraries(bench r3)
