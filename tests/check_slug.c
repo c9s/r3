@@ -52,7 +52,7 @@ END_TEST
 
 START_TEST (test_r3_slug_find_pattern)
 {
-    int len;
+    unsigned int len;
     char *test_str = "{name:\\s+}";
     const char * namerex = r3_slug_find_pattern(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "\\s+", len) == 0 );
@@ -61,7 +61,7 @@ END_TEST
 
 START_TEST (test_r3_slug_find_name)
 {
-    int len;
+    unsigned int len;
     char *test_str = "{name:\\s+}";
     const char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
@@ -70,7 +70,7 @@ END_TEST
 
 START_TEST (test_r3_slug_find_name_without_pattern)
 {
-    int len;
+    unsigned int len;
     char *test_str = "{name}";
     const char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
@@ -79,7 +79,7 @@ END_TEST
 
 START_TEST (test_r3_slug_find_name_with_multiple_slug)
 {
-    int len;
+    unsigned int len;
     char *test_str = "{name}/{name2}";
     const char * namerex = r3_slug_find_name(test_str, strlen(test_str), &len);
     ck_assert( strncmp(namerex, "name", len) == 0 );
@@ -88,7 +88,7 @@ END_TEST
 
 START_TEST (test_r3_slug_find_placeholder)
 {
-    int slug_len = 0;
+    unsigned int slug_len = 0;
     const char * slug;
     char *test_str = "/user/{name:\\s+}/to/{id}";
     slug = r3_slug_find_placeholder(test_str, strlen(test_str), &slug_len);
@@ -118,7 +118,7 @@ START_TEST (test_incomplete_slug)
     char * pattern = "/user/{name:\\d{3}}/to/{id";
     cnt = r3_slug_count(pattern, strlen(pattern), &errstr);
     ck_assert_int_eq(cnt, -1);
-    ck_assert(errstr);
+    ck_assert(errstr != NULL);
     printf("%s\n",errstr);
     free(errstr);
 }
@@ -190,7 +190,7 @@ END_TEST
 
 START_TEST (test_r3_slug_find_placeholder_with_broken_slug)
 {
-    int slug_len = 0;
+    unsigned int slug_len = 0;
     char *sl_test = "/user/{name:\\s+/to/{id";
     const char * slug = r3_slug_find_placeholder(sl_test, strlen(sl_test), &slug_len);
     ck_assert(slug == 0);
@@ -214,7 +214,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_r3_slug_find_name);
         tcase_add_test(tcase, test_r3_slug_find_name_without_pattern);
         tcase_add_test(tcase, test_r3_slug_find_name_with_multiple_slug);
-        
+
         // tcase_add_test(tcase, test_slug_parse_with_pattern);
         // tcase_add_test(tcase, test_slug_parse_without_pattern);
 
