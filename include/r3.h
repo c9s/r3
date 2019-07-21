@@ -88,7 +88,7 @@ struct _R3Route {
     unsigned int remote_addr_v4;
     int          remote_addr_v4_bits;
 
-    int          http_scheme;   // can be (SCHEME_HTTP or SCHEME_HTTP)
+    int          http_scheme;   // can be (SCHEME_HTTP or SCHEME_HTTPS)
 
 } __attribute__((aligned(64)));
 
