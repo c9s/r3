@@ -224,7 +224,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     n->combined_pattern = cpat;
 
     const char *pcre_error = NULL;
-    int pcre_erroffset;
+    int pcre_erroffset = 0;
     unsigned int option_bits = 0;
 
     n->ov_cnt = (1 + n->edges.size) * 3;
@@ -932,15 +932,44 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
         }
     }
 
-    if (r1->remote_addr_v4 > 0 && r1->remote_addr_v4_bits > 0) {
+    if (r1->remote_addr_v4_bits > 0) {
         if (!r2->remote_addr.base) {
             return -1;
         }
 
-        unsigned int r2_addr2 = inet_network(r2->remote_addr.base);
-        int bits = 32 - r1->remote_addr_v4_bits;
-        if (r1->remote_addr_v4 >> bits != r2_addr2 >> bits) {
+        uint32_t addr;
+        if(inet_pton(AF_INET, r2->remote_addr.base, (void *)&addr) != 1) {
             return -1;
+        }
+
+        unsigned int r2_addr = ntohl(addr);
+        int bits = 32 - r1->remote_addr_v4_bits;
+        if (r1->remote_addr_v4 >> bits != r2_addr >> bits) {
+            return -1;
+        }
+    }
+
+    info("r1 v6_bits[0]: %d\n", r1->remote_addr_v6_bits[0]);
+    if (r1->remote_addr_v6_bits[0] > 0) {
+        if (!r2->remote_addr.base) {
+            return -1;
+        }
+
+        struct in6_addr    addr6;
+        if(inet_pton(AF_INET6, r2->remote_addr.base, (void *)&addr6) != 1) {
+            return -1;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int bits = 32 - r1->remote_addr_v6_bits[i];
+            if (bits == 32) {
+                continue;
+            }
+
+            unsigned int r2_addr = ntohl(addr6.__in6_u.__u6_addr32[i]);
+            if (r1->remote_addr_v6[i] >> bits != r2_addr >> bits) {
+                return -1;
+            }
         }
     }
 
