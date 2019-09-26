@@ -114,10 +114,10 @@ if test "x$with_pcre" == "xno" ; then
    pcre_config="no"
 fi
 
-AS_ECHO(["pcre_config=$pcre_config"])
+#AS_ECHO(["pcre_config=$pcre_config"])
 
 if test "x$pcre_config" != "xno" ; then
-  AS_ECHO(["pcre_config=$pcre_config"])
+  #AS_ECHO(["pcre_config=$pcre_config"])
   if test "$pcre_config" = "check"; then
     AC_PATH_PROG(PCRE_CONFIG_PATH, pcre-config, false)
     dnl If --with-pcre was specified but pcre-config not found, fail hard now.
@@ -154,11 +154,7 @@ if test "x$pcre_config" != "xno" ; then
 fi
 
 
-AS_ECHO(["DEPS_LIBS = $DEPS_LIBS"])
-
-#PKG_CHECK_MODULES(DEPS, [libpcre])
-#AC_SUBST(DEPS_CFLAGS)
-#AC_SUBST(DEPS_LIBS)
+#AS_ECHO(["DEPS_LIBS = $DEPS_LIBS"])
 
 
 AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[enable debug]))
