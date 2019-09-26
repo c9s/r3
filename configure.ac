@@ -95,23 +95,30 @@ AC_ARG_WITH(pcre, [
   --with-pcre=PATH     Enable pcre support.  PATH is location of pcre-config.
                        Default is to enable and look for pcre-config in your
                        $PATH
+  --without-pcre       Don't enable pcre support
 ],[
-  pcre_config="$withval"
+  
 ],[
   pcre_config="check"
 ])
 
-AC_ARG_WITH(pcre, [
-  --without-pcre       Don't enable pcre support.
-],[
-  pcre_config="no"
-])
+AS_ECHO(["with_pcre=$with_pcre, withval=$withval"])
+
+# --with-pcre
+if test "x$with_pcre" != "xno" -a "x$withval" != "xyes" ; then
+    pcre_config=$withval
+fi
+
+# --without-pcre
+if test "x$with_pcre" == "xno" ; then
+   pcre_config="no"
+fi
 
 AS_ECHO(["pcre_config=$pcre_config"])
 
 if test "x$pcre_config" != "xno" ; then
   AS_ECHO(["pcre_config=$pcre_config"])
-  if test "$pcre_config" = "yes" -o "$pcre_config" = "check"; then
+  if test "$pcre_config" = "check"; then
     AC_PATH_PROG(PCRE_CONFIG_PATH, pcre-config, false)
     dnl If --with-pcre was specified but pcre-config not found, fail hard now.
     if test "$pcre_config" = "yes" -a "$PCRE_CONFIG_PATH" = "false"; then
