@@ -72,8 +72,26 @@ AM_CONDITIONAL(USE_JEMALLOC, test "x$have_jemalloc" = "xyes")
 # AM_CONDITIONAL(USE_JEMALLOC, test "x$found_jemalloc" = "xyes")
 # AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
 
+AC_ARG_WITH(cc-opt, [
+  --with-cc-opt= cc    set additional C compiler options    
+],[
+  R3_CC_OPT="$withval"
+],[
+  R3_CC_OPT=""
+])
+
+AC_ARG_WITH(ld-opt, [
+  --with-ld-opt= cc    set additional C link options
+],[
+  R3_LD_OPT="$withval"
+],[
+  R3_LD_OPT=""
+])
+
+AC_SUBST(R3_CC_OPT)
+AC_SUBST(R3_LD_OPT)
+
 AC_ARG_WITH(pcre, [
-  --without-pcre       Don't enable pcre support.
   --with-pcre=PATH     Enable pcre support.  PATH is location of pcre-config.
                        Default is to enable and look for pcre-config in your
                        $PATH
@@ -82,6 +100,14 @@ AC_ARG_WITH(pcre, [
 ],[
   pcre_config="check"
 ])
+
+AC_ARG_WITH(pcre, [
+  --without-pcre       Don't enable pcre support.
+],[
+  pcre_config="no"
+])
+
+AS_ECHO(["pcre_config=$pcre_config"])
 
 if test "x$pcre_config" != "xno" ; then
   AS_ECHO(["pcre_config=$pcre_config"])

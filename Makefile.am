@@ -9,9 +9,8 @@ libr3_la_SOURCES =
 libr3_la_LIBADD = src/libr3core.la
 libr3_la_LDFLAGS =
 
-AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall -std=c99
-AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS)
-
+AM_CFLAGS= $(DEPS_CFLAGS) $(R3_CC_OPT) $(GVC_DEPS_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall -std=c99
+AM_LDFLAGS=$(DEPS_LIBS) $(R3_LD_OPT) $(GVC_DEPS_LIBS)
 
 ACLOCAL_AMFLAGS=-I m4
 
