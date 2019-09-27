@@ -72,10 +72,89 @@ AM_CONDITIONAL(USE_JEMALLOC, test "x$have_jemalloc" = "xyes")
 # AM_CONDITIONAL(USE_JEMALLOC, test "x$found_jemalloc" = "xyes")
 # AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
 
+AC_ARG_WITH(cc-opt, [
+  --with-cc-opt= cc    set additional C compiler options    
+],[
+  R3_CC_OPT="$withval"
+],[
+  R3_CC_OPT=""
+])
 
-PKG_CHECK_MODULES(DEPS, [libpcre])
-AC_SUBST(DEPS_CFLAGS)
-AC_SUBST(DEPS_LIBS)
+AC_ARG_WITH(ld-opt, [
+  --with-ld-opt= cc    set additional C link options
+],[
+  R3_LD_OPT="$withval"
+],[
+  R3_LD_OPT=""
+])
+
+AC_SUBST(R3_CC_OPT)
+AC_SUBST(R3_LD_OPT)
+
+AC_ARG_WITH(pcre, [
+  --with-pcre=PATH     Enable pcre support.  PATH is location of pcre-config.
+                       Default is to enable and look for pcre-config in your
+                       $PATH
+  --without-pcre       Don't enable pcre support
+],[
+  
+],[
+  pcre_config="check"
+])
+
+AS_ECHO(["with_pcre=$with_pcre, withval=$withval"])
+
+# --with-pcre
+if test "x$with_pcre" != "x" -a "x$withval" != "xyes" ; then
+    pcre_config=$withval
+fi
+
+# --without-pcre
+if test "x$with_pcre" == "xno" ; then
+   pcre_config="no"
+fi
+
+AS_ECHO(["pcre_config=$pcre_config"])
+
+if test "x$pcre_config" != "xno" ; then
+  AS_ECHO(["pcre_config=$pcre_config"])
+  if test "$pcre_config" = "check"; then
+    AC_PATH_PROG(PCRE_CONFIG_PATH, pcre-config, false)
+    dnl If --with-pcre was specified but pcre-config not found, fail hard now.
+    if test "$pcre_config" = "yes" -a "$PCRE_CONFIG_PATH" = "false"; then
+      AC_MSG_FAILURE([--with-pcre was given, but pcre-config not found in PATH])
+    fi
+  else
+    PCRE_CONFIG_PATH="$pcre_config"
+  fi
+
+  AC_MSG_CHECKING(for PCRE using $PCRE_CONFIG_PATH)
+  pcre_version=`"$PCRE_CONFIG_PATH" --version 2>/dev/null`
+  if test $? -ne 0; then
+    AC_MSG_RESULT(failed)
+  else
+    AC_MSG_RESULT($pcre_version)
+  fi
+
+  if test -n "$pcre_version"; then
+    DEPS_LIBS=`$PCRE_CONFIG_PATH --libs`
+    DEPS_CFLAGS=`$PCRE_CONFIG_PATH --cflags`
+    AC_SUBST(DEPS_LIBS)
+    AC_SUBST(DEPS_CFLAGS)
+    AC_CHECK_HEADERS(pcre.h, [], [
+      if test "$pcre_config" != "check"; then
+         AC_MSG_FAILURE([--with-pcre was given, but pcre not found:
+             pcre-config --libs=$PCRE_LIBS
+             pcre-config --cflags=$PCRE_CFLAGS])
+      fi
+    ])
+  elif test "$pcre_config" != "check"; then
+    AC_MSG_FAILURE([$PCRE_CONFIG_PATH failed to run, could not check for PCRE])
+  fi
+fi
+
+
+#AS_ECHO(["DEPS_LIBS = $DEPS_LIBS"])
 
 
 AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[enable debug]))

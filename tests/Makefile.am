@@ -1,7 +1,7 @@
 TESTS =
 
-AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) @CHECK_CFLAGS@ -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/src -Wall -std=c99 -ggdb `pkg-config --cflags --libs check`
-AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS) @CHECK_LIBS@ $(top_builddir)/libr3.la
+AM_CFLAGS=$(DEPS_CFLAGS) $(R3_CC_OPT) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) @CHECK_CFLAGS@ -I$(top_builddir) -I$(top_builddir)/include -I$(top_builddir)/src -Wall -std=c99 -ggdb `pkg-config --cflags --libs check`
+AM_LDFLAGS=$(DEPS_LIBS) $(R3_LD_OPT) $(GVC_DEPS_LIBS) $(JSONC_LIBS) @CHECK_LIBS@ $(top_builddir)/libr3.la
 
 if USE_JEMALLOC
 AM_CFLAGS += -ljemalloc

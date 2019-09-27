@@ -1,5 +1,5 @@
-AM_CFLAGS=$(DEPS_CFLAGS) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall -std=c99
-AM_LDFLAGS=$(DEPS_LIBS) $(GVC_DEPS_LIBS) $(JSONC_LIBS)
+AM_CFLAGS=$(DEPS_CFLAGS) $(R3_CC_OPT) $(GVC_DEPS_CFLAGS) $(JSONC_CFLAGS) -I$(top_builddir) -I$(top_builddir)/include -Wall -std=c99
+AM_LDFLAGS=$(DEPS_LIBS) $(R3_LD_OPT) $(GVC_DEPS_LIBS) $(JSONC_LIBS)
 MAYBE_COVERAGE=--coverage
 
 noinst_LTLIBRARIES = libr3core.la

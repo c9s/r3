@@ -383,6 +383,9 @@ And we support debian-based distro now!
 
     ./configure --with-malloc=jemalloc
 
+#### With pcre
+    ./configure --with-pcre=pcre-config path  # such as /usr/local/bin/pcre-config 
+
 ubuntu PPA
 ----------------------
 
