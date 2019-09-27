@@ -105,7 +105,7 @@ AC_ARG_WITH(pcre, [
 AS_ECHO(["with_pcre=$with_pcre, withval=$withval"])
 
 # --with-pcre
-if test "x$with_pcre" != "xno" -a "x$withval" != "xyes" ; then
+if test "x$with_pcre" != "x" -a "x$withval" != "xyes" ; then
     pcre_config=$withval
 fi
 
@@ -114,10 +114,10 @@ if test "x$with_pcre" == "xno" ; then
    pcre_config="no"
 fi
 
-#AS_ECHO(["pcre_config=$pcre_config"])
+AS_ECHO(["pcre_config=$pcre_config"])
 
 if test "x$pcre_config" != "xno" ; then
-  #AS_ECHO(["pcre_config=$pcre_config"])
+  AS_ECHO(["pcre_config=$pcre_config"])
   if test "$pcre_config" = "check"; then
     AC_PATH_PROG(PCRE_CONFIG_PATH, pcre-config, false)
     dnl If --with-pcre was specified but pcre-config not found, fail hard now.
