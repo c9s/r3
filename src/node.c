@@ -690,6 +690,7 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
             r3_node_append_route(tree, path, path_len, method, data);
             info("tree router path is: %s, with len: %d\n", path, path_len);
         }
+        tree->data = data;
         return tree;
     }
 
