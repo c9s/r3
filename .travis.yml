@@ -45,6 +45,47 @@ matrix:
     - DEBUG=yes
     - CC=gcc
     - CXX=g++
+#power Jobs Added
+  - compiler: gcc
+    arch: pc64le
+    env:
+    - TYPE=autotools
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov --with-malloc=jemalloc'
+    - COVERALLS=yes
+    - VALGRIND=no
+    - DEBUG=yes
+    - CC=gcc
+    - CXX=g++
+  - compiler: gcc
+    arch: ppc64le
+    env:
+    - TYPE=autotools
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov'
+    - COVERALLS=yes
+    - VALGRIND=yes
+    - DEBUG=yes
+    - CC=gcc
+    - CXX=g++
+  - compiler: clang
+    arch: ppc64le
+    env:
+    - TYPE=autotools
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov'
+    - COVERALLS=yes
+    - VALGRIND=yes
+    - DEBUG=yes
+    - CC=clang
+    - CXX=clang++
+  - compiler: gcc
+    arch: ppc64le
+    env:
+    - TYPE=cmake
+    - CONFIGURE_OPTION='--enable-debug --enable-gcov'
+    - COVERALLS=yes
+    - VALGRIND=yes
+    - DEBUG=yes
+    - CC=gcc
+    - CXX=g++
 
 before_install:
   - docker run -d
