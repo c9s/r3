@@ -613,17 +613,18 @@ R3Route * r3_tree_insert_routel_ex(R3Node *tree, int method, const char *path, i
  */
 R3Edge * r3_node_find_common_prefix(R3Node *n, const char *path, int path_len, int *prefix_len, char **errstr) {
     unsigned int i = 0;
-    int prefix = 0;
+    int edge_prefix, prefix = 0;
     *prefix_len = 0;
     R3Edge *e = NULL;
-    for(i = 0 ; i < n->edges.size ; i++ ) {
+    // Check all edges to find the most common prefix
+    for(i = 0; i < n->edges.size; i++) {
         // ignore all edges with slug
-        prefix = strndiff( (char*) path, n->edges.entries[i].pattern.base, n->edges.entries[i].pattern.len);
+        edge_prefix = strndiff( (char*) path, n->edges.entries[i].pattern.base, n->edges.entries[i].pattern.len);
 
         // no common, consider insert a new edge
-        if ( prefix > 0 ) {
+        if (edge_prefix > prefix) {
+            prefix = edge_prefix;
             e = n->edges.entries + i;
-            break;
         }
     }
 
