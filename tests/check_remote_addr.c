@@ -42,6 +42,7 @@ START_TEST (test_remote_addrs)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri0);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->remote_addr.base = "127.0.0.1";
@@ -49,13 +50,14 @@ START_TEST (test_remote_addrs)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri1);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->remote_addr.base = "127.0.0.2";
     entry->remote_addr.len = sizeof("127.0.0.2") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
-
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     entry->remote_addr.base = "127.0.0.1";
@@ -63,6 +65,7 @@ START_TEST (test_remote_addrs)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri2);
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     entry->remote_addr.base = "127.0.0.2";
@@ -70,18 +73,21 @@ START_TEST (test_remote_addrs)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri2);
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     entry->remote_addr.base = "127.0.1.2";
     entry->remote_addr.len = sizeof("127.0.1.2") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     entry->remote_addr.base = "127.0.1.333";   // invalid ip address
     entry->remote_addr.len = sizeof("127.0.1.333") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     r3_tree_free(n);
 }
@@ -139,18 +145,21 @@ START_TEST (test_remote_addrs_ipv6)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri0);
+    match_entry_free(entry);
 
     entry = match_entry_create("/foo");
     entry->remote_addr.base = "fe80:fe80::2";
     entry->remote_addr.len = sizeof("fe80:fe80::2") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/foo");
     entry->remote_addr.base = "fe88:fe80::1";
     entry->remote_addr.len = sizeof("fe88:fe80::1") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->remote_addr.base = "fe80:fe80::1";
@@ -158,12 +167,14 @@ START_TEST (test_remote_addrs_ipv6)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri1);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->remote_addr.base = "fe88:fe80::1";
     entry->remote_addr.len = sizeof("fe88:fe80::1") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/goo");
     entry->remote_addr.base = "::1";
@@ -171,12 +182,14 @@ START_TEST (test_remote_addrs_ipv6)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri2);
+    match_entry_free(entry);
 
     entry = match_entry_create("/goo");
     entry->remote_addr.base = "::2";
     entry->remote_addr.len = sizeof("::2") - 1;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     r3_tree_free(n);
 }

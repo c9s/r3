@@ -34,43 +34,51 @@ START_TEST (test_http_scheme)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri0);
+    match_entry_free(entry);
 
     entry = match_entry_create("/foo");
     entry->http_scheme = SCHEME_HTTP;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri0);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->http_scheme = SCHEME_HTTP;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->http_scheme = SCHEME_HTTPS;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri1);
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     entry->http_scheme = SCHEME_HTTP;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri2);
+    match_entry_free(entry);
 
     entry = match_entry_create("/boo");
     entry->http_scheme = SCHEME_HTTPS;
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri2);
+    match_entry_free(entry);
 
     r3_tree_free(n);
 }
