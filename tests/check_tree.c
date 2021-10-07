@@ -227,7 +227,59 @@ START_TEST (test_find_common_prefix_same_pattern2)
 }
 END_TEST
 
+START_TEST (test_find_common_prefix_multi_edge)
+{
+    R3Node * n = r3_tree_create(10);
 
+    char *test_str1 = "{id}/foo";
+    R3Edge * e1 = r3_node_append_edge(n);
+    r3_edge_initl(e1, test_str1, strlen(test_str1), NULL);
+
+    char *test_str2 = "{id2}/bar";
+    R3Edge * e2 = r3_node_append_edge(n);
+    r3_edge_initl(e2, test_str2, strlen(test_str2), NULL);
+
+    R3Edge *ret_edge = NULL;
+    int prefix_len = 0;
+    char *errstr = NULL;
+
+    char *test_pref1 = "{id}";
+    ret_edge = r3_node_find_common_prefix(n, test_pref1, strlen(test_pref1), &prefix_len, &errstr);
+    ck_assert(ret_edge != NULL);
+    ck_assert_int_eq(prefix_len, 4);
+    ck_assert(ret_edge == e1);
+    SAFE_FREE(errstr);
+
+    prefix_len = 0;
+    errstr = NULL;
+    char *test_pref2 = "{id}/foo";
+    ret_edge = r3_node_find_common_prefix(n, test_pref2, strlen(test_pref2), &prefix_len, &errstr);
+    ck_assert(ret_edge != NULL);
+    ck_assert_int_eq(prefix_len, 8);
+    ck_assert(ret_edge == e1);
+    SAFE_FREE(errstr);
+
+    prefix_len = 0;
+    errstr = NULL;
+    char *test_pref3 = "{id2}";
+    ret_edge = r3_node_find_common_prefix(n, test_pref3, strlen(test_pref3), &prefix_len, &errstr);
+    ck_assert(ret_edge != NULL);
+    ck_assert_int_eq(prefix_len, 5);
+    ck_assert(ret_edge == e2);
+    SAFE_FREE(errstr);
+
+    prefix_len = 0;
+    errstr = NULL;
+    char *test_pref4 = "{id2}/bar";
+    ret_edge = r3_node_find_common_prefix(n, test_pref4, strlen(test_pref4), &prefix_len, &errstr);
+    ck_assert(ret_edge != NULL);
+    ck_assert_int_eq(prefix_len, 9);
+    ck_assert(ret_edge == e2);
+    SAFE_FREE(errstr);
+
+    r3_tree_free(n);
+}
+END_TEST
 
 
 
@@ -804,6 +856,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_common_prefix_middle);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern2);
+        tcase_add_test(tcase, test_find_common_prefix_multi_edge);
         suite_add_tcase(suite, tcase);
 
         tcase = tcase_create("insert_testcase");
