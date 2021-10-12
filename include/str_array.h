@@ -8,8 +8,16 @@
 #ifndef STR_ARRAY_H
 #define STR_ARRAY_H
 
-#include "r3.h"
 #include "memory.h"
+
+#ifdef HAVE_STDBOOL_H
+#  include <stdbool.h>
+#elif !defined(bool) && !defined(__cplusplus)
+typedef unsigned char bool;
+#  define bool bool /* For redefinition guards */
+#  define false 0
+#  define true 1
+#endif
 
 typedef struct _str_array {
   R3_VECTOR(r3_iovec_t) slugs;
