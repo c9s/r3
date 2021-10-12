@@ -8,8 +8,10 @@ find_package(Check)
 find_package(PCRE REQUIRED)
 
 include(CheckSymbolExists)
+include(CheckIncludeFile)
 check_symbol_exists(strdup string.h HAVE_STRDUP)
 check_symbol_exists(strndup string.h HAVE_STRNDUP)
+check_include_file(stdbool.h HAVE_STDBOOL_H)
 configure_file(config.h.cmake config.h)
 
 add_subdirectory(src)
