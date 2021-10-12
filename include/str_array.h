@@ -32,8 +32,8 @@ void str_array_dump_slugs(const str_array *l);
 
 void str_array_dump(const str_array *l);
 
-#define str_array_fetch(t,i)  t->tokens[i]
-#define str_array_len(t)  t->len
-#define str_array_cap(t)  t->cap
+#define str_array_fetch(t,i)  t->tokens.entries[i]
+#define str_array_len(t)  t->tokens.size
+#define str_array_cap(t)  t->tokens.capacity
 
 #endif /* !STR_ARRAY_H */
