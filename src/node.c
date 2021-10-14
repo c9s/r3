@@ -551,18 +551,16 @@ static r3_iovec_t* router_append_slug(R3Route * route, const char * slug, unsign
 
 static void get_slugs(R3Route * route, const char * path, int path_len) {
     const char *plh = path;
-    unsigned int l, namel;
-    l = 0;
     const char *name;
+    unsigned int plhl, namel;
     while (plh < (path + path_len)) {
-        plh = r3_slug_find_placeholder(plh+l, path_len, &l);
+        plh = r3_slug_find_placeholder(plh, path_len-(plh-path), &plhl);
         if (!plh) break;
-        namel = 0;
-        name = r3_slug_find_name(plh, l, &namel);
+        name = r3_slug_find_name(plh, plhl, &namel);
         if (name) {
             router_append_slug(route, name, namel);
         }
-        if ((plh + l) >= (path + path_len)) break;
+        plh += plhl;
     }
 }
 
