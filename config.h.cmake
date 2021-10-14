@@ -1,2 +1,3 @@
 #cmakedefine HAVE_STRDUP @HAVE_STRDUP@
 #cmakedefine HAVE_STRNDUP @HAVE_STRNDUP@
+#cmakedefine HAVE_STDBOOL_H @HAVE_STDBOOL_H@
