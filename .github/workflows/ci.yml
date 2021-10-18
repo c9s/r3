@@ -1,0 +1,66 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  autotools:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Prepare
+      run: |
+        sudo apt update -qq
+        sudo apt install -qq check
+        pip install cpp-coveralls
+    - uses: actions/checkout@v2
+    - name: Build
+      run: |
+        ./autogen.sh
+        ./configure --enable-check --enable-debug --enable-gcov
+        make V=1
+    - name: Install
+      run: sudo make install
+    - name: Run tests
+      run: make check
+    - name: Upload coverage
+      if: github.repository == 'c9s/r3'
+      run: coveralls --exclude php
+
+  cmake:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Prepare
+      run: |
+        sudo apt update -qq
+        sudo apt install -qq check ninja-build
+    - uses: actions/checkout@v2
+    - name: Build and test
+      run: |
+        mkdir build && cd build
+        cmake -GNinja ..
+        ninja -v
+        ctest --verbose
+
+  sanitizers:
+    name: ${{ matrix.sanitizer }}-sanitizer [${{ matrix.compiler }}]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        sanitizer: [thread, undefined, leak, address]
+    steps:
+    - name: Prepare
+      run: |
+        sudo apt update -qq
+        sudo apt install -qq check
+    - uses: actions/checkout@v2
+    - name: Build
+      env:
+        CC: ${{ matrix.compiler }}
+      run: |
+        mkdir build && cd build
+        CFLAGS="-fsanitize=${{ matrix.sanitizer }} -fno-sanitize-recover=all -fno-omit-frame-pointer" cmake ..
+        VERBOSE=1 make all
+    - name: Test
+      run: |
+        cd build
+        ctest --verbose
