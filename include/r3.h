@@ -51,9 +51,7 @@ struct _node  {
 
     // the pointer of R3Route data
     void * data;
-
-    // almost less than 255
-} __attribute__((aligned(64)));
+};
 
 #define r3_node_edge_pattern(node,i) node->edges.entries[i].pattern.base
 #define r3_node_edge_pattern_len(node,i) node->edges.entries[i].pattern.len
@@ -61,10 +59,9 @@ struct _node  {
 struct _edge {
     r3_iovec_t pattern; // 8 bytes
     R3Node * child; // 8 bytes
-    // unsigned int pattern_len; // 4byte
     unsigned int opcode; // 4byte
     unsigned int has_slug; // 4byte
-} __attribute__((aligned(64)));
+};
 
 struct _R3Route {
     r3_iovec_t path;
@@ -84,7 +81,7 @@ struct _R3Route {
 
     int          http_scheme;   // can be (SCHEME_HTTP or SCHEME_HTTPS)
 
-} __attribute__((aligned(64)));
+};
 
 typedef struct _R3Entry match_entry;
 struct _R3Entry {
@@ -98,7 +95,7 @@ struct _R3Entry {
     r3_iovec_t remote_addr;
 
     int          http_scheme;
-} __attribute__((aligned(64)));
+};
 
 
 R3Node * r3_tree_create(int cap);
