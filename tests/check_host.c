@@ -29,14 +29,13 @@ START_TEST (test_hosts)
     r3_tree_compile(n, &err);
     ck_assert(err == NULL);
 
-
     entry = match_entry_create("/foo");
     entry->host.base = host0;
     entry->host.len = strlen(host0);
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri0);
-
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->host.base = "www.bar.com";
@@ -44,19 +43,21 @@ START_TEST (test_hosts)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri1);
-
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->host.base = "bar.com";
     entry->host.len = strlen("bar.com");
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->host.base = ".bar.com";
     entry->host.len = strlen(".bar.com");
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route == NULL);
+    match_entry_free(entry);
 
     entry = match_entry_create("/bar");
     entry->host.base = "a.bar.com";
@@ -64,6 +65,7 @@ START_TEST (test_hosts)
     matched_route = r3_tree_match_route(n, entry);
     ck_assert(matched_route != NULL);
     ck_assert(matched_route->data == &uri1);
+    match_entry_free(entry);
 
     r3_tree_free(n);
 }
@@ -88,4 +90,3 @@ int main (int argc, char *argv[]) {
     srunner_free(runner);
     return number_failed;
 }
-
