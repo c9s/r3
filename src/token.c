@@ -20,7 +20,7 @@ void str_array_free(str_array *l) {
 }
 
 bool str_array_append(str_array * l, const char * token, unsigned int len) {
-    r3_vector_reserve(NULL, &l->tokens, l->tokens.size + 1);
+    r3_vector_reserve(&l->tokens, l->tokens.size + 1);
     r3_iovec_t *temp = l->tokens.entries + l->tokens.size++;
     memset(temp, 0, sizeof(*temp));
     temp->base = token;

@@ -253,10 +253,10 @@ void r3_buffer__dispose_linked(void *p);
  * @param element_size size of the elements stored in the vector
  * @param new_capacity the capacity of the buffer after the function returns
  */
-#define r3_vector_reserve(pool, vector, new_capacity)                                                                             \
-    r3_vector__reserve((pool), (r3_vector_t *)(void *)(vector), sizeof((vector)->entries[0]), (new_capacity))
-static void r3_vector__reserve(r3_mem_pool_t *pool, r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity);
-void r3_vector__expand(r3_mem_pool_t *pool, r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity);
+#define r3_vector_reserve(vector, new_capacity)                                                                             \
+    r3_vector__reserve((r3_vector_t *)(void *)(vector), sizeof((vector)->entries[0]), (new_capacity))
+static void r3_vector__reserve(r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity);
+void r3_vector__expand(r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity);
 
 /**
  * tests if target chunk (target_len bytes long) is equal to test chunk (test_len bytes long)
@@ -358,10 +358,10 @@ inline void r3_buffer_link_to_pool(r3_buffer_t *buffer, r3_mem_pool_t *pool)
     *slot = buffer;
 }
 
-inline void r3_vector__reserve(r3_mem_pool_t *pool, r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity)
+inline void r3_vector__reserve(r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity)
 {
     if (vector->capacity < new_capacity) {
-        r3_vector__expand(pool, vector, element_size, new_capacity);
+        r3_vector__expand(vector, element_size, new_capacity);
     }
 }
 

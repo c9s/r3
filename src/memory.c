@@ -316,20 +316,15 @@ void r3_buffer__dispose_linked(void *p)
     r3_buffer_dispose(buf);
 }
 
-void r3_vector__expand(r3_mem_pool_t *pool, r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity)
+void r3_vector__expand(r3_vector_t *vector, unsigned int element_size, unsigned int new_capacity)
 {
     void *new_entries;
     assert(vector->capacity < new_capacity);
-    if (!vector->capacity) 
+    if (!vector->capacity)
         vector->capacity = 4;
     while (vector->capacity < new_capacity)
         vector->capacity *= 2;
-    if (pool) {
-        new_entries = r3_mem_alloc_pool(pool, element_size * vector->capacity);
-        memcpy(new_entries, vector->entries, element_size * vector->size);
-    } else {
-        new_entries = r3_mem_realloc(vector->entries, element_size * vector->capacity);
-    }
+    new_entries = r3_mem_realloc(vector->entries, element_size * vector->capacity);
     vector->entries = new_entries;
 }
 
