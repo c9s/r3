@@ -589,6 +589,9 @@ R3Route * r3_node_append_route(R3Node *tree, const char * path, int path_len, in
  */
 R3Route * r3_tree_insert_routel_ex(R3Node *tree, int method, const char *path, int path_len, void *data, char **errstr) {
     R3Node * ret = r3_tree_insert_pathl_ex(tree, path, path_len, method, 1, data, errstr);
+    if (ret == NULL) {
+        return NULL;
+    }
     R3Route *router = ret->routes.entries + (ret->routes.size - 1);
     get_slugs(router, path, path_len);
 
