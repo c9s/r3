@@ -1,0 +1,37 @@
+name: coverity
+on: [push, pull_request]
+
+jobs:
+  analyze:
+    if: github.repository == 'c9s/r3'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download Coverity
+      run: |
+        cd ..
+        wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=r3" -O coverity-linux64.tgz
+        mkdir coverity
+        tar xzf coverity-linux64.tgz --strip 1 -C coverity
+        echo "$(pwd)/coverity/bin" >> $GITHUB_PATH
+      env:
+        COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
+
+    - name: Build with Coverity
+      run: |
+        ./autogen.sh
+        ./configure --enable-check --enable-debug
+        cov-build --dir cov-int make V=1
+
+    - name: Submit the result to Coverity
+      run: |
+        tar czvf r3.tgz cov-int
+        curl \
+          --form token=${COVERITY_TOKEN} \
+          --form email=yoanlin93+github@gmail.com \
+          --form file=@r3.tgz \
+          --form version=${GITHUB_SHA} \
+          https://scan.coverity.com/builds?project=r3
+      env:
+        COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
