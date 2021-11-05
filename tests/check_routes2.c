@@ -80,11 +80,28 @@ START_TEST (common_pattern)
 }
 END_TEST
 
+START_TEST (incomplete_pattern)
+{
+    R3Node * n = r3_tree_create(10);
+    R3Route * r;
+
+    char * uri0 = "{slug";
+    r = r3_tree_insert_routel(n, 0, uri0, strlen(uri0), &uri0);
+    ck_assert(r == NULL);
+    char * uri1 = "/foo/{slug";
+    r = r3_tree_insert_routel(n, 0, uri1, strlen(uri1), &uri1);
+    ck_assert(r == NULL);
+
+    r3_tree_free(n);
+}
+END_TEST
+
 Suite* r3_suite (void) {
     Suite *suite = suite_create("r3 routes2 tests");
     TCase *tcase = tcase_create("testcase");
     tcase_add_test(tcase, greedy_pattern);
     tcase_add_test(tcase, common_pattern);
+    tcase_add_test(tcase, incomplete_pattern);
     suite_add_tcase(suite, tcase);
     return suite;
 }
