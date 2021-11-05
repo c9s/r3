@@ -43,7 +43,7 @@ START_TEST (test_access_macros)
     ck_assert( str_array_len(vars) == 0);
     ck_assert( str_array_cap(vars) == 0);
 
-    r3_vector_reserve(NULL, &vars->tokens, 4);
+    r3_vector_reserve(&vars->tokens, 4);
     ck_assert( str_array_len(vars) == 0);
     ck_assert( str_array_cap(vars) == 4);
 

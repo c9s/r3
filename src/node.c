@@ -57,9 +57,9 @@ R3Node * r3_tree_create(int cap) {
     R3Node * n = r3_mem_alloc( sizeof(R3Node) );
     memset(n, 0, sizeof(*n));
 
-    r3_vector_reserve(NULL, &n->edges, n->edges.size + cap);
+    r3_vector_reserve(&n->edges, n->edges.size + cap);
 
-    r3_vector_reserve(NULL, &n->routes, n->routes.size + 1);
+    r3_vector_reserve(&n->routes, n->routes.size + 1);
 
     n->compare_type = NODE_COMPARE_PCRE;
     return n;
@@ -111,7 +111,7 @@ R3Edge * r3_node_connectl(R3Node * n, const char * pat, int len, int dupl, R3Nod
 
 R3Edge * r3_node_append_edge(R3Node *n)
 {
-    r3_vector_reserve(NULL, &n->edges, n->edges.size + 1);
+    r3_vector_reserve(&n->edges, n->edges.size + 1);
     R3Edge *new_e = n->edges.entries + n->edges.size++;
     memset(new_e, 0, sizeof(*new_e));
     return new_e;
@@ -542,7 +542,7 @@ void r3_route_free(R3Route * route) {
 
 static r3_iovec_t* router_append_slug(R3Route * route, const char * slug, unsigned int len) {
     r3_iovec_t *temp;
-    r3_vector_reserve(NULL, &route->slugs, route->slugs.size + 1);
+    r3_vector_reserve(&route->slugs, route->slugs.size + 1);
     temp = route->slugs.entries + route->slugs.size++;
     temp->base = slug;
     temp->len = len;
@@ -565,11 +565,11 @@ static void get_slugs(R3Route * route, const char * path, int path_len) {
 }
 
 R3Route * r3_node_append_route(R3Node *tree, const char * path, int path_len, int method, void *data) {
-    r3_vector_reserve(NULL, &tree->routes, tree->routes.size + 1);
+    r3_vector_reserve(&tree->routes, tree->routes.size + 1);
     R3Route *info = tree->routes.entries + tree->routes.size++;
     memset(info, 0, sizeof(*info));
 
-    r3_vector_reserve(NULL, &info->slugs, info->slugs.size + 3);
+    r3_vector_reserve(&info->slugs, info->slugs.size + 3);
     info->path.base = (char*) path;
     info->path.len = path_len;
     info->request_method = method; // ALLOW GET OR POST METHOD
@@ -998,7 +998,7 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
  */
 // void r3_node_append_route(R3Node * n, R3Route * r)
 // {
-//     r3_vector_reserve(NULL, &n->routes, n->routes.size + 1);
+//     r3_vector_reserve(&n->routes, n->routes.size + 1);
 //     memset(n->routes.entries + 1, 0, sizeof(*n->routes.entries));
 
 //     if (n->routes == NULL) {
