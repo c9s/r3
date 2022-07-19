@@ -720,18 +720,11 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
         if ( slug_cnt > 1 ) {
             unsigned int   slug_len;
             const char *p = r3_slug_find_placeholder(path, path_len, &slug_len);
-
-#ifdef DEBUG
             assert(p);
-#endif
 
             // find the next one '{', then break there
-            if(p) {
-                p = r3_slug_find_placeholder(p + slug_len + 1, path_len - slug_len - 1, NULL);
-            }
-#ifdef DEBUG
+            p = r3_slug_find_placeholder(p + slug_len + 1, path_len - slug_len - 1, NULL);
             assert(p);
-#endif
 
             // insert the first one edge, and break at "p"
             R3Node * child = r3_tree_create(3);
@@ -745,6 +738,7 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
                 // there is one slug, let's see if it's optimiz-able by opcode
                 unsigned int   slug_len = 0;
                 const char *slug_p = r3_slug_find_placeholder(path, path_len, &slug_len);
+                assert(slug_p);
                 unsigned int   slug_pattern_len = 0;
                 const char *slug_pattern = r3_slug_find_pattern(slug_p, slug_len, &slug_pattern_len);
 
