@@ -595,8 +595,25 @@ START_TEST (test_insert_pathl_fail)
 }
 END_TEST
 
+START_TEST (test_insert_pathl_fail2)
+{
+    R3Node * n = r3_tree_create(10);
+    char *errstr = NULL;
+    R3Node * ret;
 
+    ret = r3_tree_insert_pathl_ex(n, "/foo", strlen("/foo"),  0, 0, 0, NULL);
+    ck_assert(ret);
 
+    /* Insert an incomplete pattern without requesting an error string */
+    ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"),  0, 0, 0, NULL);
+    ck_assert(ret == NULL);
+
+    r3_tree_compile(n, &errstr);
+    ck_assert(errstr == NULL);
+
+    r3_tree_free(n);
+}
+END_TEST
 
 START_TEST (test_insert_pathl)
 {
@@ -862,6 +879,7 @@ Suite* r3_suite (void) {
         tcase = tcase_create("insert_testcase");
         tcase_add_test(tcase, test_insert_pathl);
         tcase_add_test(tcase, test_insert_pathl_fail);
+        tcase_add_test(tcase, test_insert_pathl_fail2);
         tcase_add_test(tcase, test_node_construct_and_free);
         suite_add_tcase(suite, tcase);
 

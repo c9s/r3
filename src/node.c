@@ -701,8 +701,12 @@ R3Node * r3_tree_insert_pathl_ex(R3Node *tree, const char *path, unsigned int pa
     char *err = NULL;
     e = r3_node_find_common_prefix(tree, path, path_len, &prefix_len, &err);
     if (err) {
-        // copy the error message pointer
-        if (errstr) *errstr = err;
+        if (errstr) {
+            // copy the error message pointer
+            *errstr = err;
+        } else {
+            free(err);
+        }
         return NULL;
     }
 
