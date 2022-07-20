@@ -11,7 +11,7 @@ jobs:
     - name: Download Coverity
       run: |
         cd ..
-        wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=r3" -O coverity-linux64.tgz
+        wget -q https://scan.coverity.com/download/linux64 --post-data "token=${secrets.COVERITY_TOKEN}&project=r3" -O coverity-linux64.tgz
         mkdir coverity
         tar xzf coverity-linux64.tgz --strip 1 -C coverity
         echo "$(pwd)/coverity/bin" >> $GITHUB_PATH
@@ -28,7 +28,7 @@ jobs:
       run: |
         tar czvf r3.tgz cov-int
         curl \
-          --form token=${COVERITY_TOKEN} \
+          --form token=${secrets.COVERITY_TOKEN} \
           --form email=yoanlin93+github@gmail.com \
           --form file=@r3.tgz \
           --form version=${GITHUB_SHA} \
