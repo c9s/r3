@@ -33,5 +33,3 @@ jobs:
           --form file=@r3.tgz \
           --form version=${GITHUB_SHA} \
           https://scan.coverity.com/builds?project=r3
-      env:
-        COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
