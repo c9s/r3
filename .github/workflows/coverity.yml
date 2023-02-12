@@ -15,8 +15,6 @@ jobs:
         mkdir coverity
         tar xzf coverity-linux64.tgz --strip 1 -C coverity
         echo "$(pwd)/coverity/bin" >> $GITHUB_PATH
-      env:
-        COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
 
     - name: Build with Coverity
       run: |
@@ -33,5 +31,3 @@ jobs:
           --form file=@r3.tgz \
           --form version=${GITHUB_SHA} \
           https://scan.coverity.com/builds?project=r3
-      env:
-        COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
