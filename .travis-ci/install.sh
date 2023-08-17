@@ -10,7 +10,7 @@ apt-get install -qq \
     cmake \
     graphviz-dev \
     libjemalloc-dev \
-    libpcre3-dev \
+    libpcre2-dev \
     libtool \
     ninja-build \
     pkg-config

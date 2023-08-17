@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pcre.h>
 #include <assert.h>
 #include <stdbool.h>
 
