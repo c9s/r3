@@ -714,19 +714,19 @@ START_TEST(test_route_cmp)
     R3Route *r1 = r3_node_append_route(n,test_str, strlen(test_str),0,0);
     match_entry * m = match_entry_create("/blog/post");
 
-    fail_if( r3_route_cmp(r1, m) == -1, "should match");
+    ck_assert_msg(r3_route_cmp(r1, m) == 0, "should match");
 
     r1->request_method = METHOD_GET;
     m->request_method = METHOD_GET;
-    fail_if( r3_route_cmp(r1, m) == -1, "should match");
+    ck_assert_msg(r3_route_cmp(r1, m) == 0, "should match");
 
     r1->request_method = METHOD_GET;
     m->request_method = METHOD_POST;
-    fail_if( r3_route_cmp(r1, m) == 0, "should be different");
+    ck_assert_msg(r3_route_cmp(r1, m) == -1, "should be different");
 
     r1->request_method = METHOD_GET;
     m->request_method = METHOD_POST | METHOD_GET;
-    fail_if( r3_route_cmp(r1, m) == -1, "should match");
+    ck_assert_msg(r3_route_cmp(r1, m) == 0, "should match");
 
     match_entry_free(m);
     r3_tree_free(n);
