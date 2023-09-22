@@ -304,7 +304,7 @@ START_TEST (test_node_construct_and_free)
 }
 END_TEST
 
-static R3Node * create_simple_str_tree() {
+static R3Node * create_simple_str_tree(void) {
     R3Node * n;
     n = r3_tree_create(10);
     r3_tree_insert_path(n, "/zoo", NULL);
