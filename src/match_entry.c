@@ -10,7 +10,6 @@
 #include <string.h>
 #include <pcre.h>
 #include <assert.h>
-#include <stdbool.h>
 
 #include "r3.h"
 

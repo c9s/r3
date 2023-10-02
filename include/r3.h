@@ -12,6 +12,7 @@
 #include <string.h>
 #include <pcre.h>
 
+#if __STDC_VERSION__ <= 201710L
 #ifdef HAVE_STDBOOL_H
 #  include <stdbool.h>
 #elif !defined(bool) && !defined(__cplusplus)
@@ -19,6 +20,7 @@ typedef unsigned char bool;
 #  define bool bool /* For redefinition guards */
 #  define false 0
 #  define true 1
+#endif
 #endif
 
 #include "str_array.h"
