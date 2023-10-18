@@ -236,7 +236,10 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
         if (errstr) {
             PCRE2_UCHAR buf[128];
             pcre2_get_error_message(pcre_errorcode, buf, sizeof(buf));
-            asprintf(errstr, "PCRE compilation failed at offset %ld: %s, pattern: %s", pcre_erroffset, buf, n->combined_pattern);
+            int r = asprintf(errstr, "PCRE compilation failed at offset %ld: %s, pattern: %s", pcre_erroffset, buf, n->combined_pattern);
+            if (r < 0) {
+                *errstr = NULL; /* the content of errstr is undefined when asprintf() fails */
+            }
         }
         return -1;
     }
@@ -246,7 +249,10 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     n->match_data = pcre2_match_data_create_from_pattern(n->pcre_pattern, NULL);
     if (n->match_data == NULL) {
         if (errstr) {
-            asprintf(errstr, "Failed to allocate match data block");
+            int r = asprintf(errstr, "Failed to allocate match data block");
+            if (r < 0) {
+                *errstr = NULL; /* the content of errstr is undefined when asprintf() fails */
+            }
         }
         return -1;
     }
