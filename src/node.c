@@ -226,7 +226,7 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
         pcre2_code_free(n->pcre_pattern);
     }
     n->pcre_pattern = pcre2_compile(
-            n->combined_pattern,              /* the pattern */
+            (PCRE2_SPTR)n->combined_pattern,  /* the pattern, 8-bit code units */
             PCRE2_ZERO_TERMINATED,
             option_bits,                                /* default options */
             &pcre_errorcode,           /* for error code */
@@ -343,7 +343,7 @@ static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
 
         rc = pcre2_match(
                 n->pcre_pattern, /* the compiled pattern */
-                path,         /* the subject string */
+                (PCRE2_SPTR)path,/* the subject string, 8-bit code units */
                 path_len,     /* the length of the subject */
                 0,            /* start at offset 0 in the subject */
                 0,            /* default options */
