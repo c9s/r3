@@ -7,9 +7,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-// PCRE
-#include <pcre.h>
-
 #include "r3.h"
 #include "r3_slug.h"
 #include "slug.h"
@@ -75,13 +72,11 @@ void r3_tree_free(R3Node * tree) {
     }
     free(tree->routes.entries);
     if (tree->pcre_pattern) {
-        pcre_free(tree->pcre_pattern);
+        pcre2_code_free(tree->pcre_pattern);
     }
-#ifdef PCRE_STUDY_JIT_COMPILE
-    if (tree->pcre_extra) {
-        pcre_free_study(tree->pcre_extra);
+    if (tree->match_data) {
+        pcre2_match_data_free(tree->match_data);
     }
-#endif
     free(tree->combined_pattern);
     free(tree);
     tree = NULL;
@@ -223,41 +218,44 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
     free(n->combined_pattern);
     n->combined_pattern = cpat;
 
-    const char *pcre_error = NULL;
-    int pcre_erroffset = 0;
+    int pcre_errorcode = 0;
+    PCRE2_SIZE pcre_erroffset = 0;
     unsigned int option_bits = 0;
 
-    n->ov_cnt = (1 + n->edges.size) * 3;
-
     if (n->pcre_pattern) {
-        pcre_free(n->pcre_pattern);
+        pcre2_code_free(n->pcre_pattern);
     }
-    n->pcre_pattern = pcre_compile(
-            n->combined_pattern,              /* the pattern */
+    n->pcre_pattern = pcre2_compile(
+            (PCRE2_SPTR)n->combined_pattern,  /* the pattern, 8-bit code units */
+            PCRE2_ZERO_TERMINATED,
             option_bits,                                /* default options */
-            &pcre_error,               /* for error message */
+            &pcre_errorcode,           /* for error code */
             &pcre_erroffset,           /* for error offset */
-            NULL);                /* use default character tables */
+            NULL);                     /* compile context */
     if (n->pcre_pattern == NULL) {
         if (errstr) {
-            int r = asprintf(errstr, "PCRE compilation failed at offset %d: %s, pattern: %s", pcre_erroffset, pcre_error, n->combined_pattern);
-            if (r) {};
+            PCRE2_UCHAR buf[128];
+            pcre2_get_error_message(pcre_errorcode, buf, sizeof(buf));
+            int r = asprintf(errstr, "PCRE compilation failed at offset %ld: %s, pattern: %s", pcre_erroffset, buf, n->combined_pattern);
+            if (r < 0) {
+                *errstr = NULL; /* the content of errstr is undefined when asprintf() fails */
+            }
         }
         return -1;
     }
-#ifdef PCRE_STUDY_JIT_COMPILE
-    if (n->pcre_extra) {
-        pcre_free_study(n->pcre_extra);
+    if (n->match_data) {
+        pcre2_match_data_free(n->match_data);
     }
-    n->pcre_extra = pcre_study(n->pcre_pattern, 0, &pcre_error);
-    if (!n->pcre_extra && pcre_error) {
+    n->match_data = pcre2_match_data_create_from_pattern(n->pcre_pattern, NULL);
+    if (n->match_data == NULL) {
         if (errstr) {
-            int r = asprintf(errstr, "PCRE study failed at offset %s, pattern: %s", pcre_error, n->combined_pattern);
-            if (r) {};
+            int r = asprintf(errstr, "Failed to allocate match data block");
+            if (r < 0) {
+                *errstr = NULL; /* the content of errstr is undefined when asprintf() fails */
+            }
         }
         return -1;
     }
-#endif
     return 0;
 }
 
@@ -339,20 +337,18 @@ static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
         info("COMPARE PCRE_PATTERN\n");
         const char *substring_start = 0;
         int   substring_length = 0;
-        int   ov[ n->ov_cnt ];
         int   rc;
 
         info("pcre matching %s on [%s]\n", n->combined_pattern, path);
 
-        rc = pcre_exec(
+        rc = pcre2_match(
                 n->pcre_pattern, /* the compiled pattern */
-                n->pcre_extra,
-                path,         /* the subject string */
+                (PCRE2_SPTR)path,/* the subject string, 8-bit code units */
                 path_len,     /* the length of the subject */
                 0,            /* start at offset 0 in the subject */
                 0,            /* default options */
-                ov,           /* output vector for substring information */
-                n->ov_cnt);      /* number of elements in the output vector */
+                n->match_data,/* match data results */
+                NULL);        /* match context */
 
         // does not match all edges, return NULL;
         if (rc < 0) {
@@ -360,7 +356,7 @@ static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
             printf("pcre rc: %d\n", rc );
             switch(rc)
             {
-                case PCRE_ERROR_NOMATCH:
+                case PCRE2_ERROR_NOMATCH:
                     printf("pcre: no match '%s' on pattern '%s'\n", path, n->combined_pattern);
                     break;
 
@@ -373,23 +369,22 @@ static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
             return NULL;
         }
 
-
+        PCRE2_SIZE *ov = pcre2_get_ovector_pointer(n->match_data);
 
         restlen = path_len - ov[1]; // if it's fully matched to the end (rest string length)
-        int *inv = ov + 2;
+
         if (!restlen) {
             // Check the substring to decide we should go deeper on which edge
             for (i = 1; i < rc; i++)
             {
-                substring_length = *(inv+1) - *inv;
+                substring_length = ov[2*i+1] - ov[2*i];
 
                 // if it's not matched for this edge, just skip them quickly
                 if (!is_end && !substring_length) {
-                    inv += 2;
                     continue;
                 }
 
-                substring_start = path + *inv;
+                substring_start = path + ov[2*i];
                 e = n->edges.entries + i - 1;
 
                 if (entry && e->has_slug) {
@@ -404,18 +399,16 @@ static R3Node * r3_tree_matchl_base(const R3Node * n, const char * path,
 
 
         // Check the substring to decide we should go deeper on which edge
-        inv = ov + 2;
         for (i = 1; i < rc; i++)
         {
-            substring_length = *(inv+1) - *inv;
+            substring_length = ov[2*i+1] - ov[2*i];
 
             // if it's not matched for this edge, just skip them quickly
             if (!is_end && !substring_length) {
-                inv += 2;
                 continue;
             }
 
-            substring_start = path + *inv;
+            substring_start = path + ov[2*i];
             e = n->edges.entries + i - 1;
 
             if (entry && e->has_slug) {
@@ -520,7 +513,6 @@ inline R3Edge * r3_node_find_edge_str(const R3Node * n, const char * str, int st
 //     n->endpoint = 0;
 //     n->combined_pattern = NULL;
 //     n->pcre_pattern = NULL;
-//     n->pcre_extra = NULL;
 //     n->data = NULL;
 //     return n;
 // }

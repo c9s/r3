@@ -13,8 +13,6 @@
 // Jemalloc memory management
 // #include <jemalloc/jemalloc.h>
 
-// PCRE
-#include <pcre.h>
 #include "r3.h"
 #include "r3_slug.h"
 #include "slug.h"

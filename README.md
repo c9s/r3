@@ -25,7 +25,7 @@ Requirement
 
 ### Runtime Requirement
 
-* pcre
+* pcre2
 * (optional) graphviz version 2.38.0 (20140413.2041)
 * (optional) libjson-c-dev
 
@@ -187,13 +187,13 @@ Optimization
 Simple regular expressions are optimized through a regexp pattern to opcode
 translator, which translates simple patterns into small & fast scanners.
 
-By using this method, r3 reduces the matching overhead of pcre library.
+By using this method, r3 reduces the matching overhead of pcre2 library.
 
 Optimized patterns are: `[a-z]+`, `[0-9]+`, `\d+`, `\w+`, `[^/]+`, `[^-]+` or `.*`.
 
 Slugs without specified regular expression will be compiled into the `[^/]+` pattern. therefore, it's optimized too.
 
-Complex regular expressions will still use libpcre to match URL (partially).
+Complex regular expressions will still use libpcre2 to match URL (partially).
 
 
 Performance
@@ -356,7 +356,7 @@ if ( $error ) {
 Install
 ----------------------
 
-    sudo apt-get install check libpcre3 libpcre3-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf pkg-config
+    sudo apt-get install check libpcre2 libpcre2-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf pkg-config
     sudo apt-get install graphviz-dev graphviz  # if you want graphviz
     ./autogen.sh
     ./configure && make
@@ -364,7 +364,7 @@ Install
 
 And we support debian-based distro now!
 
-    sudo apt-get install build-essential autoconf automake libpcre3-dev pkg-config debhelper libtool check
+    sudo apt-get install build-essential autoconf automake libpcre2-dev pkg-config debhelper libtool check
     mv dist-debian debian
     dpkg-buildpackage -b -us -uc
     sudo gdebi ../libr3*.deb

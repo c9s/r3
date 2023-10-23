@@ -5,7 +5,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 set(CMAKE_C_STANDARD 99)
 
 find_package(Check)
-find_package(PCRE REQUIRED)
+find_package(PCRE2 REQUIRED)
 
 include(CheckSymbolExists)
 include(CheckIncludeFile)

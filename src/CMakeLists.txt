@@ -19,7 +19,7 @@ target_include_directories(r3
 
 target_link_libraries(r3
   PUBLIC
-    ${PCRE_LIBRARIES})
+    ${PCRE2_LIBRARIES})
 
 install(
   TARGETS r3

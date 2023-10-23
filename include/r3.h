@@ -10,7 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pcre.h>
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
 
 #if __STDC_VERSION__ <= 201710L
 #ifdef HAVE_STDBOOL_H
@@ -43,13 +44,12 @@ struct _node  {
     R3_VECTOR(R3Edge) edges;
     R3_VECTOR(R3Route) routes;
     char * combined_pattern;
-    pcre * pcre_pattern;
-    pcre_extra * pcre_extra;
+    pcre2_code * pcre_pattern;
+    pcre2_match_data * match_data;
 
     // edges are mostly less than 255
     unsigned int compare_type; // compare_type: pcre, opcode, string
     unsigned int endpoint; // endpoint, should be zero for non-endpoint nodes
-    unsigned int ov_cnt; // capture vector array size for pcre
 
     // the pointer of R3Route data
     void * data;

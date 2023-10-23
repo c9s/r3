@@ -73,7 +73,7 @@ AM_CONDITIONAL(USE_JEMALLOC, test "x$have_jemalloc" = "xyes")
 # AC_DEFINE(USE_JEMALLOC, test "x$found_jemalloc" = "xyes" , "use jemalloc")
 
 
-PKG_CHECK_MODULES(DEPS, [libpcre])
+PKG_CHECK_MODULES(DEPS, [libpcre2-8])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 

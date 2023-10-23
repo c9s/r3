@@ -6,6 +6,6 @@ libdir=@libdir@
 Name: r3
 Description: High-performance URL router library
 Version: @PACKAGE_VERSION@
-Requires: libpcre
+Requires: libpcre2-8
 Libs: -L${libdir} -lr3
 CFlags: -I${includedir}
