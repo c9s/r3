@@ -26,7 +26,7 @@ install(
     include/r3_json.h
     include/str_array.h
     include/r3.hpp
-  DESTINATION include)
+  DESTINATION include/r3)
 
 # Configure substitutions for r3.pc. The variables set here must match the
 # @<values>@ in r3.pc.in.
