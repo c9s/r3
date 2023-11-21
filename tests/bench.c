@@ -17,7 +17,7 @@
 
 
 
-unsigned long unixtime() {
+unsigned long unixtime(void) {
     struct timeval tp;
     if (gettimeofday((struct timeval *) &tp, (NULL)) == 0) {
         return tp.tv_sec;
@@ -25,7 +25,7 @@ unsigned long unixtime() {
     return 0;
 }
 
-double microtime() {
+double microtime(void) {
     struct timeval tp;
     long sec = 0L;
     double msec = 0.0;
@@ -93,7 +93,7 @@ void bench_append_csv(char *filename, int countOfB, ...) {
 
 
 
-int main()
+int main(void)
 {
     R3Node * n = r3_tree_create(1);
 

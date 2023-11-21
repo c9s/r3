@@ -22,9 +22,9 @@ typedef struct {
     double end;
 } bench;
 
-unsigned long unixtime();
+unsigned long unixtime(void);
 
-double microtime();
+double microtime(void);
 
 void bench_start(bench *b);
 
