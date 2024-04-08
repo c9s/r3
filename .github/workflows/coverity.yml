@@ -3,18 +3,21 @@ on:
   push:
     branches: [2.0]
 
+permissions:
+  contents: read
+
 jobs:
   analyze:
     if: github.repository == 'c9s/r3'
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Prepare
       run: |
         ./autogen.sh
         ./configure --enable-check
-    - uses: vapier/coverity-scan-action@v1
+    - uses: vapier/coverity-scan-action@2068473c7bdf8c2fb984a6a40ae76ee7facd7a85 # v1.8.0
       with:
         project: r3
         email: yoanlin93+github@gmail.com

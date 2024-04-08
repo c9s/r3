@@ -1,6 +1,9 @@
 name: ci
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   autotools:
     runs-on: ubuntu-latest
@@ -9,7 +12,7 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install -qq check lcov
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Build
       run: |
         ./autogen.sh
@@ -23,10 +26,11 @@ jobs:
       run: lcov --capture -d '.' --exclude '/usr*' -o coverage.info
     - name: Upload coverage
       if: github.repository == 'c9s/r3'
-      uses: coverallsapp/github-action@1.1.3
+      uses: coverallsapp/github-action@3dfc5567390f6fa9267c0ee9c251e4c8c3f18949 # v2.2.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: coverage.info
+        file: coverage.info
+        format: lcov
 
   cmake:
     runs-on: ubuntu-latest
@@ -35,7 +39,7 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install -qq check ninja-build
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Build and test
       run: |
         mkdir build && cd build
@@ -56,7 +60,7 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install -qq check
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Build
       env:
         CC: ${{ matrix.compiler }}
