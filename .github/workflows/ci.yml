@@ -26,7 +26,7 @@ jobs:
       run: lcov --capture -d '.' --exclude '/usr*' -o coverage.info
     - name: Upload coverage
       if: github.repository == 'c9s/r3'
-      uses: coverallsapp/github-action@1134c89e4bf10443bf8f0ec69640b667cfd91041 # v2.3.1
+      uses: coverallsapp/github-action@4cdef0b2dbe0c9aa26bed48edb868db738625e79 # v2.3.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         file: coverage.info
