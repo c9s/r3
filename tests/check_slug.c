@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <check.h>
 #include <stdlib.h>
+#include <string.h>
 #include "r3.h"
 #include "r3_slug.h"
 #include "slug.h"
@@ -39,6 +40,90 @@ START_TEST (test_r3_slug_compile)
 
     char * path4 = "-{idx:\\d{3}}";
     ck_assert_str_eq( c = r3_slug_compile(path4, strlen(path4)), "^-(\\d{3})" );
+    free(c);
+}
+END_TEST
+
+START_TEST (test_r3_slug_compile_long_prefix)
+{
+    /* A long fixed prefix before the slug. The compiled output is roughly the
+     * same length as the input, so a long input must not overflow the buffer.
+     */
+    char path[512];
+    char *p = path;
+    *p++ = '/';
+    memset(p, 'a', 300); // 300-char prefix segment
+    p += 300;
+    strcpy(p, "/{id}");
+
+    /* Expected: "^" + "/aaa.../"  + "([^/]+)" */
+    char expected[512];
+    char *e = expected;
+    *e++ = '^';
+    *e++ = '/';
+    memset(e, 'a', 300);
+    e += 300;
+    strcpy(e, "/([^/]+)");
+
+    char *c = r3_slug_compile(path, strlen(path));
+    ck_assert(c != NULL);
+    ck_assert_str_eq(c, expected);
+    free(c);
+}
+END_TEST
+
+START_TEST (test_r3_slug_compile_long_pattern)
+{
+    /* A long custom regex inside the slug: /user/{id:[a-z][a-z]...} */
+    char path[512];
+    char *p = path;
+    p += sprintf(p, "/user/{id:");
+    for (int i = 0; i < 60; i++) { // 60 * "[a-z]" = 300 chars of regex
+        memcpy(p, "[a-z]", 5);
+        p += 5;
+    }
+    *p++ = '}';
+    *p = '\0';
+
+    /* Expected: "^/user/(" + "[a-z]"*60 + ")" */
+    char expected[512];
+    char *e = expected;
+    e += sprintf(e, "^/user/(");
+    for (int i = 0; i < 60; i++) {
+        memcpy(e, "[a-z]", 5);
+        e += 5;
+    }
+    *e++ = ')';
+    *e = '\0';
+
+    char *c = r3_slug_compile(path, strlen(path));
+    ck_assert(c != NULL);
+    ck_assert_str_eq(c, expected);
+    free(c);
+}
+END_TEST
+
+START_TEST (test_r3_slug_compile_long_suffix)
+{
+    /* A long fixed suffix after the slug: /user/{id}/aaaa... */
+    char path[512];
+    char *p = path;
+    p += sprintf(p, "/user/{id}/");
+    memset(p, 'a', 300); // 300-char suffix segment
+    p += 300;
+    *p = '\0';
+
+    /* Expected: "^/user/([^/]+)/" + "aaa..." */
+    char expected[512];
+    char *e = expected;
+    e += sprintf(e, "^/user/([^/]+)/");
+    memset(e, 'a', 300);
+    e += 300;
+    *e = '\0';
+
+    char *c = r3_slug_compile(path, strlen(path));
+    ck_assert(c != NULL);
+    ck_assert_str_eq(c, expected);
     free(c);
 }
 END_TEST
@@ -209,6 +294,9 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_r3_slug_find_placeholder_with_broken_slug);
         tcase_add_test(tcase, test_r3_slug_count);
         tcase_add_test(tcase, test_r3_slug_compile);
+        tcase_add_test(tcase, test_r3_slug_compile_long_prefix);
+        tcase_add_test(tcase, test_r3_slug_compile_long_pattern);
+        tcase_add_test(tcase, test_r3_slug_compile_long_suffix);
         tcase_add_test(tcase, test_pattern_to_opcode);
         tcase_add_test(tcase, test_incomplete_slug);
         tcase_add_test(tcase, test_r3_slug_find_name);
