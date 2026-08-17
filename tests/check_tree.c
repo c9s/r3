@@ -227,6 +227,34 @@ START_TEST (test_find_common_prefix_same_pattern2)
 }
 END_TEST
 
+START_TEST (test_find_common_prefix_short_path)
+{
+    /* Regression test for an over-read in r3_node_find_common_prefix: when the
+     * query path is a short prefix of a longer edge pattern, the comparison
+     * must not read past the end of the path.
+     */
+    R3Node * n = r3_tree_create(10);
+    char *edge_pattern = "/foobar/baz";
+    R3Edge * e = r3_node_append_edge(n);
+    r3_edge_initl(e, edge_pattern, strlen(edge_pattern), NULL);
+
+    /* Query "/foo" is a 4-char prefix of the edge pattern, copied into a
+     * buffer of exactly its length so an over-read lands out of bounds. */
+    const char *query = "/foo";
+    size_t query_len = strlen(query);
+    char *path = malloc(query_len);
+    memcpy(path, query, query_len);
+
+    int prefix_len = 0;
+    R3Edge *ret_edge = r3_node_find_common_prefix(n, path, query_len, &prefix_len, NULL);
+    ck_assert(ret_edge != NULL);
+    ck_assert_int_eq(prefix_len, 4);
+
+    free(path);
+    r3_tree_free(n);
+}
+END_TEST
+
 START_TEST (test_find_common_prefix_multi_edge)
 {
     R3Node * n = r3_tree_create(10);
@@ -873,6 +901,7 @@ Suite* r3_suite (void) {
         tcase_add_test(tcase, test_find_common_prefix_middle);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern);
         tcase_add_test(tcase, test_find_common_prefix_same_pattern2);
+        tcase_add_test(tcase, test_find_common_prefix_short_path);
         tcase_add_test(tcase, test_find_common_prefix_multi_edge);
         suite_add_tcase(suite, tcase);
 
