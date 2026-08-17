@@ -864,6 +864,88 @@ START_TEST(test_insert_route)
 }
 END_TEST
 
+START_TEST (test_compile_patterns_many_edges)
+{
+    R3Node * n = r3_tree_create(10);
+    char path[64];
+    char *paths[24];
+    int data = 1;
+    char *errstr = NULL;
+    const int num_paths = sizeof(paths) / sizeof(*paths);
+
+    /* Insert a slug plus 24 literal siblings under a shared prefix "/post/".
+     * Each literal starts with a distinct character so they become separate
+     * sibling edges, i.e. 25 edges in total. The slug makes the node use
+     * NODE_COMPARE_PCRE, so the pattern (^(\d+)|^(a_route)|^(b_route)|...) is
+     * built and used for matching.
+     */
+    r3_tree_insert_path(n, "/post/{id:\\d+}", &data);
+    for (int i = 0; i < num_paths; i++) {
+        char c = 'a' + i;
+        snprintf(path, sizeof(path), "/post/%c_endpoint_route_%c", c, c);
+        paths[i] = strdup(path);
+        r3_tree_insert_pathl(n, paths[i], strlen(paths[i]), &data);
+    }
+
+    int err = r3_tree_compile(n, &errstr);
+    ck_assert(err == 0);
+
+    /* Verify literal siblings and the slug all match correctly. */
+    R3Node *matched = r3_tree_match(n, "/post/a_endpoint_route_a", NULL);
+    ck_assert(matched != NULL);
+
+    matched = r3_tree_match(n, "/post/x_endpoint_route_x", NULL);
+    ck_assert(matched != NULL);
+
+    matched = r3_tree_match(n, "/post/12345", NULL);
+    ck_assert(matched != NULL);
+
+    SAFE_FREE(errstr);
+    r3_tree_free(n);
+    for (int i = 0; i < num_paths; i++) free(paths[i]);
+}
+END_TEST
+
+START_TEST (test_compile_patterns_long_patterns)
+{
+    R3Node * n = r3_tree_create(10);
+    char path[128];
+    char *paths[5];
+    int data = 1;
+    char *errstr = NULL;
+    const int num_paths = sizeof(paths) / sizeof(*paths);
+
+    /* A slug sibling plus 5 literal siblings, each 60-char with a distinct
+     * leading char (aaa..., bbb..., ...), all under a shared prefix.
+     */
+    r3_tree_insert_path(n, "/post/{id:\\d+}", &data);
+    for (int i = 0; i < num_paths; i++) {
+        char c = 'a' + i;
+        int off = snprintf(path, sizeof(path), "/post/%c", c);
+        memset(path + off, c, 59); // leading char + 59 more
+        path[off + 59] = '\0';
+        paths[i] = strdup(path);
+        r3_tree_insert_pathl(n, paths[i], strlen(paths[i]), &data);
+    }
+
+    int err = r3_tree_compile(n, &errstr);
+    ck_assert(err == 0);
+
+    R3Node *matched = r3_tree_match(n, paths[0], NULL);
+    ck_assert(matched != NULL);
+
+    matched = r3_tree_match(n, paths[num_paths - 1], NULL);
+    ck_assert(matched != NULL);
+
+    matched = r3_tree_match(n, "/post/98765", NULL);
+    ck_assert(matched != NULL);
+
+    SAFE_FREE(errstr);
+    r3_tree_free(n);
+    for (int i = 0; i < num_paths; i++) free(paths[i]);
+}
+END_TEST
+
 Suite* r3_suite (void) {
         Suite *suite = suite_create("r3 core tests");
         TCase *tcase = tcase_create("common_prefix_testcase");
@@ -885,6 +967,8 @@ Suite* r3_suite (void) {
 
         tcase = tcase_create("compile_testcase");
         tcase_add_test(tcase, test_compile);
+        tcase_add_test(tcase, test_compile_patterns_many_edges);
+        tcase_add_test(tcase, test_compile_patterns_long_patterns);
         tcase_add_test(tcase, test_compile_fail);
         tcase_add_test(tcase, test_route_cmp);
         tcase_add_test(tcase, test_insert_route);

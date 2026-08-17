@@ -164,30 +164,60 @@ int r3_tree_compile(R3Node *n, char **errstr)
  * Return 0 if success
  */
 int r3_tree_compile_patterns(R3Node * n, char **errstr) {
-    R3Edge *e;
-    char * p;
-    char * cpat = calloc(1, sizeof(char) * 64 * 3); // XXX
-    if (!cpat) {
+    R3Edge *e = NULL;
+    char *p = NULL;
+
+    char **slug_pats = calloc(n->edges.size, sizeof(char *));
+    if (!slug_pats) {
         int r = asprintf(errstr, "Can not allocate memory");
         if (r) {};
         return -1;
     }
 
+    // Compile and cache all slugs to get the required size of cpat.
+    size_t cpat_len = 1; // null terminator
+    unsigned int i = 0;
+    for (i = 0; i < n->edges.size; i++) {
+        e = n->edges.entries + i;
+        if (e->has_slug) {
+            // compile "foo/{slug}" to "foo/[^/]+"
+            slug_pats[i] = r3_slug_compile(e->pattern.base, e->pattern.len);
+            if (!slug_pats[i]) {
+                int r = asprintf(errstr, "Can not allocate memory");
+                if (r) {};
+                for (unsigned int k = 0; k < i; k++) free(slug_pats[k]);
+                free(slug_pats);
+                return -1;
+            }
+            cpat_len += strlen(slug_pats[i]);
+        } else {
+            cpat_len += e->pattern.len + 3; // "^(" + pattern + ")"
+        }
+        if ( i + 1 < n->edges.size ) {
+            cpat_len += 1; // "|" separator
+        }
+    }
+
+    char *cpat = calloc(1, cpat_len);
+    if (!cpat) {
+        int r = asprintf(errstr, "Can not allocate memory");
+        if (r) {};
+        for (i = 0; i < n->edges.size; i++) free(slug_pats[i]);
+        free(slug_pats);
+        return -1;
+    }
+
     p = cpat;
     int opcode_cnt = 0;
-    unsigned int i = 0;
-    for (; i < n->edges.size ; i++) {
+    for (i = 0; i < n->edges.size ; i++) {
         e = n->edges.entries + i;
         if (e->opcode) {
             opcode_cnt++;
         }
 
         if (e->has_slug) {
-            // compile "foo/{slug}" to "foo/[^/]+"
-            char * slug_pat = r3_slug_compile(e->pattern.base, e->pattern.len);
-            info("slug_pat for pattern: %s\n",slug_pat);
-            strcat(p, slug_pat);
-            free(slug_pat);
+            info("slug_pat for pattern: %s\n",slug_pats[i]);
+            strcat(p, slug_pats[i]);
             info("temp pattern: %s\n",cpat);
         } else {
             strncat(p,"^(", 2);
@@ -199,16 +229,17 @@ int r3_tree_compile_patterns(R3Node * n, char **errstr) {
             strncat(p++,")", 1);
         }
 
-        if ( i + 1 < n->edges.size && n->edges.size > 1 ) {
+        if ( i + 1 < n->edges.size ) {
             strncat(p++,"|",1);
         }
     }
+    for (i = 0; i < n->edges.size; i++) free(slug_pats[i]);
+    free(slug_pats);
 
     info("pattern: %s\n",cpat);
 
     // if all edges use opcode, we should skip the combined_pattern.
     if ( opcode_cnt == n->edges.size ) {
-        // free(cpat);
         n->compare_type = NODE_COMPARE_OPCODE;
     } else {
         n->compare_type = NODE_COMPARE_PCRE;
