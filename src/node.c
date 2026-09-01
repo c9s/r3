@@ -28,7 +28,7 @@
 
 static int strndiff(const char * d1, const char * d2, unsigned int n) {
     const char * o = d1;
-    while ( *d1 == *d2 && n-- > 0 ) {
+    while ( n-- > 0 && *d1 == *d2 ) {
         d1++;
         d2++;
     }
@@ -640,10 +640,19 @@ R3Edge * r3_node_find_common_prefix(R3Node *n, const char *path, int path_len, i
     int edge_prefix, prefix = 0;
     *prefix_len = 0;
     R3Edge *e = NULL;
+
+    if (path_len < 0) {
+        return NULL;
+    }
+
     // Check all edges to find the most common prefix
     for(i = 0; i < n->edges.size; i++) {
-        // ignore all edges with slug
-        edge_prefix = strndiff( (char*) path, n->edges.entries[i].pattern.base, n->edges.entries[i].pattern.len);
+        // Cap the compare length at the path length so strndiff never over-reads.
+        unsigned int max_len = n->edges.entries[i].pattern.len;
+        if ((unsigned int)path_len < max_len) {
+            max_len = path_len;
+        }
+        edge_prefix = strndiff( (char*) path, n->edges.entries[i].pattern.base, max_len);
 
         // no common, consider insert a new edge
         if (edge_prefix > prefix) {
