@@ -193,8 +193,18 @@ char * r3_slug_compile(const char * str, unsigned int len)
         return strndup(str,len);
     }
 
+    unsigned int pat_len = 0;
+    pat = r3_slug_find_pattern(s1, s1_len, &pat_len);
+
+    // Compute the exact output size: '^' + prefix + capture group + suffix + null.
+    // The capture group is "(<pat>)" when a pattern is given, else "([^/]+)".
+    unsigned int prefix_len = s1 - str;
+    unsigned int group_len = pat ? pat_len + 2 : strlen("([^/]+)");
+    unsigned int suffix_len = len - prefix_len - s1_len;
+    size_t out_len = 1 + prefix_len + group_len + suffix_len + 1;
+
     char * out = NULL;
-    if (!(out = calloc(1, sizeof(char) * 200))) {
+    if (!(out = calloc(1, out_len))) {
         return (NULL);
     }
 
@@ -204,10 +214,6 @@ char * r3_slug_compile(const char * str, unsigned int len)
 
     strncat(o, str, s1 - str); // string before slug
     o += (s1 - str);
-
-
-    unsigned int pat_len;
-    pat = r3_slug_find_pattern(s1, s1_len, &pat_len);
 
     if (pat) {
         *o = '(';
