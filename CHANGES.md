@@ -3,7 +3,7 @@
 by Yo-An Lin <yoanlin93@gmail.com>
 
 
-### 2.0.0 - Wed Sep 16 2026
+### 2.0.0 - Tue Sep 29 2026
 
 Breaking changes:
 
