@@ -1,3 +1,11 @@
+libr3 (2.0.0-1) unstable; urgency=low
+
+  * Release 2.0.0. Requires PCRE2 (libpcre2-8).
+  * Bump debhelper compat to 13.
+  * Raise Standards-Version to 4.6.2. No changes needed.
+
+ -- Yo-An Lin <yoanlin93@gmail.com>  Tue, 29 Sep 2026 00:00:00 +0000
+
 libr3 (1.3.1-1) unstable; urgency=low
 
   * Initial release using libr3 1.3.1.

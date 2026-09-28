@@ -32,7 +32,7 @@ echo $R3_DIR
   PHP_ADD_INCLUDE($R3_DIR/include)
 
   LIBNAME=r3
-  LIBSYMBOL=r3_route_create
+  LIBSYMBOL=r3_tree_create
 
   PHP_CHECK_LIBRARY($LIBNAME,$LIBSYMBOL,
   [

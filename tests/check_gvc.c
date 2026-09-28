@@ -15,7 +15,7 @@
 
 START_TEST (test_gvc_render_dot)
 {
-    node * n = r3_tree_create(1);
+    R3Node * n = r3_tree_create(1);
 
     r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
     r3_tree_insert_path(n, "/foo/bar/qux",  NULL);
@@ -35,7 +35,7 @@ END_TEST
 
 START_TEST (test_gvc_render_file)
 {
-    node * n = r3_tree_create(1);
+    R3Node * n = r3_tree_create(1);
 
     r3_tree_insert_path(n, "/foo/bar/baz",  NULL);
     r3_tree_insert_path(n, "/foo/bar/qux",  NULL);

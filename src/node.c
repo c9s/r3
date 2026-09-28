@@ -35,18 +35,6 @@ static int strndiff(const char * d1, const char * d2, unsigned int n) {
     return d1 - o;
 }
 
-/*
-static int strdiff(char * d1, char * d2) {
-    char * o = d1;
-    while( *d1 == *d2 ) {
-        d1++;
-        d2++;
-    }
-    return d1 - o;
-}
-*/
-
-
 /**
  * Create a node object
  */
@@ -97,10 +85,8 @@ R3Edge * r3_node_connectl(R3Node * n, const char * pat, int len, int dupl, R3Nod
     if (dupl) {
         pat = strndup(pat, len);
     }
-    // e = r3_edge_createl(pat, len, child);
     e = r3_node_append_edge(n);
     r3_edge_initl(e, pat, len, child);
-    // CHECK_PTR(e);
     return e;
 }
 
@@ -530,38 +516,10 @@ inline R3Edge * r3_node_find_edge_str(const R3Node * n, const char * str, int st
     return NULL;
 }
 
-// R3Node * r3_node_create() {
-//     R3Node * n = (R3Node*) malloc( sizeof(R3Node) );
-//     CHECK_PTR(n);
-//     n->edges = NULL;
-//     n->edge_len = 0;
-//     n->edge_cap = 0;
-
-//     n->routes = NULL;
-//     n->route_len = 0;
-//     n->route_cap = 0;
-
-//     n->endpoint = 0;
-//     n->combined_pattern = NULL;
-//     n->pcre_pattern = NULL;
-//     n->data = NULL;
-//     return n;
-// }
-
 void r3_route_free(R3Route * route) {
     assert(route);
     free(route->slugs.entries);
 }
-
-// static bool router_slugs_full(const R3Route * route) {
-//     return route->slugs_len >= route->slugs_cap;
-// }
-
-// static bool router_slugs_resize(R3Route * route, int new_cap) {
-//     route->slugs = realloc(route->slugs, sizeof(char**) * new_cap);
-//     route->slugs_cap = new_cap;
-//     return route->slugs != NULL;
-// }
 
 static r3_iovec_t* router_append_slug(R3Route * route, const char * slug, unsigned int len) {
     r3_iovec_t *temp;
@@ -1024,25 +982,5 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
 
     return 0;
 }
-
-
-/**
- *
- */
-// void r3_node_append_route(R3Node * n, R3Route * r)
-// {
-//     r3_vector_reserve(&n->routes, n->routes.size + 1);
-//     memset(n->routes.entries + 1, 0, sizeof(*n->routes.entries));
-
-//     if (n->routes == NULL) {
-//         n->route_cap = 3;
-//         n->routes = malloc(sizeof(R3Route) * n->route_cap);
-//     }
-//     if (n->route_len >= n->route_cap) {
-//         n->route_cap *= 2;
-//         n->routes = realloc(n->routes, sizeof(R3Route) * n->route_cap);
-//     }
-//     n->routes[ n->route_len++ ] = r;
-// }
 
 
