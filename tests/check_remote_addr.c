@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <check.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -101,7 +102,9 @@ void parse_ipv6(const char *ipv6, int nmask, R3Route * route)
     ck_assert(ret == 1);
 
     for (int i = 0; i < 4; i++) {
-        route->remote_addr_v6[i] = ntohl(addr6.__in6_u.__u6_addr32[i]);
+        uint32_t word;
+        memcpy(&word, &addr6.s6_addr[i * 4], sizeof(word));
+        route->remote_addr_v6[i] = ntohl(word);
 
         if (nmask >= 32) {
             route->remote_addr_v6_bits[i] = 32;

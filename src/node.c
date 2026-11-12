@@ -1015,7 +1015,9 @@ inline int r3_route_cmp(const R3Route *r1, const match_entry *r2) {
                 continue;
             }
 
-            unsigned int r2_addr = ntohl(addr6.__in6_u.__u6_addr32[i]);
+            uint32_t r2_word;
+            memcpy(&r2_word, &addr6.s6_addr[i * 4], sizeof(r2_word));
+            unsigned int r2_addr = ntohl(r2_word);
             if (r1->remote_addr_v6[i] >> bits != r2_addr >> bits) {
                 return -1;
             }
