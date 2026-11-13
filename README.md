@@ -1,7 +1,7 @@
 R3
 ================
 
-[![Build Status](https://travis-ci.org/c9s/r3.svg?branch=2.0)](https://travis-ci.org/c9s/r3)
+[![ci](https://github.com/c9s/r3/actions/workflows/ci.yml/badge.svg?branch=2.0)](https://github.com/c9s/r3/actions/workflows/ci.yml)
 
 [![Coverage Status](https://coveralls.io/repos/c9s/r3/badge.svg)](https://coveralls.io/r/c9s/r3)
 
@@ -61,7 +61,7 @@ r3_tree_insert_pathl(n, "/user/{id:\\d+}", strlen("/user/{id:\\d+}"), &route_dat
 // if you want to catch error, you may call the extended path function for insertion
 int data = 10;
 char *errstr = NULL;
-R3Node *ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"), NULL, &data, &errstr);
+R3Node *ret = r3_tree_insert_pathl_ex(n, "/foo/{name:\\d{5}", strlen("/foo/{name:\\d{5}"), 0, 0, &data, &errstr);
 if (ret == NULL) {
     // failed insertion
     printf("error: %s\n", errstr);
@@ -70,7 +70,7 @@ if (ret == NULL) {
 
 
 // let's compile the tree!
-char *errstr = NULL;
+errstr = NULL;
 int err = r3_tree_compile(n, &errstr);
 if (err != 0) {
     // fail
@@ -126,7 +126,7 @@ R3Node * matched_node = r3_tree_match_entry(n, entry);
 **Release Memory**
 
 To release the memory, you may call `r3_tree_free(R3Node *tree)` to release the whole tree structure,
-`node*`, `edge*`, `route*` objects that were inserted into the tree will be freed.
+`R3Node*`, `R3Edge*`, `R3Route*` objects that were inserted into the tree will be freed.
 
 
 
@@ -137,7 +137,7 @@ To release the memory, you may call `r3_tree_free(R3Node *tree)` to release the 
 
 ```c
 // create a router tree with 10 children capacity (this capacity can grow dynamically)
-n = r3_tree_create(10);
+R3Node *n = r3_tree_create(10);
 
 int route_data = 3;
 
@@ -160,7 +160,7 @@ match_entry * entry = match_entry_create("/blog/post");
 entry->request_method = METHOD_GET;
 
 
-R3Route *matched_R3Route = r3_tree_match_route(n, entry);
+R3Route *matched_route = r3_tree_match_route(n, entry);
 matched_route->data; // get the data from matched route
 
 // free the objects at the end
@@ -305,8 +305,6 @@ int r3_tree_render_file(const R3Node * tree, const char * format, const char * f
 int r3_tree_render(const R3Node * tree, const char *layout, const char * format, FILE *fp);
 
 int r3_tree_render_dot(const R3Node * tree, const char *layout, FILE *fp);
-
-int r3_tree_render_file(const R3Node * tree, const char * format, const char * filename);
 ```
 
 
@@ -356,7 +354,7 @@ if ( $error ) {
 Install
 ----------------------
 
-    sudo apt-get install check libpcre2 libpcre2-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf pkg-config
+    sudo apt-get install check libpcre2-dev libjemalloc-dev libjemalloc1 build-essential libtool automake autoconf pkg-config
     sudo apt-get install graphviz-dev graphviz  # if you want graphviz
     ./autogen.sh
     ./configure && make

@@ -5,8 +5,15 @@
 #export DH_VERBOSE=1
 
 %:
-	dh $@  --with autotools-dev
+	dh $@
 
 override_dh_auto_configure:
 	./autogen.sh
 	./configure --enable-check --prefix=/usr
+
+# Libtool archive (.la) files must not be shipped in Debian packages; they
+# cause cross-package breakage. Remove it after the upstream install step so
+# dh_missing does not flag it.
+override_dh_auto_install:
+	dh_auto_install
+	rm -f debian/tmp/usr/lib/libr3.la

@@ -31,19 +31,6 @@ void r3_edge_initl(R3Edge *e, const char * pattern, int pattern_len, R3Node * ch
     e->has_slug = r3_path_contains_slug_char(e->pattern.base, e->pattern.len);
 }
 
-// R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child)
-// {
-//     R3Edge * e = (R3Edge*) malloc( sizeof(R3Edge) );
-//     CHECK_PTR(e);
-//     e->pattern = (char*) pattern;
-//     e->pattern_len = pattern_len;
-//     e->opcode = 0;
-//     e->child = child;
-//     e->has_slug = r3_path_contains_slug_char(e->pattern);
-//     return e;
-// }
-
-
 
 /**
  * r3_edge_branch splits the edge and append the rest part as the child of the

@@ -1,9 +1,9 @@
 Source: libr3
 Priority: optional
 Maintainer: Ronmi Ren <ronmi.ren@gmail.com>
-Build-Depends: debhelper (>= 8.0.0), automake, autotools-dev, autoconf,
+Build-Depends: debhelper-compat (= 13), automake, autoconf,
                libtool, libpcre2-dev, pkg-config, check
-Standards-Version: 3.9.4
+Standards-Version: 4.6.2
 Section: libs
 Homepage: https://github.com/c9s/r3
 

@@ -102,8 +102,6 @@ struct _R3Entry {
 
 R3Node * r3_tree_create(int cap);
 
-// R3Node * r3_node_create();
-
 void r3_tree_free(R3Node * tree);
 
 R3Edge * r3_node_connectl(R3Node * n, const char * pat, int len, int strdup, R3Node *child);
@@ -152,12 +150,9 @@ R3Node * r3_tree_matchl(const R3Node * n, const char * path, unsigned int path_l
 
 #define r3_tree_match(n,p,e)  r3_tree_matchl(n,p, strlen(p), e)
 
-// R3Node * r3_tree_match_entry(R3Node * n, match_entry * entry);
 #define r3_tree_match_entry(n, entry) r3_tree_matchl(n, entry->path.base, entry->path.len, entry)
 
 bool r3_node_has_slug_edges(const R3Node *n);
-
-// R3Edge * r3_edge_createl(const char * pattern, int pattern_len, R3Node * child);
 
 void r3_edge_initl(R3Edge *e, const char * pattern, int pattern_len, R3Node * child);
 
@@ -169,11 +164,6 @@ void r3_edge_free(R3Edge * edge);
 
 
 
-R3Route * r3_route_create(const char * path);
-
-// R3Route * r3_route_createl(const char * path, int path_len);
-
-
 R3Route * r3_node_append_route(R3Node *tree, const char * path, int path_len, int method, void *data);
 
 void r3_route_free(R3Route * route);
@@ -182,7 +172,6 @@ int r3_route_cmp(const R3Route *r1, const match_entry *r2);
 
 R3Route * r3_tree_match_route(const R3Node *n, match_entry * entry);
 
-#define r3_route_create(p) r3_route_createl(p, strlen(p))
 
 
 #define METHOD_GET 2
